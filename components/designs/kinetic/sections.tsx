@@ -1,0 +1,275 @@
+"use client";
+
+import { motion, useScroll, useSpring } from "framer-motion";
+import { useRef } from "react";
+
+import { FinishChart } from "@/components/shared/finish-chart";
+import { Marquee } from "@/components/shared/marquee";
+import { Reveal, Stagger, StaggerItem } from "@/components/shared/reveal";
+import { RobotGlyph } from "@/components/shared/robot-glyph";
+import {
+  PITCH,
+  REGIONAL_COUNT,
+  ROBOTS,
+  SPONSORS,
+  TIMELINE,
+  TIMELINE_LABEL,
+  UNLOCKED_ROBOTS,
+  finish,
+  formatSeasons,
+  robotTitle,
+  spell,
+  type Robot,
+  type TimelineKind,
+} from "@/lib/content";
+import { LINKS, site } from "@/lib/site";
+import { fillLastRow } from "@/lib/utils";
+import { ActionBar, H2, LABEL, OUTLINE, Rail } from "./ui";
+
+/* --- Timeline ------------------------------------------------------------ */
+
+const YEAR_TONE: Record<TimelineKind, string> = {
+  legacy: "text-ink",
+  latest: "text-accent",
+  next: "text-ink",
+};
+
+function KindDot({ kind }: { kind: TimelineKind }) {
+  if (kind === "next") return <span className="size-1.5 animate-pulse bg-accent" />;
+  return <span className={`size-1.5 ${kind === "latest" ? "bg-accent" : "bg-ink"}`} />;
+}
+
+export function Timeline() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.75", "end 0.75"] });
+  // The spine fills as you read down it.
+  const fill = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
+
+  return (
+    <section ref={ref} id="timeline">
+      <Rail index="01" label="Timeline" meta={`${site.team.rookieYear} → ${site.team.season}`} />
+      <div className="px-4 py-14 sm:px-6 sm:py-20">
+        <Reveal>
+          <h2 className={H2}>
+            {spell(REGIONAL_COUNT)} regionals
+            <br />
+            since {site.team.rookieYear}
+          </h2>
+        </Reveal>
+        <Reveal className="mt-14 max-w-5xl">
+          <FinishChart className="text-ink" highlightClassName="text-accent" />
+        </Reveal>
+      </div>
+
+      <div className="relative">
+        <div aria-hidden className="absolute top-0 bottom-0 left-4 w-px bg-rule sm:left-6">
+          <motion.div style={{ scaleY: fill }} className="h-full w-px origin-top bg-accent" />
+        </div>
+
+        <ol>
+          {TIMELINE.map((entry) => (
+            <li key={entry.years} className="border-t border-rule">
+              <Reveal className="grid gap-4 py-8 pr-4 pl-10 sm:py-10 sm:pr-6 sm:pl-14 lg:grid-cols-12 lg:gap-6">
+                <span
+                  className={`font-display text-[clamp(3rem,7vw,6rem)] leading-none uppercase lg:col-span-3 ${YEAR_TONE[entry.kind]}`}
+                >
+                  {entry.years}
+                </span>
+                <span className={`flex items-center gap-2 self-start pt-1 text-ink lg:col-span-2 ${LABEL}`}>
+                  <KindDot kind={entry.kind} />
+                  {TIMELINE_LABEL[entry.kind]}
+                </span>
+                <div className="lg:col-span-7">
+                  <h3 className="font-display text-2xl uppercase sm:text-3xl">{entry.title}</h3>
+                  <p className="mt-3 max-w-xl text-xs leading-relaxed text-mute sm:text-sm">{entry.body}</p>
+                </div>
+              </Reveal>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+/* --- Garage -------------------------------------------------------------- */
+
+function RobotCard({ robot }: { robot: Robot }) {
+  return (
+    <article className="flex h-full flex-col p-4 sm:p-6">
+      <div className={`flex justify-between gap-4 text-mute ${LABEL}`}>
+        <span className="text-ink">{robot.season}</span>
+        <span>As {robot.teamName}</span>
+      </div>
+      <RobotGlyph
+        kind={robot.kind}
+        draw
+        className="my-8 w-full text-ink transition-colors duration-300 group-hover:text-accent"
+      />
+      <h3 className="font-display text-3xl uppercase">{robotTitle(robot)}</h3>
+      {robot.robotName && <p className={`mt-1 text-mute ${LABEL}`}>{robot.game}</p>}
+      <p className="mt-3 text-xs leading-relaxed text-ink">{finish(robot)}</p>
+      {robot.playoffs && <p className="mt-1 text-xs leading-relaxed text-mute">{robot.playoffs}</p>}
+    </article>
+  );
+}
+
+function LockedCard({ robot }: { robot: Robot }) {
+  return (
+    <article className="relative flex h-full flex-col overflow-hidden bg-panel p-4 sm:p-6">
+      <div className={`flex justify-between text-mute ${LABEL}`}>
+        <span className="text-ink">{robot.season}</span>
+        <span className="flex items-center gap-2 text-accent">
+          <span className="size-1.5 animate-pulse bg-accent" />
+          Locked
+        </span>
+      </div>
+      <div className="relative my-8 flex flex-1 items-center justify-center">
+        <RobotGlyph kind={robot.kind} filled className="w-full max-w-xl text-canvas" />
+        <div aria-hidden className="hatch absolute inset-0 text-rule opacity-50" />
+        <span aria-hidden className="absolute font-display text-[clamp(4rem,10vw,8rem)] text-rule">
+          ?
+        </span>
+      </div>
+      <h3 className="font-display text-3xl uppercase">{robot.game}</h3>
+      <p className="mt-3 max-w-md text-xs leading-relaxed text-mute">
+        The game is revealed on {site.team.kickoffLong}. Nothing to show until then.
+      </p>
+    </article>
+  );
+}
+
+export function Garage() {
+  return (
+    <section id="garage">
+      <Rail index="02" label="The garage" meta={`${UNLOCKED_ROBOTS} robots`} />
+      <div className="px-4 py-14 sm:px-6 sm:py-20">
+        <Reveal>
+          <h2 className={H2}>
+            Every robot
+            <br />
+            since {site.team.rookieYear}
+          </h2>
+        </Reveal>
+        <Reveal className="mt-6">
+          <p className="max-w-md text-xs leading-relaxed text-mute sm:text-sm">
+            The drawings show a typical robot for each year&rsquo;s game, not our machines. Results are
+            each season&rsquo;s best qualification finish.
+          </p>
+        </Reveal>
+      </div>
+
+      <Stagger className="grid border-t border-rule sm:grid-cols-2 lg:grid-cols-3">
+        {ROBOTS.map((robot) => (
+          <StaggerItem
+            key={robot.season}
+            className={`group border-b border-rule sm:border-r ${robot.locked ? fillLastRow(UNLOCKED_ROBOTS) : ""}`}
+          >
+            {robot.locked ? <LockedCard robot={robot} /> : <RobotCard robot={robot} />}
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </section>
+  );
+}
+
+/* --- Sponsors ------------------------------------------------------------ */
+
+export function Backers() {
+  return (
+    <section id="backers">
+      <Rail index="03" label="Sponsors" meta={`${SPONSORS.length} companies since ${site.team.rookieYear}`} />
+      <div className="px-4 py-14 sm:px-6 sm:py-20">
+        <Reveal>
+          <h2 className={H2}>Sponsors</h2>
+        </Reveal>
+        <Reveal className="mt-6">
+          <p className="max-w-lg text-xs leading-relaxed text-mute sm:text-sm">
+            {site.team.school} has backed the team every season. These companies have too, in the
+            years listed.
+          </p>
+        </Reveal>
+      </div>
+
+      <div className="space-y-4 border-t border-rule py-8">
+        <Marquee baseVelocity={-0.035} repeat={3} itemClassName="">
+          {SPONSORS.map((sponsor) => (
+            <span key={sponsor.name} className="flex items-center">
+              <span
+                className={`px-6 font-display text-[clamp(2.5rem,6vw,5rem)] leading-none uppercase sm:px-10 ${OUTLINE}`}
+              >
+                {sponsor.name}
+              </span>
+              <span className="size-2 bg-accent" />
+            </span>
+          ))}
+        </Marquee>
+        <Marquee baseVelocity={0.03} repeat={3} itemClassName="">
+          {SPONSORS.map((sponsor) => (
+            <span key={sponsor.name} className={`flex items-center gap-3 px-6 text-mute sm:px-10 ${LABEL}`}>
+              <span className="text-ink">{sponsor.name}</span>
+              {formatSeasons(sponsor.seasons)}
+            </span>
+          ))}
+        </Marquee>
+      </div>
+
+      <div className="grid border-t border-rule md:grid-cols-3">
+        {PITCH.map((item, i) => (
+          <Reveal
+            key={item.title}
+            delay={i * 0.06}
+            className="border-b border-rule p-4 sm:p-6 md:border-r md:border-b-0 md:last:border-r-0"
+          >
+            <span className={`text-mute ${LABEL}`}>0{i + 1}</span>
+            <h3 className="mt-2 font-display text-2xl uppercase">{item.title}</h3>
+            <p className="mt-3 max-w-sm text-xs leading-relaxed text-mute">{item.body}</p>
+          </Reveal>
+        ))}
+      </div>
+
+      <Stagger className="border-t border-rule">
+        <ActionBar href="#contact" label="Sponsor the team" />
+      </Stagger>
+    </section>
+  );
+}
+
+/* --- Footer -------------------------------------------------------------- */
+
+export function Footer() {
+  const { team, contact } = site;
+
+  return (
+    <footer className="border-t border-rule">
+      <div className="py-8">
+        <Marquee
+          baseVelocity={-0.08}
+          className={`font-display text-[clamp(3rem,10vw,9rem)] leading-[0.9] uppercase ${OUTLINE}`}
+        >
+          {`${team.number} · ${team.name} ·`}
+        </Marquee>
+      </div>
+      <div
+        className={`flex flex-wrap items-center justify-between gap-4 border-t border-rule px-4 py-4 text-mute sm:px-6 ${LABEL}`}
+      >
+        <span>
+          &copy; {new Date().getFullYear()} FRC {team.number} {team.name}
+        </span>
+        <nav className="flex flex-wrap gap-5">
+          <a href={`mailto:${contact.email}`} className="transition-colors hover:text-ink">
+            Email
+          </a>
+          {LINKS.map((link) => (
+            <a key={link.label} href={link.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
+              {link.label}
+            </a>
+          ))}
+        </nav>
+        <a href="#top" className="transition-colors hover:text-ink">
+          Back to top &uarr;
+        </a>
+      </div>
+    </footer>
+  );
+}

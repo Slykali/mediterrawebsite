@@ -1,0 +1,19 @@
+﻿node_modules/
+.next/
+out/
+build/
+.vercel/
+
+next-env.d.ts
+*.tsbuildinfo
+
+.env
+.env.local
+.env*.local
+
+.DS_Store
+Thumbs.db
+*.log
+
+# Local editor/agent config (machine-specific paths)
+.claude/
