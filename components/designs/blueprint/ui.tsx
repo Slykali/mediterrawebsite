@@ -1,18 +1,20 @@
 import type { ReactNode } from "react";
 
-import { TIMELINE, type TimelineKind } from "@/lib/content";
+import { TIMELINE_COUNT, type TimelineKind } from "@/lib/content";
+import { useCopy } from "./copy";
 
 export const MONO = "font-mono text-[10px] tracking-[0.16em] uppercase";
 export const PAD = "px-6 sm:px-12";
 export const REV = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 /** The revision the sheet is currently at: one letter per timeline entry. */
-export const CURRENT_REV = REV[TIMELINE.length - 1];
+export const CURRENT_REV = REV[TIMELINE_COUNT - 1];
 
-export const STATUS: Record<TimelineKind, { label: string; tone: string }> = {
-  legacy: { label: "Released", tone: "border-ink/50 text-ink" },
-  latest: { label: "Latest", tone: "border-accent text-accent" },
-  next: { label: "In work", tone: "border-accent-2 text-accent-2" },
+/** Status stamp colours. Labels are in copy.ts. */
+export const STATUS_TONE: Record<TimelineKind, string> = {
+  legacy: "border-ink/50 text-ink",
+  latest: "border-accent text-accent",
+  next: "border-accent-2 text-accent-2",
 };
 
 /**
@@ -61,10 +63,11 @@ export function SheetFrame() {
 
 /** Sheet title bar that opens each section. */
 export function SheetHeader({ sheet, title, note }: { sheet: string; title: string; note: ReactNode }) {
+  const t = useCopy();
   return (
     <div className="flex flex-wrap items-end justify-between gap-6 border-b border-ink/40 pb-5">
       <div>
-        <p className={`text-mute ${MONO}`}>Sheet {sheet} / 05</p>
+        <p className={`text-mute ${MONO}`}>{t.sheetOf(sheet)}</p>
         <h2 className="mt-2 font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.9] font-semibold tracking-[-0.01em] uppercase">
           {title}
         </h2>

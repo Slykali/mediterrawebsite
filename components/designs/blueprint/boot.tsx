@@ -6,11 +6,13 @@ import { useBootCounter } from "@/components/boot/use-boot-counter";
 import { RobotGlyph } from "@/components/shared/robot-glyph";
 import { EASE_OUT } from "@/lib/motion";
 import { site } from "@/lib/site";
+import { useCopy } from "./copy";
 import { MONO } from "./ui";
 
-/** The plotter draws the sheet: border, title block, then the robot. */
+/** Blueprint intro: draws the sheet border, title block, then the robot. */
 export function BlueprintBoot() {
   const { readout, progress } = useBootCounter(1.35);
+  const t = useCopy();
   const line = (delay: number) => ({
     initial: { pathLength: 0 },
     animate: { pathLength: 1 },
@@ -37,7 +39,7 @@ export function BlueprintBoot() {
         </div>
         <div className={`flex justify-between text-mute ${MONO}`}>
           <span>
-            DWG FRC-{site.team.number}-{site.team.season} &middot; Plotting sheet 01
+            DWG FRC-{site.team.number}-{site.team.season} &middot; {t.plotting}
           </span>
           <span className="text-ink">
             <motion.span>{readout}</motion.span>%

@@ -1,6 +1,6 @@
 /**
- * Decorative barcode derived from a string. Deterministic, so the server and
- * client draw the same bars. It doesn't scan and isn't meant to.
+ * Decorative (non-scannable) barcode derived from a string. Deterministic, so
+ * the server and client draw the same bars.
  */
 export function Barcode({ value, className = "" }: { value: string; className?: string }) {
   const bars: { x: number; w: number }[] = [];

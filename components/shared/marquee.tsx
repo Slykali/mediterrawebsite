@@ -30,9 +30,8 @@ type MarqueeProps = {
 };
 
 /**
- * Scroll-reactive marquee. It speeds up with scroll velocity and reverses when
- * you scroll back up, which is what makes it read as built rather than as a
- * CSS animation. Static under prefers-reduced-motion.
+ * Scroll-reactive marquee: speeds up with scroll velocity and reverses when
+ * you scroll back up. Static under prefers-reduced-motion.
  */
 export function Marquee({
   children,
@@ -74,7 +73,9 @@ export function Marquee({
   });
 
   return (
-    <div className="w-full overflow-hidden">
+    // Clip sideways only. overflow-hidden also clipped vertically, which cut
+    // the dots and cedillas off Ö, Ü, İ, Ş at the display sizes' tight leading.
+    <div className="w-full overflow-x-clip">
       <motion.div style={{ x }} className={`flex w-max flex-nowrap ${className}`}>
         {Array.from({ length: repeat }, (_, i) => (
           // Only the first copy is content; the rest are the loop.

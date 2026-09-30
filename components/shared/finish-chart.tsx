@@ -2,7 +2,8 @@
 
 import { motion, type Variants } from "framer-motion";
 
-import { ROBOTS, ordinal } from "@/lib/content";
+import { useBoot } from "@/components/boot/boot-provider";
+import { useContent } from "@/components/i18n/locale-provider";
 import { EASE_OUT, VIEWPORT } from "@/lib/motion";
 
 const REVEAL: Variants = {
@@ -29,7 +30,10 @@ export function FinishChart({
   highlightClassName = "",
   labelClassName = "font-mono text-[10px] sm:text-[11px]",
 }: FinishChartProps) {
-  const seasons = ROBOTS.filter((robot) => robot.rank && robot.teams);
+  const c = useContent();
+  const { crawler } = useBoot();
+  const en = c.locale === "en";
+  const seasons = c.robots.filter((robot) => robot.rank && robot.teams);
   const points = seasons.map((robot, i) => ({
     robot,
     x: (i / (seasons.length - 1)) * 100,
@@ -38,27 +42,27 @@ export function FinishChart({
   }));
   const line = points.map((p, i) => `${i ? "L" : "M"}${p.x} ${p.y}`).join(" ");
   const summary = points
-    .map(({ robot }) => `${robot.season}: ${ordinal(robot.rank!)} of ${robot.teams}`)
+    .map(({ robot }) => `${robot.season}: ${c.rankShort(robot.rank!, robot.teams!)}`)
     .join(", ");
 
   return (
     <figure className={className}>
       <div
         role="img"
-        aria-label={`Best qualification finish each season. ${summary}.`}
+        aria-label={`${en ? "Best qualification finish each season" : "Her sezonun en iyi sıralama derecesi"}. ${summary}`}
         className="relative h-56 sm:h-64"
       >
         <span aria-hidden className={`absolute top-6 left-0 -translate-y-1/2 opacity-60 ${labelClassName}`}>
-          1st
+          {en ? "1st" : "1."}
         </span>
         <span aria-hidden className={`absolute bottom-10 left-0 translate-y-1/2 opacity-60 ${labelClassName}`}>
-          Last
+          {en ? "Last" : "Son"}
         </span>
 
         {/* Plot area. Inset leaves room for the axis words and season labels. */}
         <motion.div
           aria-hidden
-          initial="hidden"
+          initial={crawler ? false : "hidden"}
           whileInView="show"
           viewport={VIEWPORT}
           className="absolute inset-x-10 top-6 bottom-10 sm:inset-x-14"
@@ -124,7 +128,9 @@ export function FinishChart({
         </motion.div>
       </div>
       <figcaption className={`mt-3 opacity-70 ${labelClassName}`}>
-        Best qualification finish each season, from FIRST&rsquo;s event records.
+        {en
+          ? "Best qualification finish each season, from FIRST’s event records."
+          : "Her sezonun en iyi sıralama derecesi, FIRST’ün yarışma kayıtlarından."}
       </figcaption>
     </figure>
   );

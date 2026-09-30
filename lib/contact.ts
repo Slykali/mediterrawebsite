@@ -1,13 +1,8 @@
-/** Shared by the server action and every design's form. */
+/** Shared by the server action and every design's form. Labels live in lib/content.ts. */
 
-export const INTERESTS = [
-  { value: "crew", label: "Join the team" },
-  { value: "sponsor", label: "Sponsor the team" },
-  { value: "mentor", label: "Mentor" },
-  { value: "other", label: "Something else" },
-] as const;
+import type { Interest } from "./content";
 
-export type Interest = (typeof INTERESTS)[number]["value"];
+export { INTEREST_VALUES, type Interest } from "./content";
 
 export type ContactField = "name" | "email" | "interest" | "message";
 

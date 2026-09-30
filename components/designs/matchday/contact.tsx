@@ -3,9 +3,11 @@
 import { useActionState, type ReactNode } from "react";
 
 import { submitContact } from "@/app/actions";
+import { useContent } from "@/components/i18n/locale-provider";
 import { FormGuards } from "@/components/shared/form-guards";
 import { Reveal } from "@/components/shared/reveal";
-import { INTERESTS, initialContactState, isChecked } from "@/lib/contact";
+import { initialContactState, isChecked } from "@/lib/contact";
+import { useCopy } from "./copy";
 import { HUD, MONO, SectionTitle } from "./ui";
 
 const INPUT = "mt-2 w-full bg-transparent text-xl font-semibold outline-none placeholder:text-mute/50";
@@ -37,13 +39,15 @@ export function Contact() {
   const [state, formAction, pending] = useActionState(submitContact, initialContactState);
   const values = state.values ?? {};
   const errors = state.errors ?? {};
+  const c = useContent();
+  const t = useCopy();
 
   return (
     <section id="contact" className="border-t border-rule px-4 py-20 sm:px-6">
-      <SectionTitle kicker="Registration">
-        Join the
+      <SectionTitle kicker={t.registration}>
+        {t.joinThe[0]}
         <br />
-        alliance
+        {t.joinThe[1]}
       </SectionTitle>
 
       <Reveal delay={0.05}>
@@ -52,11 +56,11 @@ export function Contact() {
 
           <fieldset className="lg:col-span-12">
             <legend className={`flex w-full justify-between gap-4 text-mute ${MONO}`}>
-              <span>Select your role</span>
+              <span>{t.selectRole}</span>
               {errors.interest && <span className="tracking-normal text-accent normal-case">{errors.interest}</span>}
             </legend>
             <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
-              {INTERESTS.map((option, i) => {
+              {c.interests.map((option, i) => {
                 const blue = i % 2 === 1;
                 return (
                   <label key={option.value} className="cursor-pointer">
@@ -75,7 +79,7 @@ export function Contact() {
                       }`}
                     >
                       <span className={`${MONO} ${blue ? "text-accent-2" : "text-accent"}`}>
-                        {blue ? "Blue" : "Red"} {Math.floor(i / 2) + 1}
+                        {blue ? t.blue : t.red} {Math.floor(i / 2) + 1}
                       </span>
                       <span className={`${HUD} text-2xl leading-none`}>{option.label}</span>
                     </span>
@@ -85,34 +89,34 @@ export function Contact() {
             </div>
           </fieldset>
 
-          <Field label="Name" error={errors.name} className="lg:col-span-6">
+          <Field label={t.name} error={errors.name} className="lg:col-span-6">
             <input
               name="name"
               autoComplete="name"
               defaultValue={values.name}
               aria-invalid={errors.name ? true : undefined}
-              placeholder="Your name"
+              placeholder={t.namePlaceholder}
               className={INPUT}
             />
           </Field>
-          <Field label="Email" error={errors.email} className="lg:col-span-6">
+          <Field label={t.email} error={errors.email} className="lg:col-span-6">
             <input
               name="email"
               type="email"
               autoComplete="email"
               defaultValue={values.email}
               aria-invalid={errors.email ? true : undefined}
-              placeholder="you@example.com"
+              placeholder={t.emailPlaceholder}
               className={INPUT}
             />
           </Field>
-          <Field label="Message" error={errors.message} className="lg:col-span-12">
+          <Field label={t.message} error={errors.message} className="lg:col-span-12">
             <textarea
               name="message"
               rows={5}
               defaultValue={values.message}
               aria-invalid={errors.message ? true : undefined}
-              placeholder="Tell us who you are and what you want to do"
+              placeholder={t.messagePlaceholder}
               className={`${INPUT} resize-y`}
             />
           </Field>
@@ -127,7 +131,7 @@ export function Contact() {
               className="group -skew-x-12 bg-accent px-8 py-4 text-on-accent transition-transform hover:-translate-y-0.5 disabled:opacity-60"
             >
               <span className={`inline-block skew-x-12 text-2xl ${HUD}`}>
-                {pending ? "Locking in…" : "Lock in →"}
+                {pending ? t.lockingIn : t.lockIn}
               </span>
             </button>
           </div>

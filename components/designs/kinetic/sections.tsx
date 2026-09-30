@@ -3,27 +3,25 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import { useRef } from "react";
 
+import { useContent } from "@/components/i18n/locale-provider";
+import { useSectionHref } from "@/components/i18n/nav";
 import { FinishChart } from "@/components/shared/finish-chart";
 import { Marquee } from "@/components/shared/marquee";
 import { Reveal, Stagger, StaggerItem } from "@/components/shared/reveal";
 import { RobotGlyph } from "@/components/shared/robot-glyph";
+import { ThroughLink } from "@/components/shared/through-link";
 import {
-  PITCH,
   REGIONAL_COUNT,
-  ROBOTS,
   SPONSORS,
-  TIMELINE,
-  TIMELINE_LABEL,
   UNLOCKED_ROBOTS,
-  finish,
   formatSeasons,
   robotTitle,
-  spell,
   type Robot,
   type TimelineKind,
 } from "@/lib/content";
 import { LINKS, site } from "@/lib/site";
 import { fillLastRow } from "@/lib/utils";
+import { useCopy } from "./copy";
 import { ActionBar, H2, LABEL, OUTLINE, Rail } from "./ui";
 
 /* --- Timeline ------------------------------------------------------------ */
@@ -41,19 +39,21 @@ function KindDot({ kind }: { kind: TimelineKind }) {
 
 export function Timeline() {
   const ref = useRef<HTMLElement>(null);
+  const c = useContent();
+  const t = useCopy();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.75", "end 0.75"] });
   // The spine fills as you read down it.
   const fill = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
 
   return (
     <section ref={ref} id="timeline">
-      <Rail index="01" label="Timeline" meta={`${site.team.rookieYear} → ${site.team.season}`} />
+      <Rail index="01" label={t.timeline} meta={`${site.team.rookieYear} → ${site.team.season}`} />
       <div className="px-4 py-14 sm:px-6 sm:py-20">
         <Reveal>
           <h2 className={H2}>
-            {spell(REGIONAL_COUNT)} regionals
+            {t.regionals(c.spell(REGIONAL_COUNT))}
             <br />
-            since {site.team.rookieYear}
+            {c.sinceRookie}
           </h2>
         </Reveal>
         <Reveal className="mt-14 max-w-5xl">
@@ -67,7 +67,7 @@ export function Timeline() {
         </div>
 
         <ol>
-          {TIMELINE.map((entry) => (
+          {c.timeline.map((entry) => (
             <li key={entry.years} className="border-t border-rule">
               <Reveal className="grid gap-4 py-8 pr-4 pl-10 sm:py-10 sm:pr-6 sm:pl-14 lg:grid-cols-12 lg:gap-6">
                 <span
@@ -77,7 +77,7 @@ export function Timeline() {
                 </span>
                 <span className={`flex items-center gap-2 self-start pt-1 text-ink lg:col-span-2 ${LABEL}`}>
                   <KindDot kind={entry.kind} />
-                  {TIMELINE_LABEL[entry.kind]}
+                  {c.timelineLabel[entry.kind]}
                 </span>
                 <div className="lg:col-span-7">
                   <h3 className="font-display text-2xl uppercase sm:text-3xl">{entry.title}</h3>
@@ -88,6 +88,10 @@ export function Timeline() {
           ))}
         </ol>
       </div>
+
+      <div className="border-t border-rule px-4 py-8 sm:px-6">
+        <ThroughLink page="history" />
+      </div>
     </section>
   );
 }
@@ -95,72 +99,74 @@ export function Timeline() {
 /* --- Garage -------------------------------------------------------------- */
 
 function RobotCard({ robot }: { robot: Robot }) {
+  const c = useContent();
+  const t = useCopy();
   return (
     <article className="flex h-full flex-col p-4 sm:p-6">
       <div className={`flex justify-between gap-4 text-mute ${LABEL}`}>
         <span className="text-ink">{robot.season}</span>
-        <span>As {robot.teamName}</span>
+        <span>{t.as(robot.teamName)}</span>
       </div>
       <RobotGlyph
         kind={robot.kind}
+        label={c.glyphAlt(robot)}
         draw
         className="my-8 w-full text-ink transition-colors duration-300 group-hover:text-accent"
       />
       <h3 className="font-display text-3xl uppercase">{robotTitle(robot)}</h3>
       {robot.robotName && <p className={`mt-1 text-mute ${LABEL}`}>{robot.game}</p>}
-      <p className="mt-3 text-xs leading-relaxed text-ink">{finish(robot)}</p>
+      <p className="mt-3 text-xs leading-relaxed text-ink">{c.finish(robot)}</p>
       {robot.playoffs && <p className="mt-1 text-xs leading-relaxed text-mute">{robot.playoffs}</p>}
     </article>
   );
 }
 
 function LockedCard({ robot }: { robot: Robot }) {
+  const c = useContent();
+  const t = useCopy();
   return (
     <article className="relative flex h-full flex-col overflow-hidden bg-panel p-4 sm:p-6">
       <div className={`flex justify-between text-mute ${LABEL}`}>
         <span className="text-ink">{robot.season}</span>
         <span className="flex items-center gap-2 text-accent">
           <span className="size-1.5 animate-pulse bg-accent" />
-          Locked
+          {t.locked}
         </span>
       </div>
       <div className="relative my-8 flex flex-1 items-center justify-center">
-        <RobotGlyph kind={robot.kind} filled className="w-full max-w-xl text-canvas" />
+        <RobotGlyph kind={robot.kind} filled label={c.glyphAlt(robot)} className="w-full max-w-xl text-canvas" />
         <div aria-hidden className="hatch absolute inset-0 text-rule opacity-50" />
         <span aria-hidden className="absolute font-display text-[clamp(4rem,10vw,8rem)] text-rule">
           ?
         </span>
       </div>
       <h3 className="font-display text-3xl uppercase">{robot.game}</h3>
-      <p className="mt-3 max-w-md text-xs leading-relaxed text-mute">
-        The game is revealed on {site.team.kickoffLong}. Nothing to show until then.
-      </p>
+      <p className="mt-3 max-w-md text-xs leading-relaxed text-mute">{t.lockedNote}</p>
     </article>
   );
 }
 
 export function Garage() {
+  const c = useContent();
+  const t = useCopy();
   return (
     <section id="garage">
-      <Rail index="02" label="The garage" meta={`${UNLOCKED_ROBOTS} robots`} />
+      <Rail index="02" label={t.garage} meta={t.robots(UNLOCKED_ROBOTS)} />
       <div className="px-4 py-14 sm:px-6 sm:py-20">
         <Reveal>
           <h2 className={H2}>
-            Every robot
+            {t.everyRobot}
             <br />
-            since {site.team.rookieYear}
+            {c.sinceRookie}
           </h2>
         </Reveal>
         <Reveal className="mt-6">
-          <p className="max-w-md text-xs leading-relaxed text-mute sm:text-sm">
-            The drawings show a typical robot for each year&rsquo;s game, not our machines. Results are
-            each season&rsquo;s best qualification finish.
-          </p>
+          <p className="max-w-md text-xs leading-relaxed text-mute sm:text-sm">{t.garageNote}</p>
         </Reveal>
       </div>
 
       <Stagger className="grid border-t border-rule sm:grid-cols-2 lg:grid-cols-3">
-        {ROBOTS.map((robot) => (
+        {c.robots.map((robot) => (
           <StaggerItem
             key={robot.season}
             className={`group border-b border-rule sm:border-r ${robot.locked ? fillLastRow(UNLOCKED_ROBOTS) : ""}`}
@@ -169,6 +175,10 @@ export function Garage() {
           </StaggerItem>
         ))}
       </Stagger>
+
+      <div className="px-4 py-8 sm:px-6">
+        <ThroughLink page="robot2026" />
+      </div>
     </section>
   );
 }
@@ -176,19 +186,22 @@ export function Garage() {
 /* --- Sponsors ------------------------------------------------------------ */
 
 export function Backers() {
+  const c = useContent();
+  const t = useCopy();
+  const href = useSectionHref();
   return (
     <section id="backers">
-      <Rail index="03" label="Sponsors" meta={`${SPONSORS.length} companies since ${site.team.rookieYear}`} />
+      <Rail index="03" label={t.sponsors} meta={t.companiesSince(SPONSORS.length)} />
       <div className="px-4 py-14 sm:px-6 sm:py-20">
         <Reveal>
-          <h2 className={H2}>Sponsors</h2>
+          <h2 className={H2}>{t.sponsors}</h2>
         </Reveal>
         <Reveal className="mt-6">
-          <p className="max-w-lg text-xs leading-relaxed text-mute sm:text-sm">
-            {site.team.school} has backed the team every season. These companies have too, in the
-            years listed.
-          </p>
+          <p className="max-w-lg text-xs leading-relaxed text-mute sm:text-sm">{t.sponsorsNote}</p>
         </Reveal>
+        <div className="mt-8">
+          <ThroughLink page="sponsors" />
+        </div>
       </div>
 
       <div className="space-y-4 border-t border-rule py-8">
@@ -215,7 +228,7 @@ export function Backers() {
       </div>
 
       <div className="grid border-t border-rule md:grid-cols-3">
-        {PITCH.map((item, i) => (
+        {c.pitch.map((item, i) => (
           <Reveal
             key={item.title}
             delay={i * 0.06}
@@ -229,7 +242,7 @@ export function Backers() {
       </div>
 
       <Stagger className="border-t border-rule">
-        <ActionBar href="#contact" label="Sponsor the team" />
+        <ActionBar href={href("contact")} label={t.sponsorTeam} />
       </Stagger>
     </section>
   );
@@ -239,6 +252,7 @@ export function Backers() {
 
 export function Footer() {
   const { team, contact } = site;
+  const c = useContent();
 
   return (
     <footer className="border-t border-rule">
@@ -258,7 +272,7 @@ export function Footer() {
         </span>
         <nav className="flex flex-wrap gap-5">
           <a href={`mailto:${contact.email}`} className="transition-colors hover:text-ink">
-            Email
+            {c.email}
           </a>
           {LINKS.map((link) => (
             <a key={link.label} href={link.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
@@ -267,7 +281,7 @@ export function Footer() {
           ))}
         </nav>
         <a href="#top" className="transition-colors hover:text-ink">
-          Back to top &uarr;
+          {c.backToTop} &uarr;
         </a>
       </div>
     </footer>

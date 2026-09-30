@@ -1,13 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
 
-import { BOOT_STORAGE_KEY } from "@/components/boot/boot-provider";
-import { NAV } from "@/lib/content";
+import { clearBootFlag } from "@/components/boot/boot-provider";
+import { SECTION_IDS } from "@/lib/content";
 import { DESIGN_COOKIE, DESIGN_IDS, DESIGN_META, type DesignId } from "@/lib/designs";
-
-const SECTION_IDS = ["top", ...NAV.map((item) => item.id)];
 
 /** The section whose top has crossed the upper third of the viewport. */
 function currentSection(): string | null {
@@ -25,12 +23,12 @@ function isTyping(target: EventTarget | null): boolean {
 }
 
 /**
- * Picker for comparing designs. Not part of any design — it deliberately looks
- * the same on all five. Switching keeps you on the section you were reading.
- * Keys 1–5 jump straight to a design.
+ * Picker for comparing designs; looks the same in all five. Switching keeps
+ * the current section in view. Keys 1–5 jump straight to a design.
  */
 export function DesignSwitcher({ current }: { current: DesignId }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const [target, setTarget] = useState<DesignId | null>(null);
@@ -45,10 +43,11 @@ export function DesignSwitcher({ current }: { current: DesignId }) {
       document.documentElement.dataset.design = id;
       setTarget(id);
       startTransition(() => {
-        router.replace(`/?design=${id}${section ? `#${section}` : ""}`);
+        // Same page, new design. The canonical stays the clean URL either way.
+        router.replace(`${pathname}?design=${id}${section ? `#${section}` : ""}`);
       });
     },
-    [current, router],
+    [current, pathname, router],
   );
 
   const step = useCallback(
@@ -68,11 +67,7 @@ export function DesignSwitcher({ current }: { current: DesignId }) {
   }, [go]);
 
   const replayIntro = () => {
-    try {
-      window.sessionStorage.removeItem(BOOT_STORAGE_KEY);
-    } catch {
-      /* no-op */
-    }
+    clearBootFlag();
     window.scrollTo(0, 0);
     window.location.reload();
   };

@@ -4,20 +4,32 @@
  *   https://frc-events.firstinspires.org/team/6874
  *   https://www.thebluealliance.com/team/6874
  */
+
+// TODO: set NEXT_PUBLIC_SITE_URL in Vercel to the production domain
+// (e.g. https://yourdomain.com). Canonicals, hreflang, the sitemap and the
+// structured data are all built from it.
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://6874.vercel.app").replace(/\/+$/, "");
+
 export const site = {
   team: {
     number: 6874,
     name: "MEDITERRA",
+    /** Display form for titles, schema and prose. */
+    displayName: "FRC 6874 Mediterra",
+    // 2023 was registered as Imperium (at the Haliç Regional), per FIRST.
+    // TODO: confirm with the team whether "Haliç" was ever a team name.
     formerNames: ["Imperium", "Lycia"],
     school: "Özel Antalya Bahçeşehir Anadolu Lisesi",
     city: "Döşemealtı, Antalya",
+    locality: "Döşemealtı",
+    region: "Antalya",
+    country: "Türkiye",
+    countryCode: "TR",
     program: "FIRST Robotics Competition",
     rookieYear: 2018,
     lastCompeted: 2026,
     season: 2027,
     game: "BIOCORE",
-    kickoff: "9 JAN 2027",
-    kickoffLong: "9 January 2027",
     // 12:00 ET, per firstinspires.org/programs/frc/game-and-season.
     kickoffISO: "2027-01-09T17:00:00Z",
   },
@@ -26,12 +38,16 @@ export const site = {
     email: "team6874@example.com", // TODO — the team's real address
     instagram: "https://www.instagram.com/team_6874/",
     x: "https://x.com/team6874",
+    xHandle: "@team6874",
     tba: "https://www.thebluealliance.com/team/6874",
     frcEvents: "https://frc-events.firstinspires.org/team/6874",
   },
 
-  url: "https://6874.vercel.app", // TODO — production domain
+  url: SITE_URL,
 } as const;
+
+/** False while the email above is still the placeholder; keeps it out of structured data. */
+export const HAS_REAL_EMAIL = !site.contact.email.endsWith("@example.com");
 
 /** Outbound links every footer shows. */
 export const LINKS = [
@@ -45,11 +61,3 @@ export const LINKS = [
  * actually exist. While it's false the <video> is never rendered at all.
  */
 export const HAS_HERO_MEDIA = false;
-
-/** Hero spec grid. Values have to fit Hazard's cells, so keep them short. */
-export const SPECS = [
-  { label: "Rookie year", value: String(site.team.rookieYear) },
-  { label: "Başkent 2026", value: "7th of 33" },
-  { label: "2026 robot", value: "MT07" },
-  { label: "Crew", value: "Recruiting", accent: true },
-] as const;

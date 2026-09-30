@@ -6,11 +6,13 @@ import { useBootCounter } from "@/components/boot/use-boot-counter";
 import { Marquee } from "@/components/shared/marquee";
 import { BOOT_SPIN_VELOCITY } from "@/lib/boot";
 import { site } from "@/lib/site";
+import { useCopy } from "./copy";
 import { LABEL } from "./ui";
 
-/** The hero's own type, spun up. The hero inherits the momentum and settles it. */
+/** Kinetic intro: the team number spins; the hero's marquees pick up that speed and slow down. */
 export function KineticBoot() {
   const { readout, progress } = useBootCounter();
+  const t = useCopy();
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
@@ -34,7 +36,7 @@ export function KineticBoot() {
           <motion.div style={{ scaleX: progress }} className="h-px w-full origin-left bg-accent" />
         </div>
         <div className={`flex items-baseline justify-between text-mute ${LABEL}`}>
-          <span>Spinning up</span>
+          <span>{t.spinningUp}</span>
           <span className="flex items-baseline gap-1 text-ink">
             <motion.span className="font-display text-base tracking-normal">{readout}</motion.span>
             <span className="text-mute">%</span>

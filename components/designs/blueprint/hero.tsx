@@ -3,19 +3,16 @@
 import { motion } from "framer-motion";
 
 import { useBoot } from "@/components/boot/boot-provider";
+import { LangSwitch } from "@/components/i18n/lang-switch";
+import { useContent } from "@/components/i18n/locale-provider";
+import { useSectionHref } from "@/components/i18n/nav";
 import { RobotGlyph } from "@/components/shared/robot-glyph";
 import { EASE_OUT, fadeIn, riseIn, stagger } from "@/lib/motion";
 import { site } from "@/lib/site";
+import { useCopy } from "./copy";
 import { CURRENT_REV, MONO, PAD } from "./ui";
 
-const NAV = [
-  { id: "timeline", label: "Revisions" },
-  { id: "garage", label: "Details" },
-  { id: "backers", label: "Suppliers" },
-  { id: "contact", label: "RFI" },
-];
-
-const CALLOUTS = ["Shooter / flywheel", "Hopper", "Bumper, team number", "Drive module ×4"];
+const NAV_IDS = ["timeline", "garage", "backers", "contact"] as const;
 
 /** Balloon position, then the point on the robot its leader lands on. */
 const BALLOONS: [number, number, number, number][] = [
@@ -50,6 +47,7 @@ function Redline({ play }: { play: boolean }) {
 
 /** General arrangement drawing: the robot plus numbered balloons and a dimension. */
 function Drawing({ play }: { play: boolean }) {
+  const t = useCopy();
   const draw = (delay: number) => ({
     initial: { pathLength: 0, opacity: 0 },
     animate: play ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 },
@@ -59,9 +57,9 @@ function Drawing({ play }: { play: boolean }) {
   return (
     <figure>
       <div className="relative border border-ink/40 p-4 sm:p-8">
-        <span className={`absolute top-2 left-3 text-mute ${MONO}`}>View A &middot; typical shooter robot, illustration</span>
+        <span className={`absolute top-2 left-3 text-mute ${MONO}`}>{t.viewA}</span>
         <div className="relative mt-4">
-          <RobotGlyph kind="shooter" play={play} strokeWidth={1.25} className="w-full text-ink" />
+          <RobotGlyph kind="shooter" play={play} strokeWidth={1.25} label={t.drawingAlt} className="w-full text-ink" />
           {/* Stroke width is in viewBox units: vector-effect would break pathLength. */}
           <svg viewBox="0 0 240 180" className="absolute inset-0 h-full w-full text-accent" fill="none" stroke="currentColor" strokeWidth="0.55" aria-hidden>
             {BALLOONS.map(([bx, by, tx, ty], i) => (
@@ -103,7 +101,7 @@ function Drawing({ play }: { play: boolean }) {
         </div>
       </div>
       <figcaption className={`mt-3 grid gap-1 text-mute sm:grid-cols-2 ${MONO}`}>
-        {CALLOUTS.map((label, i) => (
+        {t.callouts.map((label, i) => (
           <span key={label}>
             <span className="text-accent">{i + 1}</span> &mdash; {label}
           </span>
@@ -115,6 +113,8 @@ function Drawing({ play }: { play: boolean }) {
 
 function TitleBlock() {
   const { team } = site;
+  const c = useContent();
+  const { tb, sheetOf } = useCopy();
   const cell = "border-r border-b border-ink/50 px-3 py-2";
   const label = "block text-[9px] text-mute";
   const value = "mt-0.5 block text-[11px] text-ink";
@@ -122,59 +122,59 @@ function TitleBlock() {
   return (
     <div className="grid grid-cols-2 border-t border-l border-ink/50 font-mono tracking-[0.12em] uppercase">
       <div className={`${cell} col-span-2`}>
-        <span className={label}>Title</span>
-        <span className="mt-0.5 block text-xs text-ink">
-          Team {team.number} &middot; {team.season} build ({team.game})
-        </span>
+        <span className={label}>{tb.title}</span>
+        <span className="mt-0.5 block text-xs text-ink">{tb.titleValue}</span>
       </div>
       <div className={`${cell} col-span-2`}>
-        <span className={label}>School</span>
+        <span className={label}>{tb.school}</span>
         <span className={value}>{team.school}</span>
       </div>
       <div className={cell}>
-        <span className={label}>Drawn by</span>
+        <span className={label}>{tb.drawnBy}</span>
         <span className={value}>{team.name}</span>
       </div>
       <div className={cell}>
-        <span className={label}>Rookie year</span>
+        <span className={label}>{tb.rookieYear}</span>
         <span className={value}>{team.rookieYear}</span>
       </div>
       <div className={cell}>
-        <span className={label}>Last robot</span>
+        <span className={label}>{tb.lastRobot}</span>
         <span className={value}>MT07, {team.lastCompeted}</span>
       </div>
       <div className={cell}>
-        <span className={label}>Last finish</span>
-        <span className={value}>7th of 33, captain</span>
+        <span className={label}>{tb.lastFinish}</span>
+        <span className={value}>{tb.lastFinishValue}</span>
       </div>
       <div className={cell}>
-        <span className={label}>Kickoff</span>
-        <span className={value}>{team.kickoff}</span>
+        <span className={label}>{tb.kickoff}</span>
+        <span className={value}>{c.kickoff}</span>
       </div>
       <div className={cell}>
-        <span className={label}>Rev</span>
+        <span className={label}>{tb.rev}</span>
         <span className={value}>{CURRENT_REV}</span>
       </div>
       <div className={`${cell} col-span-2 flex items-center justify-between`}>
         <span>
-          <span className={label}>Crew</span>
-          <span className={`${value} text-accent`}>Recruiting</span>
+          <span className={label}>{tb.crew}</span>
+          <span className={`${value} text-accent`}>{tb.recruiting}</span>
         </span>
-        <span className={label}>Sheet 01 / 05</span>
+        <span className={label}>{sheetOf("01")}</span>
       </div>
     </div>
   );
 }
 
 export function Hero() {
-  const { booted } = useBoot();
+  const { booted, instant } = useBoot();
   const { team } = site;
+  const t = useCopy();
+  const href = useSectionHref();
 
   return (
     <motion.section
       id="top"
       variants={stagger(0.07, 0.1)}
-      initial="hidden"
+      initial={instant ? false : "hidden"}
       animate={booted ? "show" : "hidden"}
       className={`relative flex min-h-[100svh] flex-col pt-8 pb-12 sm:pt-12 ${PAD}`}
     >
@@ -184,23 +184,26 @@ export function Hero() {
         className={`flex flex-wrap items-center justify-between gap-3 border-b border-ink/40 pb-3 text-mute ${MONO}`}
       >
         <span className="text-ink">
-          DWG no. FRC-{team.number}-{team.season}
+          {t.dwgNo} FRC-{team.number}-{team.season}
         </span>
         <nav className="hidden gap-6 md:flex">
-          {NAV.map((item) => (
-            <a key={item.id} href={`#${item.id}`} className="transition-colors hover:text-ink">
-              {item.label}
+          {NAV_IDS.map((id) => (
+            <a key={id} href={href(id)} className="transition-colors hover:text-ink">
+              {t.nav[id]}
             </a>
           ))}
         </nav>
-        <span>Sheet 01 / 05</span>
+        <span className="flex items-center gap-4">
+          <span className="hidden sm:inline">{t.sheetOf("01")}</span>
+          <LangSwitch className="text-ink" />
+        </span>
       </motion.div>
 
       <div className="grid flex-1 items-center gap-12 py-10 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <motion.p variants={riseIn} data-reveal className={`flex items-center gap-3 text-mute ${MONO}`}>
             <span className="flex size-6 items-center justify-center rounded-full border border-ink text-ink">A</span>
-            Section A&ndash;A &middot; General arrangement
+            {t.sectionAA}
           </motion.p>
 
           <motion.h1
@@ -208,10 +211,11 @@ export function Hero() {
             data-reveal
             className="mt-6 font-display text-[clamp(3.5rem,9vw,8rem)] leading-[0.88] font-semibold tracking-[-0.02em] uppercase"
           >
-            We are
+            <span className="sr-only">FRC {team.number} Mediterra: </span>
+            {t.weAreBack[0]}
             <br />
             <span className="relative inline-block">
-              Back
+              {t.weAreBack[1]}
               <Redline play={booted} />
             </span>
           </motion.h1>
@@ -221,20 +225,19 @@ export function Hero() {
             data-reveal
             className="mt-6 inline-block -rotate-2 font-mono text-xs tracking-[0.14em] text-accent uppercase"
           >
-            &larr; Rev {CURRENT_REV}: {team.season} build season
+            &larr; {t.revNote(CURRENT_REV)}
           </motion.p>
 
           <motion.p variants={riseIn} data-reveal className="mt-6 max-w-sm font-mono text-xs leading-relaxed text-mute">
-            {team.school}, {team.city}. Competing since {team.rookieYear}. In {team.lastCompeted} MT07
-            finished 7th of 33 at the Başkent Regional and captained Alliance 5.
+            {t.summary}
           </motion.p>
 
           <motion.div variants={riseIn} data-reveal className="mt-8 flex flex-wrap gap-3 font-mono text-[11px] tracking-[0.16em] uppercase">
-            <a href="#contact" className="border border-ink px-4 py-3 transition-colors hover:bg-ink hover:text-canvas">
-              Submit RFI &rarr;
+            <a href={href("contact")} className="border border-ink px-4 py-3 transition-colors hover:bg-ink hover:text-canvas">
+              {t.submitRfi} &rarr;
             </a>
-            <a href="#backers" className="border border-ink/40 px-4 py-3 text-mute transition-colors hover:border-ink hover:text-ink">
-              Supplier list
+            <a href={href("backers")} className="border border-ink/40 px-4 py-3 text-mute transition-colors hover:border-ink hover:text-ink">
+              {t.supplierList}
             </a>
           </motion.div>
         </div>

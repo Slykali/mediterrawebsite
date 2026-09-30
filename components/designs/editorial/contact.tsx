@@ -5,17 +5,9 @@ import { useActionState, type InputHTMLAttributes } from "react";
 import { submitContact } from "@/app/actions";
 import { FormGuards } from "@/components/shared/form-guards";
 import { Reveal } from "@/components/shared/reveal";
-import { INTERESTS, initialContactState, type Interest } from "@/lib/contact";
-import { site } from "@/lib/site";
+import { INTEREST_VALUES, initialContactState } from "@/lib/contact";
+import { useCopy } from "./copy";
 import { H2, KICKER } from "./ui";
-
-/** Each option has to finish the sentence "I'd like to …". */
-const PHRASE: Record<Interest, string> = {
-  crew: "join the team",
-  sponsor: "sponsor the team",
-  mentor: "mentor the team",
-  other: "talk about something else",
-};
 
 const LINE_HEIGHT = "2.3em";
 
@@ -37,18 +29,19 @@ export function Contact() {
   const values = state.values ?? {};
   const errors = state.errors ?? {};
   const problems = Object.values(errors).filter(Boolean);
+  // Each option finishes the sentence "I'd like to …" / "… istiyorum."
+  const t = useCopy();
 
   return (
     <section id="contact" className="border-t border-ink bg-panel/40">
       <div className="mx-auto max-w-4xl px-5 py-16 sm:px-8 lg:py-24">
         <Reveal className="text-center">
-          <p className={`text-accent ${KICKER}`}>Letters</p>
+          <p className={`text-accent ${KICKER}`}>{t.letters}</p>
           <h2 className={`mt-3 ${H2}`}>
-            Write to <em>us</em>
+            {t.writeTo[0]}
+            <em>{t.writeTo[1]}</em>
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-lg text-mute italic">
-            Fill in the blanks. Someone on the team reads every letter.
-          </p>
+          <p className="mx-auto mt-4 max-w-md text-lg text-mute italic">{t.lettersNote}</p>
         </Reveal>
 
         <Reveal delay={0.08}>
@@ -60,44 +53,44 @@ export function Contact() {
           >
             <FormGuards design="editorial" />
 
-            <p>Dear {site.team.number},</p>
+            <p>{t.dear}</p>
             <p className="mt-2">
-              My name is
+              {t.myNameIs}
               <Blank
                 name="name"
                 autoComplete="name"
-                placeholder="your name"
-                aria-label="Your name"
+                placeholder={t.namePlaceholder}
+                aria-label={t.nameLabel}
                 defaultValue={values.name}
                 error={errors.name}
                 className="w-[11ch]"
               />
-              , and you can write back to me at
+              {t.writeBackAt}
               <Blank
                 name="email"
                 type="email"
                 autoComplete="email"
-                placeholder="you@example.com"
-                aria-label="Your email"
+                placeholder={t.emailPlaceholder}
+                aria-label={t.emailLabel}
                 defaultValue={values.email}
                 error={errors.email}
                 className="w-[15ch]"
               />
-              .
+              {t.afterEmail}
             </p>
             <p>
-              I&rsquo;d like to{" "}
+              {t.likeBefore}
               <span className="relative inline-block">
                 <select
                   name="interest"
-                  aria-label="What you'd like to do"
+                  aria-label={t.interestLabel}
                   defaultValue={values.interest ?? "crew"}
                   // field-sizing hugs the chosen option where supported; elsewhere it's the widest one.
                   className="appearance-none border-b border-ink bg-transparent pr-6 pl-1 text-accent italic outline-none [field-sizing:content] focus:border-accent"
                 >
-                  {INTERESTS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {PHRASE[option.value]}
+                  {INTEREST_VALUES.map((value) => (
+                    <option key={value} value={value}>
+                      {t.phrase[value]}
                     </option>
                   ))}
                 </select>
@@ -105,16 +98,16 @@ export function Contact() {
                   &#9662;
                 </span>
               </span>
-              .
+              {t.likeAfter}
             </p>
 
             <textarea
               name="message"
               rows={4}
-              aria-label="Your message"
+              aria-label={t.messageLabel}
               aria-invalid={errors.message ? true : undefined}
               defaultValue={values.message}
-              placeholder={"The rest of the letter…"}
+              placeholder={t.messagePlaceholder}
               className="mt-4 block w-full resize-y bg-transparent italic outline-none placeholder:text-mute/70"
               style={{
                 lineHeight: LINE_HEIGHT,
@@ -133,13 +126,13 @@ export function Contact() {
             )}
 
             <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-rule pt-6 leading-normal">
-              <span className="text-lg text-mute italic">&mdash; Signed, and sent from the website</span>
+              <span className="text-lg text-mute italic">{t.signed}</span>
               <button
                 type="submit"
                 disabled={pending}
                 className="border border-ink px-5 py-3 font-mono text-xs tracking-[0.2em] uppercase transition-colors hover:bg-ink hover:text-canvas disabled:opacity-60"
               >
-                {pending ? "Posting…" : "Send the letter →"}
+                {pending ? t.posting : t.send}
               </button>
             </div>
           </form>

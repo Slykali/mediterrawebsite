@@ -10,6 +10,8 @@ import {
   type ReactNode,
 } from "react";
 
+import { BOOT_COOKIE } from "@/lib/boot";
+
 /**
  * idle    — first paint, before the client has decided anything. The overlay is
  *           already on screen (server-rendered), so there's no flash of hero.
@@ -25,10 +27,21 @@ export type BootPhase = "idle" | "running" | "done" | "skipped";
 
 export const BOOT_STORAGE_KEY = "frc6874:booted";
 
+
 type BootContextValue = {
   phase: BootPhase;
   /** The page is live: boot finished, or was never played. */
   booted: boolean;
+  /**
+   * The server already knew the intro wouldn't play, so the hero should render
+   * in its final state (initial={false}) instead of animating in.
+   */
+  instant: boolean;
+  /**
+   * A crawler. Scroll reveals render in their final state too, so every word
+   * is visible in the server HTML without running any script.
+   */
+  crawler: boolean;
   /** End the sequence now. Safe to call more than once. */
   finish: () => void;
 };
@@ -41,7 +54,7 @@ export function useBoot(): BootContextValue {
   return ctx;
 }
 
-/** sessionStorage throws in some privacy modes. It's a nicety, not a feature. */
+/** sessionStorage throws in some privacy modes, so failures are ignored. */
 function readSessionFlag(): boolean {
   try {
     return window.sessionStorage.getItem(BOOT_STORAGE_KEY) === "1";
@@ -56,11 +69,32 @@ function writeSessionFlag(): void {
   } catch {
     /* no-op */
   }
+  document.cookie = `${BOOT_COOKIE}=1; path=/; samesite=lax`;
 }
 
-export function BootProvider({ children }: { children: ReactNode }) {
-  // Starts "idle" so server HTML and first client render match.
-  const [phase, setPhase] = useState<BootPhase>("idle");
+/** Forget the intro was seen, so the next load plays it again. */
+export function clearBootFlag(): void {
+  try {
+    window.sessionStorage.removeItem(BOOT_STORAGE_KEY);
+  } catch {
+    /* no-op */
+  }
+  document.cookie = `${BOOT_COOKIE}=; path=/; max-age=0; samesite=lax`;
+}
+
+export function BootProvider({
+  children,
+  skip = false,
+  crawler = false,
+}: {
+  children: ReactNode;
+  /** Decided on the server: crawler, or the boot cookie is set. */
+  skip?: boolean;
+  crawler?: boolean;
+}) {
+  // Starts "idle" (or "skipped" when the server already knows) so server HTML
+  // and first client render match.
+  const [phase, setPhase] = useState<BootPhase>(skip ? "skipped" : "idle");
 
   useEffect(() => {
     const seen = readSessionFlag();
@@ -76,8 +110,8 @@ export function BootProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<BootContextValue>(
-    () => ({ phase, booted: phase === "done" || phase === "skipped", finish }),
-    [phase, finish],
+    () => ({ phase, booted: phase === "done" || phase === "skipped", instant: skip, crawler, finish }),
+    [phase, skip, crawler, finish],
   );
 
   return <BootContext.Provider value={value}>{children}</BootContext.Provider>;

@@ -5,8 +5,8 @@ import { useEffect, useRef } from "react";
 import { HAS_HERO_MEDIA } from "@/lib/site";
 
 /**
- * The workshop loop, knocked well back behind the type. Renders grain only
- * until HAS_HERO_MEDIA is flipped, so a missing file never becomes a request.
+ * Background video behind the hero, at low opacity. Renders only the grain
+ * texture until HAS_HERO_MEDIA is true, so a missing file is never requested.
  */
 export function MediaBackdrop({ opacity = "opacity-25" }: { opacity?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -19,7 +19,7 @@ export function MediaBackdrop({ opacity = "opacity-25" }: { opacity?: string }) 
     // Started here rather than with the autoPlay attribute: reduced motion
     // keeps the poster and the loop is never fetched.
     void video.play().catch(() => {
-      /* Autoplay blocked. Poster stays up, nothing breaks. */
+      /* Autoplay blocked: the poster stays up. */
     });
   }, []);
 

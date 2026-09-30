@@ -1,5 +1,6 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import {
   Anton,
   Archivo,
@@ -11,7 +12,13 @@ import {
 } from "next/font/google";
 
 import { BootProvider } from "@/components/boot/boot-provider";
+import { LocaleProvider } from "@/components/i18n/locale-provider";
+import { JsonLd } from "@/components/shared/json-ld";
+import { BOOT_COOKIE } from "@/lib/boot";
 import { DESIGN_COOKIE, resolveDesign } from "@/lib/designs";
+import { DEFAULT_LOCALE, LOCALE_HEADER, OG_LOCALE, isLocale } from "@/lib/i18n";
+import { PAGES } from "@/lib/pages";
+import { TITLE_TEMPLATE, sportsTeamJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -79,24 +86,37 @@ const fontVariables = [plexMono, anton, instrument, newsreader, plexCondensed, a
   .map((font) => font.variable)
   .join(" ");
 
-const description = `FRC Team ${site.team.number} Mediterra, the robotics team of ${site.team.school} in ${site.team.city}. Competing since ${site.team.rookieYear}, building for ${site.team.game} in ${site.team.season}.`;
+const home = PAGES.en.home;
 
+/**
+ * Site-wide defaults. Every page overrides title, description, canonical,
+ * hreflang and the social tags through pageMetadata() in lib/seo.ts; these
+ * cover anything that doesn't (the 404).
+ */
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: {
-    default: `FRC ${site.team.number} · ${site.team.name}`,
-    template: `%s · FRC ${site.team.number}`,
-  },
-  description,
+  title: { default: home.title, template: TITLE_TEMPLATE },
+  description: home.description,
+  applicationName: site.team.displayName,
   openGraph: {
-    title: `FRC ${site.team.number} · ${site.team.name}`,
-    description,
-    url: site.url,
-    siteName: `FRC ${site.team.number}`,
     type: "website",
+    siteName: site.team.displayName,
+    locale: OG_LOCALE.en,
+    title: home.title,
+    description: home.description,
   },
-  twitter: { card: "summary_large_image" },
+  twitter: {
+    card: "summary_large_image",
+    site: site.contact.xHandle,
+    creator: site.contact.xHandle,
+  },
+  // TODO: add Google Search Console / Bing Webmaster verification codes here
+  // once the domain is live: verification: { google: "…", other: { "msvalidate.01": "…" } }
 };
+
+/** Search engines, AI crawlers and link previewers: no intro, no hidden reveals in the HTML. */
+const CRAWLER =
+  /bot|crawl|spider|slurp|mediapartners|facebookexternalhit|embedly|google-extended|chatgpt-user|perplexity-user|claude-user|bingpreview/i;
 
 export const viewport: Viewport = {
   themeColor: "#0c0c0b",
@@ -108,18 +128,36 @@ export default async function RootLayout({
   // The page picks the design authoritatively (it can also see ?design=). This
   // only gets <html> right on first paint — page background, scrollbars and
   // form controls follow color-scheme, which lives on the design block.
-  const design = resolveDesign((await cookies()).get(DESIGN_COOKIE)?.value);
+  const cookieStore = await cookies();
+  const headerStore = await headers();
+  const design = resolveDesign(cookieStore.get(DESIGN_COOKIE)?.value);
+
+  // Set by middleware.ts from the path: /tr/… is Turkish, everything else English.
+  const requested = headerStore.get(LOCALE_HEADER);
+  const locale = isLocale(requested) ? requested : DEFAULT_LOCALE;
+
+  const crawler = CRAWLER.test(headerStore.get("user-agent") ?? "");
+  // Seen the intro this session (or a crawler): leave it out of the HTML.
+  const skipBoot = crawler || cookieStore.get(BOOT_COOKIE)?.value === "1";
 
   return (
-    <html lang="en" data-design={design} className={fontVariables}>
+    // Browser extensions (theme/dark-mode ones especially) add attributes to
+    // <html> before React loads. This only silences mismatches on this element.
+    <html lang={locale} data-design={design} className={fontVariables} suppressHydrationWarning>
       <body className="antialiased">
+        <JsonLd data={sportsTeamJsonLd(locale)} />
         {/* Without JS the boot overlay would sit there forever and every reveal
             would stay at its initial transform. Neither is acceptable. */}
         <noscript>
           <style>{`[data-boot-overlay]{display:none!important}[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
 
-        <BootProvider>{children}</BootProvider>
+        <LocaleProvider locale={locale}>
+          <BootProvider skip={skipBoot} crawler={crawler}>
+            {children}
+          </BootProvider>
+        </LocaleProvider>
+        <Analytics />
       </body>
     </html>
   );

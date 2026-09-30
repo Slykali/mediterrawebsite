@@ -9,12 +9,12 @@ import { useBoot } from "./boot-provider";
 export type BootExit = "collapse" | "lift" | "wipe" | "fade";
 
 const EXITS = {
-  // Shrinks to a horizontal line and goes, like a tape cut.
+  // Collapses to a horizontal line.
   collapse: {
     from: { clipPath: "inset(0% 0% 0% 0%)" },
     to: { clipPath: "inset(50% 0% 50% 0%)", transition: { duration: 0.5, ease: EASE_IN_OUT } },
   },
-  // Slides up like a sheet of paper.
+  // Slides up.
   lift: {
     from: { y: "0%" },
     to: { y: "-100%", transition: { duration: 0.75, ease: EASE_IN_OUT } },
@@ -43,7 +43,7 @@ export function BootOverlay({ children, exit = "collapse" }: { children: ReactNo
     const root = document.documentElement;
     root.style.overflow = "hidden";
 
-    // Any input skips. Nobody should be held hostage by an intro.
+    // Any key or pointer input skips the intro.
     const skip = () => finish();
     window.addEventListener("keydown", skip);
     window.addEventListener("pointerdown", skip);
@@ -55,8 +55,7 @@ export function BootOverlay({ children, exit = "collapse" }: { children: ReactNo
     };
   }, [active, finish]);
 
-  // Never played — tear the whole tree down so there's no curtain call for
-  // someone who never saw the curtain.
+  // Never played: render nothing, so there's no exit animation either.
   if (phase === "skipped") return null;
 
   const { from, to } = EXITS[exit];

@@ -130,6 +130,40 @@
   }
 }
 
+/* --- Shared display type ---------------------------------------------------
+   Page titles and the FAQ sit outside the five designs' own components, so
+   they take each design's headline treatment from here. */
+
+@utility display-face {
+  font-family: var(--display);
+}
+
+/* display-face in capitals (Editorial overrides this below). */
+@utility display-title {
+  font-family: var(--display);
+  text-transform: uppercase;
+}
+
+[data-design="editorial"] :is(.display-title, .display-face) {
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+[data-design="blueprint"] :is(.display-title, .display-face) {
+  font-weight: 600;
+}
+
+[data-design="hazard"] :is(.display-title, .display-face) {
+  font-weight: 900;
+  font-stretch: 125%;
+  letter-spacing: -0.03em;
+}
+
+[data-design="matchday"] :is(.display-title, .display-face) {
+  font-weight: 800;
+  font-style: italic;
+}
+
 /* --- Textures ------------------------------------------------------------- */
 
 @utility grain {

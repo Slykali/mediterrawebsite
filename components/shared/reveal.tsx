@@ -3,6 +3,8 @@
 import { motion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
+import { useBoot } from "@/components/boot/boot-provider";
+
 import { SPRING, VIEWPORT, riseIn, stagger } from "@/lib/motion";
 
 type RevealProps = {
@@ -14,6 +16,8 @@ type RevealProps = {
 
 /** Rises into place the first time it scrolls into view. */
 export function Reveal({ children, className, delay = 0, y = 16 }: RevealProps) {
+  // Crawlers get the final state in the server HTML, not opacity: 0.
+  const { crawler } = useBoot();
   const variants: Variants = {
     hidden: { opacity: 0, y },
     show: { opacity: 1, y: 0, transition: { ...SPRING, delay } },
@@ -22,7 +26,7 @@ export function Reveal({ children, className, delay = 0, y = 16 }: RevealProps) 
   return (
     <motion.div
       data-reveal
-      initial="hidden"
+      initial={crawler ? false : "hidden"}
       whileInView="show"
       viewport={VIEWPORT}
       variants={variants}
@@ -43,9 +47,10 @@ export function Stagger({
   className?: string;
   gap?: number;
 }) {
+  const { crawler } = useBoot();
   return (
     <motion.div
-      initial="hidden"
+      initial={crawler ? false : "hidden"}
       whileInView="show"
       viewport={VIEWPORT}
       variants={stagger(gap)}

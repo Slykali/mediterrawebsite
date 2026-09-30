@@ -3,56 +3,58 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
+import { useContent } from "@/components/i18n/locale-provider";
+import { useSectionHref } from "@/components/i18n/nav";
 import { FinishChart } from "@/components/shared/finish-chart";
 import { Marquee } from "@/components/shared/marquee";
 import { Reveal } from "@/components/shared/reveal";
 import { RobotGlyph } from "@/components/shared/robot-glyph";
+import { ThroughLink } from "@/components/shared/through-link";
 import { pad2, useCountdown } from "@/components/shared/use-countdown";
 import {
-  PITCH,
   REGIONAL_COUNT,
-  ROBOTS,
   SPONSORS,
-  TIMELINE,
-  finish,
   formatSeasons,
   robotTitle,
-  spell,
   type Robot,
   type TimelineKind,
 } from "@/lib/content";
 import { LINKS, site } from "@/lib/site";
+import { useCopy } from "./copy";
 import { HUD, MONO, SectionTitle, SkewButton } from "./ui";
 
 /* --- Match log ------------------------------------------------------------ */
 
-const RESULT: Record<TimelineKind, { label: string; tag: string; stripe: string }> = {
-  legacy: { label: "Played", tag: "bg-accent-2 text-on-accent", stripe: "bg-accent-2" },
-  latest: { label: "Last season", tag: "bg-accent text-on-accent", stripe: "bg-accent" },
-  next: { label: "Up next", tag: "border border-accent text-accent", stripe: "bg-accent" },
+/** Result tag colours. Labels are in copy.ts. */
+const RESULT: Record<TimelineKind, { tag: string; stripe: string }> = {
+  legacy: { tag: "bg-accent-2 text-on-accent", stripe: "bg-accent-2" },
+  latest: { tag: "bg-accent text-on-accent", stripe: "bg-accent" },
+  next: { tag: "border border-accent text-accent", stripe: "bg-accent" },
 };
 
 export function Timeline() {
+  const c = useContent();
+  const t = useCopy();
   return (
     <section id="timeline" className="border-t border-rule px-4 py-20 sm:px-6">
-      <SectionTitle kicker="Match log">
-        {spell(REGIONAL_COUNT)} regionals
+      <SectionTitle kicker={t.matchLog}>
+        {t.regionals(c.spell(REGIONAL_COUNT))}
         <br />
-        <span className="text-mute">since {site.team.rookieYear}</span>
+        <span className="text-mute">{c.sinceRookie}</span>
       </SectionTitle>
 
       <Reveal className="mt-10 border border-rule bg-panel/40 p-4 sm:p-6">
-        <p className={`text-mute ${MONO}`}>Best qualification finish per season</p>
+        <p className={`text-mute ${MONO}`}>{t.bestFinish}</p>
         <FinishChart className="mt-4 text-ink" highlightClassName="text-accent" />
       </Reveal>
 
       <div className="mt-4 border border-rule bg-panel/40">
         <div className={`hidden grid-cols-[9rem_11rem_1fr] gap-6 border-b border-rule px-5 py-2 text-mute md:grid ${MONO}`}>
-          <span>Season</span>
-          <span>Result</span>
-          <span>Summary</span>
+          <span>{t.cols[0]}</span>
+          <span>{t.cols[1]}</span>
+          <span>{t.cols[2]}</span>
         </div>
-        {TIMELINE.map((entry) => {
+        {c.timeline.map((entry) => {
           const result = RESULT[entry.kind];
           return (
             <Reveal
@@ -64,7 +66,7 @@ export function Timeline() {
               <span>
                 <span className={`inline-flex items-center gap-2 px-2 py-1 ${MONO} ${result.tag}`}>
                   {entry.kind === "next" && <span className="size-1.5 animate-pulse bg-accent" />}
-                  {result.label}
+                  {t.result[entry.kind]}
                 </span>
               </span>
               <div>
@@ -75,6 +77,10 @@ export function Timeline() {
           );
         })}
       </div>
+
+      <div className="mt-8">
+        <ThroughLink page="history" />
+      </div>
     </section>
   );
 }
@@ -83,10 +89,11 @@ export function Timeline() {
 
 function LockedDetail({ robot }: { robot: Robot }) {
   const time = useCountdown(site.team.kickoffISO);
+  const t = useCopy();
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-10 text-center">
       <span className={`${HUD} text-[clamp(6rem,14vw,10rem)] leading-none text-rule`}>?</span>
-      <p className={`${HUD} text-3xl`}>{robot.game} unlocks at kickoff</p>
+      <p className={`${HUD} text-3xl`}>{t.unlocks(robot.game)}</p>
       <p className={`text-mute ${MONO}`}>
         {time ? `${time.days}d ${pad2(time.hours)}h ${pad2(time.minutes)}m ${pad2(time.seconds)}s` : "--"}
       </p>
@@ -95,24 +102,32 @@ function LockedDetail({ robot }: { robot: Robot }) {
 }
 
 function RobotDetail({ robot }: { robot: Robot }) {
+  const c = useContent();
+  const t = useCopy();
   const rows: [string, string][] = [
-    ["Season", String(robot.season)],
-    ["Game", robot.game],
-    ["Team name", robot.teamName],
+    [t.rows[0], String(robot.season)],
+    [t.rows[1], robot.game],
+    [t.rows[2], robot.teamName],
   ];
 
   return (
     <div>
       <div className={`flex justify-between text-mute ${MONO}`}>
-        <span>Unit select</span>
+        <span>{t.unitSelect}</span>
         <span>{robot.season}</span>
       </div>
       {robot.locked ? (
         <LockedDetail robot={robot} />
       ) : (
         <>
-          <RobotGlyph kind={robot.kind} play strokeWidth={1.4} className="mx-auto my-6 w-full max-w-lg text-ink" />
-          <p className={`text-mute ${MONO}`}>Illustration of a typical robot for this game</p>
+          <RobotGlyph
+            kind={robot.kind}
+            play
+            strokeWidth={1.4}
+            label={c.glyphAlt(robot)}
+            className="mx-auto my-6 w-full max-w-lg text-ink"
+          />
+          <p className={`text-mute ${MONO}`}>{t.illustration}</p>
           <h3 className={`${HUD} mt-2 text-5xl leading-none`}>{robotTitle(robot)}</h3>
           <dl className="mt-5 grid grid-cols-3 border-y border-rule">
             {rows.map(([label, value]) => (
@@ -122,7 +137,7 @@ function RobotDetail({ robot }: { robot: Robot }) {
               </div>
             ))}
           </dl>
-          <p className="mt-4 text-lg leading-snug">{finish(robot)}</p>
+          <p className="mt-4 text-lg leading-snug">{c.finish(robot)}</p>
           {robot.playoffs && <p className="text-lg leading-snug text-mute">{robot.playoffs}</p>}
         </>
       )}
@@ -131,16 +146,18 @@ function RobotDetail({ robot }: { robot: Robot }) {
 }
 
 export function Garage() {
-  const [selected, setSelected] = useState(() => Math.max(0, ROBOTS.findLastIndex((robot) => !robot.locked)));
-  const robot = ROBOTS[selected];
+  const c = useContent();
+  const t = useCopy();
+  const [selected, setSelected] = useState(() => Math.max(0, c.robots.findLastIndex((robot) => !robot.locked)));
+  const robot = c.robots[selected];
 
   return (
     <section id="garage" className="border-t border-rule px-4 py-20 sm:px-6">
-      <SectionTitle kicker="Robot select">Pick a season</SectionTitle>
+      <SectionTitle kicker={t.robotSelect}>{t.pickSeason}</SectionTitle>
 
       <div className="mt-10 grid gap-4 lg:grid-cols-12">
         <div className="grid grid-cols-3 content-start gap-2 sm:grid-cols-4 lg:col-span-5 lg:grid-cols-3">
-          {ROBOTS.map((item, i) => {
+          {c.robots.map((item, i) => {
             const active = i === selected;
             return (
               <button
@@ -159,7 +176,7 @@ export function Garage() {
                 ) : (
                   <RobotGlyph kind={item.kind} strokeWidth={1.3} className="h-16 w-full text-ink" />
                 )}
-                <span className={`${HUD} text-base leading-none`}>{item.locked ? "Locked" : robotTitle(item)}</span>
+                <span className={`${HUD} text-base leading-none`}>{item.locked ? t.locked : robotTitle(item)}</span>
                 {active && (
                   <motion.span
                     layoutId="robot-select"
@@ -186,6 +203,10 @@ export function Garage() {
           </AnimatePresence>
         </div>
       </div>
+
+      <div className="mt-8">
+        <ThroughLink page="robot2026" />
+      </div>
     </section>
   );
 }
@@ -193,22 +214,22 @@ export function Garage() {
 /* --- Partners ------------------------------------------------------------- */
 
 export function Backers() {
+  const c = useContent();
+  const t = useCopy();
+  const href = useSectionHref();
   return (
     <section id="backers" className="border-t border-rule py-20">
       <div className="px-4 sm:px-6">
-        <SectionTitle kicker="Partners">Presented by</SectionTitle>
+        <SectionTitle kicker={t.partners}>{t.presentedBy}</SectionTitle>
         <Reveal>
-          <p className="mt-4 max-w-xl text-lg leading-snug text-mute">
-            {site.team.school} has backed the team every season. These companies have too, in the
-            years shown.
-          </p>
+          <p className="mt-4 max-w-xl text-lg leading-snug text-mute">{t.partnersNote}</p>
         </Reveal>
       </div>
 
       {/* News-crawl ticker, fixed label on the left. */}
       <div className="mt-10 flex items-stretch border-y border-rule bg-panel">
         <span className={`relative z-10 flex shrink-0 items-center bg-accent-2 px-4 text-lg text-on-accent sm:px-6 sm:text-2xl ${HUD}`}>
-          Partners
+          {t.partners}
         </span>
         <div className="min-w-0 flex-1 py-3">
           <Marquee baseVelocity={-0.04} repeat={3} itemClassName="">
@@ -224,7 +245,7 @@ export function Backers() {
       </div>
 
       <div className="mt-10 grid gap-3 px-4 sm:px-6 md:grid-cols-3">
-        {PITCH.map((item, i) => (
+        {c.pitch.map((item, i) => (
           <Reveal key={item.title} delay={i * 0.06} className="border border-rule bg-panel p-5">
             <span className={`text-accent ${MONO}`}>0{i + 1}</span>
             <h3 className={`${HUD} mt-2 text-2xl`}>{item.title}</h3>
@@ -233,10 +254,11 @@ export function Backers() {
         ))}
       </div>
 
-      <div className="mt-10 px-4 sm:px-6">
-        <SkewButton href="#contact" tone="blue">
-          Become a partner
+      <div className="mt-10 flex flex-wrap items-center gap-8 px-4 sm:px-6">
+        <SkewButton href={href("contact")} tone="blue">
+          {t.becomePartner}
         </SkewButton>
+        <ThroughLink page="sponsors" />
       </div>
     </section>
   );
@@ -246,6 +268,7 @@ export function Backers() {
 
 export function Footer() {
   const { team, contact } = site;
+  const c = useContent();
 
   return (
     <footer className="border-t border-rule">
@@ -255,7 +278,7 @@ export function Footer() {
         </span>
         <nav className={`flex flex-wrap gap-5 text-mute ${MONO}`}>
           <a href={`mailto:${contact.email}`} className="transition-colors hover:text-ink">
-            Email
+            {c.email}
           </a>
           {LINKS.map((link) => (
             <a key={link.label} href={link.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
@@ -273,7 +296,7 @@ export function Footer() {
           &copy; {new Date().getFullYear()} FRC {team.number}
         </span>
         <a href="#top" className="transition-colors hover:text-ink">
-          Back to top &uarr;
+          {c.backToTop} &uarr;
         </a>
       </div>
     </footer>

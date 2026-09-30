@@ -3,8 +3,10 @@
 import { useActionState, type ReactNode } from "react";
 
 import { submitContact } from "@/app/actions";
+import { useContent } from "@/components/i18n/locale-provider";
 import { FormGuards } from "@/components/shared/form-guards";
-import { INTERESTS, initialContactState, isChecked } from "@/lib/contact";
+import { initialContactState, isChecked } from "@/lib/contact";
+import { useCopy } from "./copy";
 import { MONO, SectionHead, WIDE } from "./ui";
 
 const FIELD_TEXT = "mt-3 w-full bg-transparent font-bold outline-none placeholder:text-ink/35 [font-stretch:110%]";
@@ -29,48 +31,50 @@ export function Contact() {
   const [state, formAction, pending] = useActionState(submitContact, initialContactState);
   const values = state.values ?? {};
   const errors = state.errors ?? {};
+  const c = useContent();
+  const t = useCopy();
 
   return (
     <section id="contact" className="border-t-4 border-ink">
-      <SectionHead n="04" label="Contact">
-        Send it.
+      <SectionHead n="04" label={t.contact}>
+        {t.sendIt}
       </SectionHead>
 
       <form action={formAction} noValidate className="relative border-t-4 border-ink">
         <FormGuards design="hazard" />
 
         <div className="grid gap-1 bg-ink md:grid-cols-2">
-          <Field n="01" label="Name" error={errors.name}>
+          <Field n="01" label={t.name} error={errors.name}>
             <input
               name="name"
               autoComplete="name"
               defaultValue={values.name}
               aria-invalid={errors.name ? true : undefined}
-              placeholder="YOUR NAME"
+              placeholder={t.namePlaceholder}
               className={INPUT}
             />
           </Field>
-          <Field n="02" label="Email" error={errors.email}>
+          <Field n="02" label={t.email} error={errors.email}>
             <input
               name="email"
               type="email"
               autoComplete="email"
               defaultValue={values.email}
               aria-invalid={errors.email ? true : undefined}
-              placeholder="YOU@EXAMPLE.COM"
+              placeholder={t.emailPlaceholder}
               className={INPUT}
             />
           </Field>
         </div>
 
         <fieldset className="border-t-4 border-ink p-4 sm:p-6">
-          <legend className="sr-only">I want to</legend>
+          <legend className="sr-only">{t.iWantTo}</legend>
           <span aria-hidden className={`flex justify-between gap-4 ${MONO}`}>
-            <span>03 &mdash; I want to</span>
+            <span>03 &mdash; {t.iWantTo}</span>
             {errors.interest && <span className="bg-ink px-1.5 text-canvas normal-case">{errors.interest}</span>}
           </span>
           <div className="mt-4 flex flex-wrap gap-2">
-            {INTERESTS.map((option) => (
+            {c.interests.map((option) => (
               <label key={option.value} className="cursor-pointer">
                 <input
                   type="radio"
@@ -88,13 +92,13 @@ export function Contact() {
         </fieldset>
 
         <div className="border-t-4 border-ink">
-          <Field n="04" label="Message" error={errors.message}>
+          <Field n="04" label={t.message} error={errors.message}>
             <textarea
               name="message"
               rows={5}
               defaultValue={values.message}
               aria-invalid={errors.message ? true : undefined}
-              placeholder="YOUR MESSAGE"
+              placeholder={t.messagePlaceholder}
               className={TEXTAREA}
             />
           </Field>
@@ -116,7 +120,7 @@ export function Contact() {
             disabled={pending}
             className={`group flex w-full items-center justify-between bg-ink px-4 py-6 text-canvas transition-colors hover:bg-canvas hover:text-ink disabled:opacity-60 sm:px-6 ${WIDE} text-2xl sm:text-4xl`}
           >
-            {pending ? "Sending…" : "Send it"}
+            {pending ? t.sending : t.send}
             <span className="transition-transform group-hover:translate-x-2">&rarr;</span>
           </button>
         </div>

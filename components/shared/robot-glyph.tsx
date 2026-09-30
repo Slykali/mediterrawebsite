@@ -3,13 +3,14 @@
 import { motion, type Variants } from "framer-motion";
 import { useId } from "react";
 
+import { useBoot } from "@/components/boot/boot-provider";
+
 import type { GlyphKind } from "@/lib/content";
 import { EASE_OUT, VIEWPORT } from "@/lib/motion";
 
 /*
  * Side-elevation line drawings, one per robot archetype, built from plain
- * geometry so every design can restyle them with currentColor. No photos
- * needed to make the garage look like a garage.
+ * geometry so every design can restyle them with currentColor.
  *
  * Every shape winds clockwise, so the filled silhouette (the locked robot) is
  * one solid mass instead of punching holes where parts overlap.
@@ -81,6 +82,11 @@ type RobotGlyphProps = {
   draw?: boolean;
   /** Draw on command instead of on scroll — for things above the fold. */
   play?: boolean;
+  /**
+   * Alt text. With it the drawing is an image to assistive tech and crawlers;
+   * without it it's decoration and hidden from them.
+   */
+  label?: string;
 };
 
 export function RobotGlyph({
@@ -90,13 +96,16 @@ export function RobotGlyph({
   filled = false,
   draw = false,
   play,
+  label,
 }: RobotGlyphProps) {
   const maskId = `glyph-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const { crawler } = useBoot();
   const paths = pathsFor(kind);
+  const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": true as const };
 
   if (filled) {
     return (
-      <svg viewBox="0 0 240 180" className={className} fill="currentColor" aria-hidden>
+      <svg viewBox="0 0 240 180" className={className} fill="currentColor" {...a11y}>
         <path d={paths.slice(1).join(" ")} />
       </svg>
     );
@@ -110,10 +119,10 @@ export function RobotGlyph({
     strokeWidth,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
-    "aria-hidden": true,
+    ...a11y,
   };
 
-  // Hairlines stay hairlines at any size.
+  // Non-scaling stroke: line width stays the same at any size.
   const lines = paths.map((d, i) => <path key={i} d={d} vectorEffect="non-scaling-stroke" />);
 
   if (!draw && play === undefined) return <svg {...svgProps}>{lines}</svg>;
@@ -136,14 +145,14 @@ export function RobotGlyph({
 
   if (play !== undefined) {
     return (
-      <motion.svg {...svgProps} initial="hidden" animate={play ? "show" : "hidden"}>
+      <motion.svg {...svgProps} initial={crawler ? false : "hidden"} animate={play || crawler ? "show" : "hidden"}>
         {body}
       </motion.svg>
     );
   }
 
   return (
-    <motion.svg {...svgProps} initial="hidden" whileInView="show" viewport={VIEWPORT}>
+    <motion.svg {...svgProps} initial={crawler ? false : "hidden"} whileInView="show" viewport={VIEWPORT}>
       {body}
     </motion.svg>
   );

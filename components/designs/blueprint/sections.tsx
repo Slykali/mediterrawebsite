@@ -1,40 +1,41 @@
 "use client";
 
+import { useContent } from "@/components/i18n/locale-provider";
+import { useSectionHref } from "@/components/i18n/nav";
 import { FinishChart } from "@/components/shared/finish-chart";
 import { Marquee } from "@/components/shared/marquee";
 import { Reveal, Stagger, StaggerItem } from "@/components/shared/reveal";
 import { RobotGlyph } from "@/components/shared/robot-glyph";
-import { PITCH, ROBOTS, SPONSORS, TIMELINE, finish, formatSeasons, type Robot } from "@/lib/content";
+import { ThroughLink } from "@/components/shared/through-link";
+import { SPONSORS, formatSeasons, type Robot } from "@/lib/content";
 import { LINKS, site } from "@/lib/site";
 import { fillLastRow } from "@/lib/utils";
-import { Corners, MONO, PAD, REV, RevMark, STATUS, SheetHeader } from "./ui";
+import { useCopy } from "./copy";
+import { Corners, MONO, PAD, REV, RevMark, STATUS_TONE, SheetHeader } from "./ui";
 
 /* --- Sheet 02: revision history ------------------------------------------ */
 
 export function Timeline() {
+  const c = useContent();
+  const t = useCopy();
   return (
     <section id="timeline" className={`py-20 ${PAD}`}>
-      <SheetHeader
-        sheet="02"
-        title="Revision history"
-        note="Every season on FIRST's record, starting with the 2017 off-season in İstanbul."
-      />
+      <SheetHeader sheet="02" title={t.revisionHistory} note={t.revisionNote} />
 
       <Reveal className="mt-10 border border-ink/40 p-4 sm:p-6">
-        <p className={`text-mute ${MONO}`}>Chart 1 &middot; best qualification finish per season</p>
+        <p className={`text-mute ${MONO}`}>{t.chart1}</p>
         <FinishChart className="mt-4 text-ink" highlightClassName="text-accent" />
       </Reveal>
 
       <div className={`mt-10 hidden grid-cols-12 gap-6 border-b border-ink/60 pb-2 text-mute sm:grid ${MONO}`}>
-        <span className="col-span-1">Rev</span>
-        <span className="col-span-2">Year</span>
-        <span className="col-span-7">Description</span>
-        <span className="col-span-2 text-right">Status</span>
+        <span className="col-span-1">{t.cols[0]}</span>
+        <span className="col-span-2">{t.cols[1]}</span>
+        <span className="col-span-7">{t.cols[2]}</span>
+        <span className="col-span-2 text-right">{t.cols[3]}</span>
       </div>
 
       <ol>
-        {TIMELINE.map((entry, i) => {
-          const status = STATUS[entry.kind];
+        {c.timeline.map((entry, i) => {
           return (
             <li key={entry.years} className="relative border-b border-ink/30">
               <Reveal className="relative grid gap-3 py-6 sm:grid-cols-12 sm:gap-6">
@@ -47,13 +48,19 @@ export function Timeline() {
                   <p className="mt-2 max-w-2xl font-mono text-xs leading-relaxed text-mute">{entry.body}</p>
                 </div>
                 <div className="sm:col-span-2 sm:text-right">
-                  <span className={`inline-block border px-2 py-1 ${MONO} ${status.tone}`}>{status.label}</span>
+                  <span className={`inline-block border px-2 py-1 ${MONO} ${STATUS_TONE[entry.kind]}`}>
+                    {t.status[entry.kind]}
+                  </span>
                 </div>
               </Reveal>
             </li>
           );
         })}
       </ol>
+
+      <div className="mt-10">
+        <ThroughLink page="history" />
+      </div>
     </section>
   );
 }
@@ -61,13 +68,17 @@ export function Timeline() {
 /* --- Sheet 03: detail views ---------------------------------------------- */
 
 function DetailCard({ robot, letter }: { robot: Robot; letter: string }) {
+  const c = useContent();
+  const t = useCopy();
   const cell = "border-r border-b border-ink/40 px-3 py-2";
 
   return (
     <article className="relative h-full border border-ink/50 bg-panel/40 p-4">
       <Corners />
       <header className={`flex justify-between ${MONO}`}>
-        <span>Detail {letter}</span>
+        <span>
+          {t.detail} {letter}
+        </span>
         <span className="text-mute">{robot.season}</span>
       </header>
 
@@ -76,33 +87,33 @@ function DetailCard({ robot, letter }: { robot: Robot; letter: string }) {
           <>
             <div aria-hidden className="hatch absolute inset-0 text-ink/15" />
             <span className="relative -rotate-6 border-2 border-accent bg-canvas px-3 py-1 font-mono text-xs tracking-[0.25em] text-accent uppercase">
-              Not for release
+              {t.notForRelease}
             </span>
           </>
         ) : (
-          <RobotGlyph kind={robot.kind} draw strokeWidth={1.1} className="w-[88%] text-ink" />
+          <RobotGlyph kind={robot.kind} draw strokeWidth={1.1} label={c.glyphAlt(robot)} className="w-[88%] text-ink" />
         )}
       </div>
 
       <dl className={`grid grid-cols-2 border-t border-l border-ink/40 ${MONO}`}>
         <div className={cell}>
-          <dt className="text-[9px] text-mute">Game</dt>
+          <dt className="text-[9px] text-mute">{t.game}</dt>
           <dd className="mt-0.5">{robot.game}</dd>
         </div>
         <div className={cell}>
-          <dt className="text-[9px] text-mute">Team name</dt>
+          <dt className="text-[9px] text-mute">{t.teamName}</dt>
           <dd className="mt-0.5">{robot.teamName}</dd>
         </div>
         <div className={`${cell} col-span-2`}>
-          <dt className="text-[9px] text-mute">{robot.locked ? "Status" : "Best finish"}</dt>
+          <dt className="text-[9px] text-mute">{robot.locked ? t.statusLabel : t.bestFinish}</dt>
           <dd className="mt-0.5">
-            {robot.locked ? `Revealed ${site.team.kickoff}` : finish(robot)}
+            {robot.locked ? t.revealed(c.kickoff) : c.finish(robot)}
             {robot.playoffs && <span className="block text-mute">{robot.playoffs}</span>}
           </dd>
         </div>
         {robot.robotName && (
           <div className={`${cell} col-span-2`}>
-            <dt className="text-[9px] text-mute">Robot</dt>
+            <dt className="text-[9px] text-mute">{t.robot}</dt>
             <dd className="mt-0.5 text-accent">{robot.robotName}</dd>
           </div>
         )}
@@ -112,32 +123,37 @@ function DetailCard({ robot, letter }: { robot: Robot; letter: string }) {
 }
 
 export function Garage() {
+  const c = useContent();
+  const t = useCopy();
+  const href = useSectionHref();
   return (
     <section id="garage" className={`py-20 ${PAD}`}>
-      <SheetHeader
-        sheet="03"
-        title="Detail views"
-        note={`One detail per season competed. Illustrations of a typical robot for each game, not drawings of ours. Detail ${REV[ROBOTS.length - 1]} is withheld until the game is released.`}
-      />
+      <SheetHeader sheet="03" title={t.detailViews} note={t.detailNote(REV[c.robots.length - 1])} />
       <Stagger className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {ROBOTS.map((robot, i) => (
+        {c.robots.map((robot, i) => (
           <StaggerItem key={robot.season}>
             <DetailCard robot={robot} letter={REV[i]} />
           </StaggerItem>
         ))}
-        <StaggerItem className={fillLastRow(ROBOTS.length)}>
+        <StaggerItem className={fillLastRow(c.robots.length)}>
           <a
-            href="#contact"
+            href={href("contact")}
             className="group flex h-full min-h-64 flex-col justify-between border border-dashed border-ink/40 p-4 transition-colors hover:border-accent"
           >
-            <span className={`text-mute ${MONO}`}>Detail {REV[ROBOTS.length]}</span>
+            <span className={`text-mute ${MONO}`}>
+              {t.detail} {REV[c.robots.length]}
+            </span>
             <span className="font-display text-3xl leading-tight font-semibold uppercase">
-              Yours.
-              <span className="block text-accent group-hover:underline">Join the team &rarr;</span>
+              {t.yours}
+              <span className="block text-accent group-hover:underline">{t.joinTeam} &rarr;</span>
             </span>
           </a>
         </StaggerItem>
       </Stagger>
+
+      <div className="mt-10">
+        <ThroughLink page="robot2026" />
+      </div>
     </section>
   );
 }
@@ -155,14 +171,13 @@ function RulerTicks() {
 }
 
 export function Backers() {
+  const c = useContent();
+  const t = useCopy();
+  const href = useSectionHref();
   return (
     <section id="backers" className="py-20">
       <div className={PAD}>
-        <SheetHeader
-          sheet="04"
-          title="Suppliers"
-          note={`Companies named in the team's FIRST registration, by season. ${site.team.school} has backed every season.`}
-        />
+        <SheetHeader sheet="04" title={t.suppliers} note={t.suppliersNote} />
       </div>
 
       <div className="mt-10 border-y border-ink/40 bg-panel/40">
@@ -178,9 +193,11 @@ export function Backers() {
 
       <div className={`mt-12 grid gap-10 lg:grid-cols-12 ${PAD}`}>
         <div className="grid gap-6 md:grid-cols-3 lg:col-span-7">
-          {PITCH.map((item, i) => (
+          {c.pitch.map((item, i) => (
             <Reveal key={item.title} delay={i * 0.06} className="border-t border-ink/40 pt-4">
-              <p className={`text-accent ${MONO}`}>Note {i + 1}</p>
+              <p className={`text-accent ${MONO}`}>
+                {t.note} {i + 1}
+              </p>
               <h3 className="mt-2 font-display text-2xl font-semibold uppercase">{item.title}</h3>
               <p className="mt-2 font-mono text-xs leading-relaxed text-mute">{item.body}</p>
             </Reveal>
@@ -189,14 +206,14 @@ export function Backers() {
 
         <Reveal className="lg:col-span-5">
           <table className={`w-full border-collapse text-left ${MONO}`}>
-            <caption className="pb-2 text-left text-mute">Supplier list</caption>
+            <caption className="pb-2 text-left text-mute">{t.sponsorsCaption}</caption>
             <thead>
               <tr className="text-mute">
                 <th scope="col" className="pb-2 font-normal">
-                  Supplier
+                  {t.supplier}
                 </th>
                 <th scope="col" className="pb-2 text-right font-normal">
-                  Seasons
+                  {t.seasons}
                 </th>
               </tr>
             </thead>
@@ -214,13 +231,14 @@ export function Backers() {
         </Reveal>
       </div>
 
-      <div className={`mt-12 ${PAD}`}>
+      <div className={`mt-12 flex flex-wrap items-center gap-8 ${PAD}`}>
         <a
-          href="#contact"
+          href={href("contact")}
           className="inline-flex border border-ink px-5 py-3 font-mono text-[11px] tracking-[0.16em] uppercase transition-colors hover:bg-ink hover:text-canvas"
         >
-          Become a supplier &rarr;
+          {t.becomeSupplier} &rarr;
         </a>
+        <ThroughLink page="sponsors" />
       </div>
     </section>
   );
@@ -230,18 +248,19 @@ export function Backers() {
 
 export function Footer() {
   const { team, contact } = site;
+  const t = useCopy();
 
   return (
     <footer className={`pb-16 ${PAD}`}>
       <div className="grid gap-10 border-t border-ink/40 pt-8 md:grid-cols-2">
         <div>
-          <p className={`text-mute ${MONO}`}>General notes</p>
+          <p className={`text-mute ${MONO}`}>{t.generalNotes}</p>
           <ol className="mt-3 space-y-1.5 font-mono text-[11px] tracking-[0.08em] text-ink/85 uppercase">
-            <li>1. Do not scale drawing.</li>
-            <li>2. Results from FIRST event records and The Blue Alliance.</li>
-            <li>3. Robot drawings are illustrations, not as-built.</li>
+            {t.notes.map((note) => (
+              <li key={note}>{note}</li>
+            ))}
             <li>
-              4. Questions &rarr;{" "}
+              {t.questions} &rarr;{" "}
               <a href={`mailto:${contact.email}`} className="normal-case underline decoration-ink/40 hover:text-accent">
                 {contact.email}
               </a>
@@ -255,7 +274,7 @@ export function Footer() {
             </a>
           ))}
           <a href="#top" className="transition-colors hover:text-accent">
-            Back to sheet 01 &uarr;
+            {t.backToSheet} &uarr;
           </a>
           <span className="mt-4 text-mute">
             &copy; {new Date().getFullYear()} FRC {team.number} {team.name}

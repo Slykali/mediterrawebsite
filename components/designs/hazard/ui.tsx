@@ -5,8 +5,9 @@ import type { ReactNode } from "react";
 
 import { Reveal } from "@/components/shared/reveal";
 import { riseIn } from "@/lib/motion";
+import { useCopy } from "./copy";
 
-/** Archivo at full width and weight — the whole design hangs off this. */
+/** Archivo at full width and weight. */
 export const WIDE = "font-display font-black uppercase [font-stretch:125%]";
 export const MONO = "font-mono text-xs tracking-[0.14em] uppercase";
 
@@ -21,10 +22,11 @@ export function WarningIcon({ className = "", mark = "var(--canvas)" }: { classN
 }
 
 export function SectionHead({ n, label, children }: { n: string; label: string; children: ReactNode }) {
+  const t = useCopy();
   return (
     <Reveal className="px-4 pt-16 pb-10 sm:px-6 sm:pt-24">
       <p className={MONO}>
-        Section {n} &mdash; {label}
+        {t.section} {n} &mdash; {label}
       </p>
       {/* Floor is low enough that "ALUMINUM" (the longest unbreakable word) fits at 320px. */}
       <h2 className={`${WIDE} mt-4 text-[clamp(2.25rem,11vw,10rem)] leading-[0.8] tracking-[-0.04em]`}>{children}</h2>

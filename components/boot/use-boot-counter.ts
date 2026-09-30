@@ -5,9 +5,8 @@ import { BOOT_DURATION, BOOT_HOLD_MS } from "@/lib/boot";
 import { useBoot } from "./boot-provider";
 
 /**
- * The counter every intro runs on. One motion value drives the readout and the
- * progress bar, so they physically cannot disagree; reaching 100 holds briefly
- * and then ends the boot.
+ * The counter every intro runs on. One motion value drives both the readout
+ * and the progress bar; reaching 100 holds briefly and then ends the boot.
  */
 export function useBootCounter(duration: number = BOOT_DURATION) {
   const { finish } = useBoot();

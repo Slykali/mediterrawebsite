@@ -85,6 +85,21 @@ Components never name colours. They use `bg-canvas`, `text-ink`,
 `border-rule`, `text-accent` and friends; each design's block in `globals.css`
 decides what those are.
 
+## Pages and languages
+
+English lives at the root, Turkish under `/tr`, with the same paths in both:
+`/`, `/history`, `/sponsors`, `/join`, `/robot/2026`. Subpages reuse the active
+design's own sections inside a shared frame (`components/pages/`).
+
+- Section text is in `lib/content.ts`, page titles and descriptions in
+  `lib/pages.ts`, the FAQ in `lib/faq.ts`, and each design's own wording in
+  `components/designs/<name>/copy.ts`. Every string has an `en` and a `tr`
+  version.
+- `middleware.ts` sets `<html lang>` from the path.
+- Metadata, canonicals, hreflang and structured data come from `lib/seo.ts`.
+  `sitemap.xml`, `robots.txt`, `llms.txt` and the social images are generated
+  from the same data.
+
 ## Contact form
 
 1. Create a Supabase project.
@@ -132,5 +147,9 @@ Search for `TODO`. What's still missing:
 
 ## Deploy
 
-Push to GitHub, import the repo in Vercel, add `SUPABASE_URL` and
-`SUPABASE_SERVICE_ROLE_KEY` as environment variables. No other config.
+Push to GitHub, import the repo in Vercel, and add these environment variables:
+
+- `NEXT_PUBLIC_SITE_URL`: the production domain, e.g. `https://yourdomain.com`
+- `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`
+
+Turn on Web Analytics in the Vercel project for `@vercel/analytics` to report.

@@ -3,12 +3,13 @@
 import { headers } from "next/headers";
 
 import {
-  INTERESTS,
+  INTEREST_VALUES,
   type ContactField,
   type ContactState,
   type ContactValues,
 } from "@/lib/contact";
 import { isDesignId } from "@/lib/designs";
+import { isLocale, type Locale } from "@/lib/i18n";
 import { site } from "@/lib/site";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
@@ -17,7 +18,42 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** A human can't read the form and type a message this fast. */
 const MIN_FILL_MS = 2500;
 
-const SENT = "Got it. Someone on the team will write back within a few days.";
+const MESSAGES: Record<
+  Locale,
+  {
+    sent: string;
+    name: string;
+    email: string;
+    interest: string;
+    message: string;
+    fix: string;
+    failed: string;
+    notConnected: string;
+  }
+> = {
+  en: {
+    sent: "Got it. Someone on the team will write back within a few days.",
+    name: "Need a name.",
+    email: "That email doesn't look right.",
+    interest: "Pick one.",
+    message: "Say something, even one line.",
+    fix: "A few things need fixing.",
+    failed: `Couldn't send that. Email us at ${site.contact.email}.`,
+    notConnected:
+      "Form isn't connected yet. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to .env.local and restart the dev server.",
+  },
+  tr: {
+    sent: "Aldık. Takımdan biri birkaç gün içinde size dönecek.",
+    name: "Bir isim gerekli.",
+    email: "Bu e-posta adresi doğru görünmüyor.",
+    interest: "Birini seçin.",
+    message: "Bir şeyler yazın, tek satır bile olur.",
+    fix: "Düzeltilmesi gereken birkaç şey var.",
+    failed: `Gönderilemedi. Bize ${site.contact.email} adresinden yazın.`,
+    notConnected:
+      "Form henüz bağlı değil. .env.local dosyasına SUPABASE_URL ve SUPABASE_SERVICE_ROLE_KEY ekleyip geliştirme sunucusunu yeniden başlatın.",
+  },
+};
 
 function field(formData: FormData, key: string, max: number): string {
   return String(formData.get(key) ?? "")
@@ -29,12 +65,14 @@ export async function submitContact(
   _previous: ContactState,
   formData: FormData,
 ): Promise<ContactState> {
-  // Bots fill the hidden field or submit instantly. Tell them it worked and
-  // store nothing — a visible rejection just teaches them to adapt.
-  if (field(formData, "company_website", 200)) return { status: "success", message: SENT };
+  const locale = formData.get("locale");
+  const t = MESSAGES[isLocale(locale) ? locale : "en"];
+
+  // Bots fill the hidden field or submit instantly. Report success and store nothing.
+  if (field(formData, "company_website", 200)) return { status: "success", message: t.sent };
   const startedAt = Number(formData.get("started_at"));
   if (startedAt > 0 && Date.now() - startedAt < MIN_FILL_MS) {
-    return { status: "success", message: SENT };
+    return { status: "success", message: t.sent };
   }
 
   const values: ContactValues = {
@@ -45,13 +83,13 @@ export async function submitContact(
   };
 
   const errors: Partial<Record<ContactField, string>> = {};
-  if (!values.name) errors.name = "Need a name.";
-  if (!values.email || !EMAIL.test(values.email)) errors.email = "That email doesn't look right.";
-  if (!INTERESTS.some((option) => option.value === values.interest)) errors.interest = "Pick one.";
-  if (!values.message) errors.message = "Say something, even one line.";
+  if (!values.name) errors.name = t.name;
+  if (!values.email || !EMAIL.test(values.email)) errors.email = t.email;
+  if (!(INTEREST_VALUES as readonly string[]).includes(values.interest ?? "")) errors.interest = t.interest;
+  if (!values.message) errors.message = t.message;
 
   if (Object.keys(errors).length > 0) {
-    return { status: "error", message: "A few things need fixing.", errors, values };
+    return { status: "error", message: t.fix, errors, values };
   }
 
   const supabase = getSupabaseAdmin();
@@ -60,10 +98,7 @@ export async function submitContact(
     return {
       status: "error",
       values,
-      message:
-        process.env.NODE_ENV === "production"
-          ? `Couldn't send that. Email us at ${site.contact.email}.`
-          : "Form isn't connected yet. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to .env.local and restart the dev server.",
+      message: process.env.NODE_ENV === "production" ? t.failed : t.notConnected,
     };
   }
 
@@ -79,12 +114,8 @@ export async function submitContact(
 
   if (error) {
     console.error("[contact] insert failed:", error.message);
-    return {
-      status: "error",
-      values,
-      message: `Couldn't send that. Email us at ${site.contact.email}.`,
-    };
+    return { status: "error", values, message: t.failed };
   }
 
-  return { status: "success", message: SENT };
+  return { status: "success", message: t.sent };
 }

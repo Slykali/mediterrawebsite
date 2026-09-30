@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { Reveal } from "@/components/shared/reveal";
 
-/** Broadcast type: condensed, heavy, leaning forward. */
+/** Condensed, heavy, italic display type. */
 export const HUD = "font-display font-extrabold uppercase italic tracking-[-0.01em]";
 export const MONO = "font-mono text-[10px] tracking-[0.2em] uppercase";
 
@@ -22,7 +22,7 @@ export function SectionTitle({ kicker, children }: { kicker: string; children: R
   );
 }
 
-/** Parallelogram button, the shape of every broadcast lower third. */
+/** Parallelogram (skewed) link button. */
 export function SkewButton({
   href,
   tone,

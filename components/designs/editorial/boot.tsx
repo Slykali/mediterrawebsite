@@ -5,16 +5,18 @@ import { motion } from "framer-motion";
 import { useBootCounter } from "@/components/boot/use-boot-counter";
 import { SPRING_HEAVY } from "@/lib/motion";
 import { site } from "@/lib/site";
+import { useCopy } from "./copy";
 import { KICKER, titleCase } from "./ui";
 
-/** Going to press: the masthead sets, a rule runs across, the sheet lifts. */
+/** Editorial intro: the masthead slides in, a rule fills, then the sheet lifts. */
 export function EditorialBoot() {
   const { readout, progress } = useBootCounter(1.25);
+  const t = useCopy();
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-6 px-6 text-center">
       <span className={`text-mute ${KICKER}`}>
-        N&ordm; {site.team.number} &middot; Season {site.team.season}
+        N&ordm; {site.team.number} &middot; {t.season} {site.team.season}
       </span>
       <div className="overflow-hidden">
         <motion.p
@@ -30,7 +32,7 @@ export function EditorialBoot() {
         <motion.div style={{ scaleX: progress }} className="h-px w-full origin-left bg-ink" />
       </div>
       <span className={`text-mute ${KICKER}`}>
-        Going to press &mdash; <motion.span className="text-ink">{readout}</motion.span>%
+        {t.goingToPress} &mdash; <motion.span className="text-ink">{readout}</motion.span>%
       </span>
     </div>
   );

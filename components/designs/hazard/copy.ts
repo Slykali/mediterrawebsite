@@ -1,0 +1,86 @@
+import { useLocale } from "@/components/i18n/locale-provider";
+import { site } from "@/lib/site";
+
+const { team } = site;
+
+const en = {
+  standClear: "Stand clear",
+  poweringUp: ["Powering", "up"],
+  weAreBack: "We are back.",
+  caution: "Caution:",
+  cautionBody: (kickoff: string) =>
+    `${team.season} robot under construction. ${team.game} is revealed on ${kickoff}. ${team.school}, ${team.city}.`,
+  joinTeam: "Join the team",
+  sponsorTeam: "Sponsor the team",
+  section: "Section",
+  log: "Log",
+  regionals: (count: string) => `${count} regionals`,
+  bestFinish: "Best qualification finish per season",
+  asset: "Asset",
+  game: "Game",
+  team: "Team",
+  finish: "Finish",
+  playoffs: "Playoffs",
+  restricted: "Restricted area",
+  lockedNote: (kickoff: string) => `Locked. Game revealed ${kickoff}.`,
+  inventory: "Inventory",
+  everyRobot: "Every robot",
+  drawingsNote: "Drawings show a typical robot for each game, not ours.",
+  sponsors: "Sponsors",
+  sponsorsNote: `${team.school} has backed every season. These companies too, in the years listed.`,
+  sponsorsCaption: "Sponsors and the seasons they backed",
+  contact: "Contact",
+  sendIt: "Send it.",
+  name: "Name",
+  namePlaceholder: "YOUR NAME",
+  email: "Email",
+  emailPlaceholder: "YOU@EXAMPLE.COM",
+  iWantTo: "I want to",
+  message: "Message",
+  messagePlaceholder: "YOUR MESSAGE",
+  send: "Send it",
+  sending: "Sending…",
+};
+
+const tr: typeof en = {
+  standClear: "Uzak durun",
+  poweringUp: ["Güç", "veriliyor"],
+  weAreBack: "Geri döndük.",
+  caution: "Dikkat:",
+  cautionBody: (kickoff: string) =>
+    `${team.season} robotu yapım aşamasında. ${team.game}, ${kickoff} tarihinde açıklanıyor. ${team.school}, ${team.city}.`,
+  joinTeam: "Takıma katıl",
+  sponsorTeam: "Sponsor ol",
+  section: "Bölüm",
+  log: "Kayıt",
+  regionals: (count: string) => `${count} regional`,
+  bestFinish: "Sezon başına en iyi sıralama derecesi",
+  asset: "Demirbaş",
+  game: "Oyun",
+  team: "Takım",
+  finish: "Derece",
+  playoffs: "Playoff",
+  restricted: "Yasak bölge",
+  lockedNote: (kickoff: string) => `Kilitli. Oyun ${kickoff} tarihinde açıklanıyor.`,
+  inventory: "Envanter",
+  everyRobot: "Her robotumuz",
+  drawingsNote: "Çizimler her oyun için tipik bir robotu gösteriyor, bizimkileri değil.",
+  sponsors: "Sponsorlar",
+  sponsorsNote: `${team.school} her sezon destek verdi. Bu şirketler de yazan yıllarda.`,
+  sponsorsCaption: "Sponsorlar ve destek verdikleri sezonlar",
+  contact: "İletişim",
+  sendIt: "Yazın.",
+  name: "Ad",
+  namePlaceholder: "ADINIZ",
+  email: "E-posta",
+  emailPlaceholder: "ADINIZ@ORNEK.COM",
+  iWantTo: "Ne istiyorsunuz",
+  message: "Mesaj",
+  messagePlaceholder: "MESAJINIZ",
+  send: "Gönder",
+  sending: "Gönderiliyor…",
+};
+
+export function useCopy() {
+  return useLocale() === "tr" ? tr : en;
+}
