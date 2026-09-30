@@ -42,7 +42,8 @@ FRC Team ${team.number} Mediterra is a FIRST Robotics Competition (FRC) team bas
 - Program: FIRST Robotics Competition
 - Rookie year: ${team.rookieYear}
 - Best result: 2026 Başkent Regional (Ankara) with robot MT07: 7th of 33, 8 wins and 2 losses in qualifications, captain of Alliance 5 with teams 8828 and 6430
-- Next season: ${team.season}, game ${team.game}, revealed 9 January 2027. The team is recruiting now.
+- Next season: ${team.season}, game ${team.game}, revealed 9 January 2027.
+- Membership: a school team; only students of ${team.school} can join, and it isn't taking new members right now.
 ${HAS_REAL_EMAIL ? `- Email: ${contact.email}\n` : ""}
 ## Results by season
 

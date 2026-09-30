@@ -75,7 +75,7 @@ function LowerThird({ play }: { play: boolean }) {
         <span className="text-ink">{team.name}</span>
         <span>{team.city}</span>
         <span>{t.lastResult}</span>
-        <span className="text-accent">{t.recruiting}</span>
+        <span className="text-accent">{t.membership}</span>
       </div>
     </motion.div>
   );

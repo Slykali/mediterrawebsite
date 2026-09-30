@@ -156,7 +156,7 @@ function TitleBlock() {
       <div className={`${cell} col-span-2 flex items-center justify-between`}>
         <span>
           <span className={label}>{tb.crew}</span>
-          <span className={`${value} text-accent`}>{tb.recruiting}</span>
+          <span className={`${value} text-accent`}>{tb.membership}</span>
         </span>
         <span className={label}>{sheetOf("01")}</span>
       </div>

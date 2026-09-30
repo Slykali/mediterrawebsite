@@ -34,7 +34,7 @@ const EN: Record<PageKey, PageCopy> = {
   home: {
     title: "FRC 6874 Mediterra | FIRST Robotics Team, Antalya",
     description:
-      "FRC Team 6874 Mediterra is a FIRST Robotics Competition team from Döşemealtı, Antalya, Türkiye. 2026 Başkent Regional: 7th of 33, Alliance 5 captain. Recruiting for 2027.",
+      "FRC Team 6874 Mediterra is a FIRST Robotics Competition team from Döşemealtı, Antalya, Türkiye. 2026 Başkent Regional: 7th of 33, Alliance 5 captain. Building for the 2027 season.",
     h1: "FRC 6874 Mediterra",
     kicker: "",
     intro: "",
@@ -60,13 +60,13 @@ const EN: Record<PageKey, PageCopy> = {
     label: "Sponsors",
   },
   join: {
-    title: "Join the Team or Get in Touch",
+    title: "Joining the Team and Contact",
     description:
-      "Join FRC Team 6874 Mediterra for the 2027 BIOCORE season, sponsor the team or offer to mentor. Based in Döşemealtı, Antalya, Türkiye.",
+      "FRC Team 6874 Mediterra is a school team: only students of Özel Antalya Bahçeşehir Anadolu Lisesi can join, and membership is currently closed. Sponsors and mentors can get in touch here.",
     h1: "Join the team",
-    kicker: "Recruiting · 2027 season",
+    kicker: "School team · membership closed",
     intro:
-      "We're recruiting for the 2027 season, whose game, BIOCORE, is revealed on 9 January 2027. Students who want to join, companies that want to sponsor and engineers who could mentor: write to us below and someone on the team will answer.",
+      "FRC 6874 Mediterra is a school team made up of students of Özel Antalya Bahçeşehir Anadolu Lisesi, and we aren't taking new members right now. Companies that want to sponsor and engineers who could mentor can still write to us below, and someone on the team will answer.",
     label: "Join",
   },
   robot2026: {
@@ -84,7 +84,7 @@ const TR: Record<PageKey, PageCopy> = {
   home: {
     title: "FRC 6874 Mediterra | Antalya Robotik Takımı",
     description:
-      "FRC 6874 Mediterra, Döşemealtı, Antalya'dan bir FIRST Robotics Competition takımı. 2026 Başkent Regional: 33 takım arasında 7. ve 5. İttifak kaptanı. 2027 sezonu için üye alımı sürüyor.",
+      "FRC 6874 Mediterra, Döşemealtı, Antalya'dan bir FIRST Robotics Competition takımı. 2026 Başkent Regional: 33 takım arasında 7. ve 5. İttifak kaptanı. 2027 sezonuna hazırlanıyor.",
     h1: "FRC 6874 Mediterra",
     kicker: "",
     intro: "",
@@ -110,13 +110,13 @@ const TR: Record<PageKey, PageCopy> = {
     label: "Sponsorlar",
   },
   join: {
-    title: "Takıma Katıl ya da Bize Yaz",
+    title: "Takıma Katılım ve İletişim",
     description:
-      "2027 BIOCORE sezonu için FRC 6874 Mediterra'ya katılın, takıma sponsor olun ya da mentorluk yapın. Döşemealtı, Antalya, Türkiye.",
+      "FRC 6874 Mediterra bir okul takımı: yalnızca Özel Antalya Bahçeşehir Anadolu Lisesi öğrencileri katılabilir ve üye alımı şu anda kapalı. Sponsorlar ve mentorlar buradan bize ulaşabilir.",
     h1: "Takıma katıl",
-    kicker: "Üye alımı · 2027 sezonu",
+    kicker: "Okul takımı · üye alımı kapalı",
     intro:
-      "2027 sezonu için üye alıyoruz; sezonun oyunu BIOCORE, 9 Ocak 2027'de açıklanıyor. Takıma katılmak isteyen öğrenciler, sponsor olmak isteyen şirketler ve mentorluk yapabilecek mühendisler: aşağıdan bize yazın, takımdan biri size dönecek.",
+      "FRC 6874 Mediterra, Özel Antalya Bahçeşehir Anadolu Lisesi öğrencilerinden oluşan bir okul takımı ve şu anda yeni üye almıyoruz. Sponsor olmak isteyen şirketler ve mentorluk yapabilecek mühendisler aşağıdan bize yazabilir; takımdan biri size dönecek.",
     label: "Katıl",
   },
   robot2026: {
@@ -175,6 +175,19 @@ export const CHROME = {
       line2: "değil",
       body: "Böyle bir sayfa yok. Şunlardan birine göz atın:",
     },
+  },
+} as const;
+
+/* --- Membership ------------------------------------------------------------ */
+
+export const MEMBERSHIP_CLOSED = {
+  en: {
+    title: "Membership is closed.",
+    body: "FRC 6874 is a school team made up of students of Özel Antalya Bahçeşehir Anadolu Lisesi, and we aren't taking new members right now. This form is for sponsors, mentors and general questions.",
+  },
+  tr: {
+    title: "Üye alımı kapalı.",
+    body: "FRC 6874, Özel Antalya Bahçeşehir Anadolu Lisesi öğrencilerinden oluşan bir okul takımı ve şu anda yeni üye almıyoruz. Bu form sponsorlar, mentorlar ve genel sorular için.",
   },
 } as const;
 

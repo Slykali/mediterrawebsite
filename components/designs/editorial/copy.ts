@@ -56,7 +56,6 @@ const en = {
   likeBefore: "I’d like to ",
   likeAfter: ".",
   phrase: {
-    crew: "join the team",
     sponsor: "sponsor the team",
     mentor: "mentor the team",
     other: "talk about something else",
@@ -126,7 +125,6 @@ const tr: typeof en = {
   likeBefore: "",
   likeAfter: " istiyorum.",
   phrase: {
-    crew: "takıma katılmak",
     sponsor: "takıma sponsor olmak",
     mentor: "takıma mentorluk yapmak",
     other: "başka bir konuda konuşmak",

@@ -4,6 +4,7 @@ import { useActionState, type ReactNode } from "react";
 
 import { submitContact } from "@/app/actions";
 import { useContent } from "@/components/i18n/locale-provider";
+import { ClosedNotice } from "@/components/shared/closed-notice";
 import { FormGuards } from "@/components/shared/form-guards";
 import { initialContactState, isChecked } from "@/lib/contact";
 import { useCopy } from "./copy";
@@ -42,6 +43,7 @@ export function Contact() {
 
       <form action={formAction} noValidate className="relative border-t-4 border-ink">
         <FormGuards design="hazard" />
+        <ClosedNotice className="m-4 font-mono text-xs uppercase sm:m-6" />
 
         <div className="grid gap-1 bg-ink md:grid-cols-2">
           <Field n="01" label={t.name} error={errors.name}>

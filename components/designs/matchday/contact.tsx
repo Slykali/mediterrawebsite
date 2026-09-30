@@ -4,6 +4,7 @@ import { useActionState, type ReactNode } from "react";
 
 import { submitContact } from "@/app/actions";
 import { useContent } from "@/components/i18n/locale-provider";
+import { ClosedNotice } from "@/components/shared/closed-notice";
 import { FormGuards } from "@/components/shared/form-guards";
 import { Reveal } from "@/components/shared/reveal";
 import { initialContactState, isChecked } from "@/lib/contact";
@@ -53,13 +54,14 @@ export function Contact() {
       <Reveal delay={0.05}>
         <form action={formAction} noValidate className="relative mt-10 grid gap-3 lg:grid-cols-12">
           <FormGuards design="matchday" />
+          <ClosedNotice className="bg-panel lg:col-span-12" />
 
           <fieldset className="lg:col-span-12">
             <legend className={`flex w-full justify-between gap-4 text-mute ${MONO}`}>
               <span>{t.selectRole}</span>
               {errors.interest && <span className="tracking-normal text-accent normal-case">{errors.interest}</span>}
             </legend>
-            <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+            <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3">
               {c.interests.map((option, i) => {
                 const blue = i % 2 === 1;
                 return (

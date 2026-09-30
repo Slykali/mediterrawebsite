@@ -26,7 +26,7 @@ const en = {
   replies: "Replies in a few days",
   talk: ["Talk", "to us"],
   contactNote:
-    "Students who want to join, companies that want to sponsor, engineers who could mentor: write to us and someone on the team will answer.",
+    "Companies that want to sponsor, engineers who could mentor, anyone with a question: write to us and someone on the team will answer.",
   results: "Results",
   name: "Name",
   namePlaceholder: "Your name",
@@ -61,7 +61,7 @@ const tr: typeof en = {
   replies: "Birkaç gün içinde yanıt",
   talk: ["Bize", "yazın"],
   contactNote:
-    "Katılmak isteyen öğrenciler, sponsor olmak isteyen şirketler, mentorluk yapabilecek mühendisler: bize yazın, takımdan biri yanıt verecek.",
+    "Sponsor olmak isteyen şirketler, mentorluk yapabilecek mühendisler, sorusu olan herkes: bize yazın, takımdan biri yanıt verecek.",
   results: "Sonuçlar",
   name: "Ad",
   namePlaceholder: "Adınız",

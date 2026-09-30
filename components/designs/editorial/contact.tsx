@@ -3,6 +3,7 @@
 import { useActionState, type InputHTMLAttributes } from "react";
 
 import { submitContact } from "@/app/actions";
+import { ClosedNotice } from "@/components/shared/closed-notice";
 import { FormGuards } from "@/components/shared/form-guards";
 import { Reveal } from "@/components/shared/reveal";
 import { INTEREST_VALUES, initialContactState } from "@/lib/contact";
@@ -52,6 +53,7 @@ export function Contact() {
             style={{ lineHeight: LINE_HEIGHT }}
           >
             <FormGuards design="editorial" />
+            <ClosedNotice className="mb-6 text-base italic" />
 
             <p>{t.dear}</p>
             <p className="mt-2">
@@ -84,7 +86,7 @@ export function Contact() {
                 <select
                   name="interest"
                   aria-label={t.interestLabel}
-                  defaultValue={values.interest ?? "crew"}
+                  defaultValue={values.interest ?? "sponsor"}
                   // field-sizing hugs the chosen option where supported; elsewhere it's the widest one.
                   className="appearance-none border-b border-ink bg-transparent pr-6 pl-1 text-accent italic outline-none [field-sizing:content] focus:border-accent"
                 >

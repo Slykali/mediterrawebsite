@@ -138,8 +138,8 @@ const TIMELINE_SOURCE: { years: string; kind: TimelineKind; title: Localized; bo
     kind: "next",
     title: { en: "BIOCORE", tr: "BIOCORE" },
     body: {
-      en: "The game is revealed on 9 January. We're recruiting for the build now.",
-      tr: "Oyun 9 Ocak'ta açıklanıyor. Yapım sezonu için şimdiden yeni üyeler arıyoruz.",
+      en: "The game is revealed on 9 January.",
+      tr: "Oyun 9 Ocak'ta açıklanıyor.",
     },
   },
 ];
@@ -262,7 +262,8 @@ export const PAST_SPONSORS = SPONSORS.filter((sponsor) => !sponsor.seasons.inclu
 
 /* --- Contact interests ---------------------------------------------------- */
 
-export const INTEREST_VALUES = ["crew", "sponsor", "mentor", "other"] as const;
+// No "join the team" option: membership is limited to the school's students and currently closed.
+export const INTEREST_VALUES = ["sponsor", "mentor", "other"] as const;
 
 export type Interest = (typeof INTEREST_VALUES)[number];
 
@@ -385,20 +386,20 @@ function buildContent(locale: Locale) {
           { label: "Rookie year", value: String(site.team.rookieYear) },
           { label: "Başkent 2026", value: "7th of 33" },
           { label: "2026 robot", value: "MT07" },
-          { label: "Crew", value: "Recruiting", accent: true },
+          { label: "New members", value: "Closed", accent: true },
         ]
       : [
           { label: "Çaylak yılı", value: String(site.team.rookieYear) },
           { label: "Başkent 2026", value: "33'te 7." },
           { label: "2026 robotu", value: "MT07" },
-          { label: "Ekip", value: "Üye alımı", accent: true },
+          { label: "Üye alımı", value: "Kapalı", accent: true },
         ]) as { label: string; value: string; accent?: boolean }[],
 
     interests: INTEREST_VALUES.map((value) => ({
       value,
       label: (en
-        ? { crew: "Join the team", sponsor: "Sponsor the team", mentor: "Mentor", other: "Something else" }
-        : { crew: "Takıma katılmak", sponsor: "Sponsor olmak", mentor: "Mentorluk", other: "Başka bir konu" })[value],
+        ? { sponsor: "Sponsor the team", mentor: "Mentor", other: "Something else" }
+        : { sponsor: "Sponsor olmak", mentor: "Mentorluk", other: "Başka bir konu" })[value],
     })),
   };
 }

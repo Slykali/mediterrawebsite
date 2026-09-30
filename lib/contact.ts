@@ -19,5 +19,5 @@ export type ContactState = {
 export const initialContactState: ContactState = { status: "idle" };
 
 export function isChecked(state: ContactState, value: Interest): boolean {
-  return (state.values?.interest ?? "crew") === value;
+  return (state.values?.interest ?? "sponsor") === value;
 }

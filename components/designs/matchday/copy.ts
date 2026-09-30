@@ -20,7 +20,7 @@ const en = {
   buildOn: "Build season is on",
   kickoffIn: "Kickoff in",
   lastResult: `${team.lastCompeted}: 7th of 33, Alliance 5 captain`,
-  recruiting: "Recruiting",
+  membership: "Membership closed",
   live: "Live",
   seasonLabel: `${team.season} season`,
   qualification: `Qualification 01 · ${team.season} season`,
@@ -52,8 +52,8 @@ const en = {
   emailPlaceholder: "you@example.com",
   message: "Message",
   messagePlaceholder: "Tell us who you are and what you want to do",
-  lockingIn: "Locking in…",
-  lockIn: "Lock in →",
+  lockingIn: "Sending…",
+  lockIn: "Send it →",
 };
 
 const tr: typeof en = {
@@ -69,7 +69,7 @@ const tr: typeof en = {
   buildOn: "Yapım sezonu başladı",
   kickoffIn: "Kickoff'a kalan",
   lastResult: `${team.lastCompeted}: 33'te 7., 5. İttifak kaptanı`,
-  recruiting: "Üye alımı",
+  membership: "Üye alımı kapalı",
   live: "Canlı",
   seasonLabel: `${team.season} sezonu`,
   qualification: `Sıralama 01 · ${team.season} sezonu`,

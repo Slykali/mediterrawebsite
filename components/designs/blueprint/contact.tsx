@@ -4,6 +4,7 @@ import { useActionState, type ReactNode } from "react";
 
 import { submitContact } from "@/app/actions";
 import { useContent } from "@/components/i18n/locale-provider";
+import { ClosedNotice } from "@/components/shared/closed-notice";
 import { FormGuards } from "@/components/shared/form-guards";
 import { Reveal } from "@/components/shared/reveal";
 import { initialContactState, isChecked } from "@/lib/contact";
@@ -54,6 +55,7 @@ export function Contact() {
       <Reveal>
         <form action={formAction} noValidate className="relative mt-10 grid border-t border-l border-ink/60 bg-canvas/60 lg:grid-cols-2">
           <FormGuards design="blueprint" />
+          <ClosedNotice className="m-4 font-mono text-xs lg:col-span-2" />
 
           <BoxField n={1} label={t.name} error={errors.name}>
             <input
@@ -83,7 +85,7 @@ export function Contact() {
               <span>3. {t.nature}</span>
               {errors.interest && <span className="text-accent">{errors.interest}</span>}
             </span>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-3 grid gap-3 sm:grid-cols-3">
               {c.interests.map((option) => (
                 <label key={option.value} className="group flex cursor-pointer items-center gap-3 font-mono text-xs tracking-[0.12em] uppercase">
                   <input

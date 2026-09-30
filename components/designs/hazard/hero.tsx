@@ -81,7 +81,7 @@ export function Hero() {
             >
               <span className="font-mono text-xs">0{i + 1}</span>
               <span className={`mt-6 block ${MONO}`}>{spec.label}</span>
-              {/* Sized off the cell: "RECRUITING" is 8.4em at this width, cells are
+              {/* Sized off the cell: a 10-letter value like "RECRUITING" is 8.4em at this width, cells are
                   half the viewport (quarter at lg) minus padding. */}
               <span
                 className={`${WIDE} mt-1 block text-[min(calc((50vw_-_3rem)/8.6),2.25rem)] leading-none lg:text-[min(calc((25vw_-_3rem)/8.6),2.25rem)]`}

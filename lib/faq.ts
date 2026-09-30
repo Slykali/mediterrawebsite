@@ -17,10 +17,8 @@ export const FAQ: Record<Locale, FaqItem[]> = {
   en: [
     {
       question: "Who can join FRC 6874 Mediterra?",
-      // TODO: say exactly who can join (only students of the school? which
-      // grades? is there an application or interview?) and when.
       answer:
-        "We're recruiting for the 2027 season now. The team is based at Özel Antalya Bahçeşehir Anadolu Lisesi in Döşemealtı, Antalya. To join, send us a message through the form on the Join page and someone on the team will reply. Engineers who could mentor can use the same form.",
+        "FRC 6874 Mediterra is a school team: only students of Özel Antalya Bahçeşehir Anadolu Lisesi in Döşemealtı, Antalya can join. The team isn't taking new members at the moment. Companies and engineers who want to sponsor or mentor can still get in touch through the form on the Join page.",
     },
     {
       question: "How can a company sponsor the team?",
@@ -46,10 +44,8 @@ export const FAQ: Record<Locale, FaqItem[]> = {
   tr: [
     {
       question: "FRC 6874 Mediterra'ya kimler katılabilir?",
-      // TODO: kimlerin katılabileceğini netleştirin (yalnızca okulun
-      // öğrencileri mi? hangi sınıflar? başvuru ya da mülakat var mı?).
       answer:
-        "2027 sezonu için şu anda üye alıyoruz. Takım, Döşemealtı, Antalya'daki Özel Antalya Bahçeşehir Anadolu Lisesi'nde. Katılmak için Katıl sayfasındaki formdan bize yazın, takımdan biri size dönecek. Mentorluk yapabilecek mühendisler de aynı formu kullanabilir.",
+        "FRC 6874 Mediterra bir okul takımı: yalnızca Döşemealtı, Antalya'daki Özel Antalya Bahçeşehir Anadolu Lisesi öğrencileri katılabilir. Takım şu anda yeni üye almıyor. Sponsor olmak ya da mentorluk yapmak isteyen şirketler ve mühendisler Katıl sayfasındaki formdan yine de bize ulaşabilir.",
     },
     {
       question: "Bir şirket takıma nasıl sponsor olabilir?",
