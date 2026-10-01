@@ -66,7 +66,7 @@ const TIMELINE_SOURCE: { years: string; kind: TimelineKind; title: Localized; bo
     title: { en: "First time on a field", tr: "İlk kez sahada" },
     body: {
       en: "Played the Turkish Robotics Off-Season in Ataşehir in December, before the first official season.",
-      tr: "İlk resmi sezondan önce, Aralık'ta Ataşehir'deki Turkish Robotics Off-Season'da oynadık.",
+      tr: "İlk resmi sezondan önce, aralıkta Ataşehir'deki Turkish Robotics Off-Season'da oynadık.",
     },
   },
   {
@@ -84,7 +84,7 @@ const TIMELINE_SOURCE: { years: string; kind: TimelineKind; title: Localized; bo
     title: { en: "Lycia", tr: "Lycia" },
     body: {
       en: "Registered as Lycia. At the Bosphorus Regional we finished 32nd of 32 with one win in eleven matches. Played the Mersin off-season in October.",
-      tr: "Lycia adıyla kayıt olduk. Bosphorus Regional'da on bir maçta tek galibiyetle 32 takım arasında 32. olduk. Ekim'de Mersin'deki off-season etkinliğinde oynadık.",
+      tr: "Lycia adıyla kayıt olduk. Bosphorus Regional'da on bir maçta tek galibiyetle 32 takım arasında 32. olduk. Ekimde Mersin'deki off-season etkinliğinde oynadık.",
     },
   },
   {
@@ -111,7 +111,7 @@ const TIMELINE_SOURCE: { years: string; kind: TimelineKind; title: Localized; bo
     kind: "legacy",
     title: { en: "Now Mediterra", tr: "Artık Mediterra" },
     body: {
-      en: "New name and two regionals in six days. Picked by Alliance 2 at Haliç for our first playoffs, then 10th of 53 at Marmara and first pick of Alliance 5.",
+      en: "New name and two regionals in six days. Picked by Alliance 2 at Haliç for our first regional playoffs, then 10th of 53 at Marmara and first pick of Alliance 5.",
       tr: "Yeni isim, altı günde iki regional. Haliç'te 2. İttifak bizi seçti ve ilk kez playoff oynadık; ardından Marmara'da 53 takım arasında 10. olup 5. İttifak'ın ilk seçimi olduk.",
     },
   },
@@ -120,8 +120,8 @@ const TIMELINE_SOURCE: { years: string; kind: TimelineKind; title: Localized; bo
     kind: "legacy",
     title: { en: "İstanbul", tr: "İstanbul" },
     body: {
-      en: "25th of 48 at the İstanbul Regional in Bakırköy and second pick of Alliance 8. BIST Başakşehir off-season in October.",
-      tr: "Bakırköy'deki İstanbul Regional'da 48 takım arasında 25. olduk ve 8. İttifak'ın ikinci seçimi olduk. Ekim'de BIST Başakşehir off-season etkinliğine katıldık.",
+      en: "25th of 48 at the İstanbul Regional in Bakırköy and second pick of Alliance 8, then played the BIST Başakşehir off-season in October.",
+      tr: "Bakırköy'deki İstanbul Regional'da 48 takım arasında 25. olduk ve 8. İttifak bizi ikinci seçim olarak aldı. Ekimde BIST Başakşehir off-season etkinliğine katıldık.",
     },
   },
   {
@@ -130,7 +130,7 @@ const TIMELINE_SOURCE: { years: string; kind: TimelineKind; title: Localized; bo
     title: { en: "Alliance captain", tr: "İttifak kaptanı" },
     body: {
       en: "Took MT07 to the Başkent Regional in Ankara: 7th of 33, 8 wins and 2 losses in qualifications, and captain of Alliance 5 with 8828 and 6430.",
-      tr: "MT07'yi Ankara'daki Başkent Regional'a götürdük: 33 takım arasında 7., sıralama maçlarında 8 galibiyet 2 mağlubiyet ve 8828 ile 6430'la birlikte 5. İttifak'ın kaptanı.",
+      tr: "MT07'yi Ankara'daki Başkent Regional'a götürdük: 33 takım arasında 7. olduk, sıralama maçlarında 8 galibiyet 2 mağlubiyet aldık ve 8828 ile 6430'la birlikte 5. İttifak'ın kaptanı olduk.",
     },
   },
   {
@@ -345,7 +345,7 @@ function buildContent(locale: Locale) {
         : `${robot.game} için tipik bir ${robot.season} robotunun çizimi; takımın kendi robotu değil`;
     },
 
-    /** Short form for tight cells: "7th of 33" / "33'te 7." */
+    /** Short form for tight cells: "7th of 33" / "33 takımda 7." */
     rankShort(rank: number, teams: number): string {
       return en ? `${enOrdinal(rank)} of ${teams}` : `${teams} takımda ${rank}.`;
     },
@@ -390,7 +390,7 @@ function buildContent(locale: Locale) {
         ]
       : [
           { label: "Çaylak yılı", value: String(site.team.rookieYear) },
-          { label: "Başkent 2026", value: "33'te 7." },
+          { label: "Başkent 2026", value: "33 takımda 7." },
           { label: "2026 robotu", value: "MT07" },
           { label: "Üye alımı", value: "Kapalı", accent: true },
         ]) as { label: string; value: string; accent?: boolean }[],

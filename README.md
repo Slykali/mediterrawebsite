@@ -72,8 +72,8 @@ the full pages.
 ## Contact form
 
 1. Create a Supabase project. Pick the EU (Frankfurt) region.
-2. Run `supabase/migrations/20260923000000_contact_messages.sql` in the SQL
-   editor (or `supabase db push`).
+2. Run both files in `supabase/migrations/` in the SQL editor, in order (or
+   `supabase db push`). The second schedules the 12-month deletion with pg_cron.
 3. Copy `.env.example` to `.env.local` and fill in `SUPABASE_URL` and
    `SUPABASE_SERVICE_ROLE_KEY` from Project Settings → API.
 4. Restart `npm run dev`.
@@ -84,10 +84,11 @@ can't read or write the table; only the server action can.
 
 - Spam: a honeypot field, a minimum fill time, and at most three messages per
   email address per hour.
-- Retention: every successful submit deletes messages older than 12 months,
-  which is what the privacy notice promises.
-- Until the keys are set, submitting says "not connected yet" in development
-  and points to Instagram in production.
+- Retention: a daily pg_cron job, plus every successful submit, deletes
+  messages older than 12 months, which is what the privacy notice promises.
+- Until the keys are set, production shows a "write to us on Instagram" panel
+  instead of the form, so no message is ever lost. Development keeps the form
+  and says what is missing.
 
 ## Accessibility
 
@@ -153,4 +154,10 @@ Import the repo in Vercel. Environment variables:
 - `NEXT_PUBLIC_SITE_URL` only once you add a custom domain. Until then the
   site uses the Vercel production domain automatically.
 
-Turn on Web Analytics in the Vercel project for `@vercel/analytics` to report.
+Turn on Web Analytics in the Vercel project (Analytics tab) for
+`@vercel/analytics` to report; until then the browser console shows a 404 for
+its script, which is harmless.
+
+A production build stops with an error if the site URL would be localhost.
+If that happens, set `NEXT_PUBLIC_SITE_URL`, or turn on "Automatically expose
+System Environment Variables" in the Vercel project settings.

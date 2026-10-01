@@ -98,7 +98,7 @@ function LockedDetail({ robot }: { robot: Robot }) {
       <span className={`${HUD} text-[clamp(6rem,14vw,10rem)] leading-none text-rule`}>?</span>
       <p className={`${HUD} text-3xl`}><Cased>{t.unlocks(robot.game)}</Cased></p>
       <p className={`text-mute ${MONO}`}>
-        {time ? `${time.days}d ${pad2(time.hours)}h ${pad2(time.minutes)}m ${pad2(time.seconds)}s` : "--"}
+        {time ? `${time.days} ${t.cells[0]} ${pad2(time.hours)} ${t.cells[1]} ${pad2(time.minutes)} ${t.cells[2]} ${pad2(time.seconds)} ${t.cells[3]}` : "--"}
       </p>
     </div>
   );

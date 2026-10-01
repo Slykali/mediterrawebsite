@@ -7,6 +7,7 @@ import { A11yMenu } from "@/components/a11y/a11y-menu";
 import { A11yProvider } from "@/components/a11y/a11y-provider";
 import { BootProvider } from "@/components/boot/boot-provider";
 import { LocaleProvider } from "@/components/i18n/locale-provider";
+import { FormStatusProvider } from "@/components/shared/form-status";
 import { JsonLd } from "@/components/shared/json-ld";
 import { A11Y_HEAD_SCRIPT } from "@/lib/a11y";
 import { BOOT_COOKIE } from "@/lib/boot";
@@ -67,7 +68,7 @@ export const metadata: Metadata = {
 
 /** Search engines, AI crawlers and link previewers: no intro, no hidden reveals in the HTML. */
 const CRAWLER =
-  /bot|crawl|spider|slurp|mediapartners|facebookexternalhit|embedly|google-extended|chatgpt-user|perplexity-user|claude-user|bingpreview/i;
+  /bot|crawl|spider|slurp|mediapartners|facebookexternalhit|embedly|google-extended|chatgpt-user|perplexity-user|claude-user|bingpreview|google/i;
 
 export const viewport: Viewport = {
   themeColor: "#06080d",
@@ -84,6 +85,12 @@ export default async function RootLayout({
   const locale = isLocale(requested) ? requested : DEFAULT_LOCALE;
 
   const crawler = CRAWLER.test(headerStore.get("user-agent") ?? "");
+  // Without the Supabase keys the form can't store anything. In production it's
+  // swapped for a "write to us on Instagram" panel; in development it stays, so
+  // it can be tested (the action explains what's missing).
+  const formOpen =
+    process.env.NODE_ENV !== "production" ||
+    Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
   // Seen the intro this session (or a crawler): leave it out of the HTML.
   const skipBoot = crawler || cookieStore.get(BOOT_COOKIE)?.value === "1";
 
@@ -112,7 +119,7 @@ export default async function RootLayout({
         <LocaleProvider locale={locale}>
           <A11yProvider>
             <BootProvider skip={skipBoot} crawler={crawler}>
-              {children}
+              <FormStatusProvider open={formOpen}>{children}</FormStatusProvider>
             </BootProvider>
             <A11yMenu />
           </A11yProvider>

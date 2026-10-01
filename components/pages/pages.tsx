@@ -7,7 +7,7 @@ import { CONTENT, MT07, SPONSORS, formatSeasons } from "@/lib/content";
 import { DEFAULT_DESIGN } from "@/lib/designs";
 import { localePath, type Locale } from "@/lib/i18n";
 import { ACCESSIBILITY, PAGES, PAGE_PATHS, PRIVACY, ROBOT_PAGE, SEASON_TABLE } from "@/lib/pages";
-import { faqJsonLd } from "@/lib/seo";
+import { faqJsonLd, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { DesignFrame } from "./design-frame";
 import { PageShell } from "./page-shell";
@@ -26,6 +26,7 @@ export function HomePage({ locale }: PageProps) {
 
   return (
     <DesignFrame id={id}>
+      <JsonLd data={websiteJsonLd()} />
       <JsonLd data={faqJsonLd(locale)} />
       <Home />
     </DesignFrame>
@@ -46,7 +47,8 @@ function SeasonTable({ locale, pad }: { locale: Locale; pad: string }) {
         {t.caption}
       </h2>
       <p className="mt-4 max-w-xl text-sm text-mute">{t.note}</p>
-      <div className="mt-8 overflow-x-auto">
+      {/* Scrolls sideways on phones, so it has to be focusable to scroll with the keyboard. */}
+      <div tabIndex={0} className="mt-8 overflow-x-auto">
         <table className="w-full min-w-[40rem] border-collapse text-left text-sm">
           <thead>
             <tr className={`border-b border-rule text-mute ${LABEL}`}>

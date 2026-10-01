@@ -75,7 +75,8 @@ export function sportsTeamJsonLd(locale: Locale) {
     // Haliç left out on purpose: FIRST's records have 2023 as Imperium.
     alternateName: ["Team 6874", "FRC Team 6874", ...site.team.formerNames],
     sport: "Robotics",
-    url: abs(localePath(locale, "/")),
+    // One @id, one set of facts: the URL is the same in both languages.
+    url: `${site.url}/`,
     logo: `${site.url}/icon-512.png`,
     image: `${site.url}/opengraph-image`,
     foundingDate: String(site.team.rookieYear),
@@ -93,7 +94,7 @@ export function sportsTeamJsonLd(locale: Locale) {
     memberOf: {
       "@type": "SportsOrganization",
       name: "FIRST Robotics Competition",
-      url: "https://www.firstinspires.org/robotics/frc",
+      url: "https://www.firstinspires.org/programs/frc",
     },
     sponsor: [
       { "@type": "EducationalOrganization", name: site.team.school },
@@ -101,6 +102,20 @@ export function sportsTeamJsonLd(locale: Locale) {
     ],
     ...(HAS_REAL_EMAIL ? { email: site.contact.email } : {}),
     sameAs: [site.contact.tba, site.contact.frcEvents, site.contact.instagram, site.contact.x],
+  };
+}
+
+/** Home pages only. Tells search engines the site's name, so results don't show the bare hostname. */
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${site.url}/#website`,
+    name: site.team.displayName,
+    alternateName: ["Team 6874", "FRC Team 6874", "Mediterra 6874"],
+    url: `${site.url}/`,
+    inLanguage: ["en", "tr"],
+    publisher: { "@id": `${site.url}/#team` },
   };
 }
 

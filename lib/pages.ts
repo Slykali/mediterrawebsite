@@ -36,35 +36,35 @@ const EN: Record<PageKey, PageCopy> = {
   home: {
     title: "FRC 6874 Mediterra | FIRST Robotics Team, Antalya",
     description:
-      "FRC Team 6874 Mediterra is a FIRST Robotics Competition team from Döşemealtı, Antalya, Türkiye. 2026 Başkent Regional: 7th of 33, Alliance 5 captain. Building for the 2027 season.",
+      "FRC Team 6874 Mediterra, a FIRST Robotics Competition team from Döşemealtı, Antalya. 2026 Başkent Regional: 7th of 33 and Alliance 5 captain.",
     h1: "FRC 6874 Mediterra",
     kicker: "",
     intro: "",
     label: "Home",
   },
   history: {
-    title: "Team History and Results, 2017–2026",
+    title: "Team History and Results, 2018–2026",
     description:
-      "Every season of FRC Team 6874 Mediterra since 2017: events, rankings and playoff results from the official FIRST records, including 7th of 33 and Alliance 5 captain at the 2026 Başkent Regional.",
+      "Every event FRC Team 6874 Mediterra has played since its 2018 rookie season, with rankings and playoff results from the official FIRST records.",
     h1: "History and results",
     kicker: "Match log · 2017–2027",
     intro:
-      "The team has competed in FIRST Robotics Competition since its 2018 rookie season, registered as Imperium (2018, 2020, 2023), Lycia (2019) and, since 2024, Mediterra. These are every event and result in the official FIRST records.",
+      "The team has competed in FIRST Robotics Competition since its 2018 rookie season, registered as Imperium (2018, 2020, 2023), Lycia (2019) and, since 2024, Mediterra. Below is every event and result on record with FIRST and The Blue Alliance.",
     label: "History",
   },
   sponsors: {
     title: "Sponsors and Sponsorship",
     description:
-      "The companies behind FRC Team 6874 Mediterra, a FIRST robotics team in Antalya, Türkiye, and how to sponsor the team: where the money goes, what sponsors get and how to get in touch.",
+      "The companies behind FRC Team 6874 Mediterra, a FIRST robotics team in Antalya, and how to sponsor the team: where the money goes and what sponsors get.",
     h1: "Sponsors",
-    kicker: "Partners · since 2018",
+    kicker: "Sponsors · since 2018",
     intro: `${site.team.school} has backed the team every season. MGA Airlines, Levent Kimya, Antera, Crystal Industrial, Bosch, SMC, Bahçeşehir Üniversitesi and Antalya Büyükşehir Belediyesi have backed it too, in the seasons listed below.`,
     label: "Sponsors",
   },
   join: {
     title: "Contact and Joining the Team",
     description:
-      "FRC Team 6874 Mediterra is a school team: only students of Özel Antalya Bahçeşehir Anadolu Lisesi can join, and membership is currently closed. Sponsors and mentors can get in touch here.",
+      "FRC Team 6874 Mediterra is a school team and membership is currently closed. Sponsors, mentors and anyone with a question can get in touch here.",
     h1: "Contact",
     kicker: "School team · membership closed",
     intro:
@@ -73,17 +73,17 @@ const EN: Record<PageKey, PageCopy> = {
   },
   robot2026: {
     title: "MT07, the 2026 Robot",
-    description: `MT07 is FRC Team 6874 Mediterra's robot for the 2026 season (${MT07.game}). At the Başkent Regional in Ankara it finished 7th of 33, went 8–2 in qualifications and captained Alliance 5.`,
+    description: `MT07, FRC Team 6874 Mediterra's 2026 robot (${MT07.game}): 7th of 33 at the Başkent Regional in Ankara, 8–2 in qualifications, Alliance 5 captain.`,
     h1: "MT07",
     kicker: "2026 robot · REBUILT",
     intro:
-      "MT07 is the robot the team built for the 2026 FIRST Robotics Competition season. It took the team to its best finish so far: 7th of 33 at the Başkent Regional in Ankara and captain of Alliance 5.",
+      "MT07 is the team's robot for the 2026 FIRST Robotics Competition season. It took the team to its best finish so far: 7th of 33 at the Başkent Regional in Ankara and captain of Alliance 5.",
     label: "MT07",
   },
   privacy: {
     title: "Privacy Notice",
     description:
-      "What FRC Team 6874 Mediterra's website does with the name, email and message you send through its contact form, how long it keeps them and how to have them deleted.",
+      "What the FRC Team 6874 Mediterra website does with the name, email and message you send through its contact form, and how to have them deleted.",
     h1: "Privacy",
     kicker: "KVKK · GDPR",
     intro:
@@ -106,35 +106,35 @@ const TR: Record<PageKey, PageCopy> = {
   home: {
     title: "FRC 6874 Mediterra | Antalya Robotik Takımı",
     description:
-      "FRC 6874 Mediterra, Döşemealtı, Antalya'dan bir FIRST Robotics Competition takımı. 2026 Başkent Regional: 33 takım arasında 7. ve 5. İttifak kaptanı. 2027 sezonuna hazırlanıyor.",
+      "FRC 6874 Mediterra, Antalya Döşemealtı'ndan bir FIRST Robotics Competition takımı. 2026 Başkent Regional: 33 takım arasında 7. ve 5. İttifak kaptanı.",
     h1: "FRC 6874 Mediterra",
     kicker: "",
     intro: "",
     label: "Ana sayfa",
   },
   history: {
-    title: "Takım Tarihçesi ve Sonuçlar, 2017–2026",
+    title: "Takım Tarihçesi ve Sonuçlar, 2018–2026",
     description:
-      "FRC 6874 Mediterra'nın 2017'den bu yana her sezonu: FIRST kayıtlarından yarışmalar, sıralamalar ve playoff sonuçları. 2026 Başkent Regional'da 33 takım arasında 7. ve 5. İttifak kaptanı.",
+      "FRC 6874 Mediterra'nın 2018'deki çaylak sezonundan bu yana oynadığı tüm yarışmalar: resmi FIRST kayıtlarından sıralamalar ve playoff sonuçları.",
     h1: "Tarihçe ve sonuçlar",
     kicker: "Maç kaydı · 2017–2027",
     intro:
-      "Takım, 2018'deki çaylak sezonundan bu yana FIRST Robotics Competition'da yarışıyor: Imperium (2018, 2020, 2023), Lycia (2019) ve 2024'ten beri Mediterra adıyla. Aşağıda resmi FIRST kayıtlarındaki tüm yarışmalar ve sonuçlar var.",
+      "Takım, 2018'deki çaylak sezonundan bu yana FIRST Robotics Competition'da yarışıyor: Imperium (2018, 2020, 2023), Lycia (2019) ve 2024'ten beri Mediterra adıyla. Aşağıda FIRST ve The Blue Alliance kayıtlarındaki tüm yarışmalar ve sonuçlar var.",
     label: "Tarihçe",
   },
   sponsors: {
     title: "Sponsorlar ve Sponsorluk",
     description:
-      "Antalya'daki FIRST robotik takımı FRC 6874 Mediterra'nın arkasındaki şirketler ve takıma nasıl sponsor olunur: destek nereye gider, sponsorlar ne kazanır, nasıl iletişime geçilir.",
+      "Antalya'daki FIRST robotik takımı FRC 6874 Mediterra'yı destekleyen şirketler ve takıma nasıl sponsor olunacağı: destek nereye gider, sponsorlar ne kazanır.",
     h1: "Sponsorlar",
-    kicker: "Destekçiler · 2018'den beri",
-    intro: `${site.team.school} takımı her sezon destekledi. MGA Airlines, Levent Kimya, Antera, Crystal Industrial, Bosch, SMC, Bahçeşehir Üniversitesi ve Antalya Büyükşehir Belediyesi de aşağıda yazan sezonlarda destek verdi.`,
+    kicker: "Sponsorlar · 2018'den beri",
+    intro: `${site.team.school} takımı her sezon destekledi. MGA Airlines, Levent Kimya, Antera, Crystal Industrial, Bosch, SMC, Bahçeşehir Üniversitesi ve Antalya Büyükşehir Belediyesi de aşağıda belirtilen sezonlarda destek verdi.`,
     label: "Sponsorlar",
   },
   join: {
     title: "İletişim ve Takıma Katılım",
     description:
-      "FRC 6874 Mediterra bir okul takımı: yalnızca Özel Antalya Bahçeşehir Anadolu Lisesi öğrencileri katılabilir ve üye alımı şu anda kapalı. Sponsorlar ve mentorlar buradan bize ulaşabilir.",
+      "FRC 6874 Mediterra bir okul takımı ve üye alımı şu anda kapalı. Sponsorlar, mentorlar ve sorusu olan herkes buradan bize ulaşabilir.",
     h1: "İletişim",
     kicker: "Okul takımı · üye alımı kapalı",
     intro:
@@ -143,11 +143,11 @@ const TR: Record<PageKey, PageCopy> = {
   },
   robot2026: {
     title: "MT07, 2026 Robotumuz",
-    description: `MT07, FRC 6874 Mediterra'nın 2026 sezonu (${MT07.game}) robotu. Ankara'daki Başkent Regional'da 33 takım arasında 7. oldu, sıralama maçlarında 8–2 yaptı ve 5. İttifak'ın kaptanı oldu.`,
+    description: `MT07, FRC 6874 Mediterra'nın 2026 (${MT07.game}) robotu: Başkent Regional'da 33 takım arasında 7., 8 galibiyet 2 mağlubiyet ve 5. İttifak kaptanlığı.`,
     h1: "MT07",
     kicker: "2026 robotu · REBUILT",
     intro:
-      "MT07, takımın 2026 FIRST Robotics Competition sezonu için yaptığı robot. Takımı bugüne kadarki en iyi derecesine taşıdı: Ankara'daki Başkent Regional'da 33 takım arasında 7.lik ve 5. İttifak kaptanlığı.",
+      "MT07, takımın 2026 FIRST Robotics Competition sezonundaki robotu. Takımı bugüne kadarki en iyi derecesine taşıdı: Ankara'daki Başkent Regional'da 33 takım arasında yedincilik ve 5. İttifak kaptanlığı.",
     label: "MT07",
   },
   privacy: {
@@ -162,7 +162,7 @@ const TR: Record<PageKey, PageCopy> = {
   accessibility: {
     title: "Erişilebilirlik Beyanı",
     description:
-      "FRC 6874 Mediterra web sitesinin klavye, ekran okuyucu ve büyük yazıyla nasıl çalıştığı, nerelerde hâlâ eksik olduğu ve bir sorunu bize nasıl bildirebileceğiniz.",
+      "FRC 6874 Mediterra web sitesinin klavye, ekran okuyucu ve büyük yazıyla nasıl çalıştığı, nerede eksik olduğu ve bir sorunu nasıl bildirebileceğiniz.",
     h1: "Erişilebilirlik",
     kicker: "WCAG 2.2 · AA",
     intro:
@@ -252,7 +252,7 @@ export const SEASON_TABLE = {
   },
   tr: {
     caption: "Sezon sezon",
-    note: "Her sezon bir regional'daki en iyi sıralama derecesi. Off-season etkinlikleri dahil değil.",
+    note: "Her sezon regional yarışmalarındaki en iyi sıralama derecesi. Off-season etkinlikleri dâhil değil.",
     cols: ["Sezon", "Kayıtlı adı", "Oyun", "Yarışma", "Derece", "Playoff"],
   },
 } as const;
@@ -291,8 +291,8 @@ export const ROBOT_PAGE = {
     figure: "2026 oyunu için tipik bir robotun çizimi; MT07'nin kendisi değil.",
     specsTitle: "Tasarım",
     specsBody:
-      "MT07'nin fotoğrafları ve teknik ayrıntıları yakında. Bu arada takımın tüm kaydı The Blue Alliance'ta.",
-    tba: "Takımı The Blue Alliance'ta gör",
+      "MT07'nin fotoğrafları ve teknik ayrıntıları yakında. Bu arada takımın tüm sonuçları The Blue Alliance'ta.",
+    tba: "Takımı The Blue Alliance'ta görün",
     next: `Sıradaki: ${site.team.game} için ${site.team.season} robotu. Oyun 9 Ocak 2027'de açıklanıyor.`,
   },
 } as const;
@@ -322,7 +322,7 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
         title: "What we collect",
         body: [
           "Only what you type into the contact form: your name, your email address, which option you picked and your message, plus the time it was sent.",
-          "We don't use the form for anything else, and we don't record your IP address or browser with it.",
+          "We don't use the form for anything else, and we don't store your IP address or browser with your message.",
         ],
       },
       {
@@ -345,8 +345,8 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
       {
         title: "Cookies and statistics",
         body: [
-          "No advertising or tracking cookies. One cookie, frc6874-booted, remembers for the current browser session that you've seen the opening animation, so it doesn't play on every page. It's deleted when you close the browser.",
-          "If you change anything in the accessibility menu, your choices are kept in your browser's local storage so they stay on the next visit. They're never sent to us.",
+          "No advertising or tracking cookies. One cookie, frc6874-booted, remembers for the current browser session that you've seen the opening animation, so it doesn't play on every page. A matching flag is kept in session storage. Both are deleted when you close the browser.",
+          "If you change anything in the accessibility menu, your choices are kept in your browser's local storage (frc6874-a11y) so they stay on the next visit. They're never sent to us.",
           "Vercel Web Analytics counts page views without cookies and without identifying you.",
         ],
       },
@@ -358,7 +358,7 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
         title: "Your rights",
         body: [
           "Under KVKK article 11 (and the GDPR, if you're in the EU) you can ask whether we hold data about you, get a copy, have it corrected or deleted, and object to how it's used.",
-          `Write to ${REACH} and we'll answer within 30 days. You can also complain to Türkiye's Personal Data Protection Authority (KVKK), or your own country's data protection authority.`,
+          `Write to ${REACH} and we'll answer within 30 days. You can also complain to Türkiye's Personal Data Protection Board (KVK Kurulu), or your own country's data protection authority.`,
         ],
       },
     ],
@@ -369,7 +369,7 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
       {
         title: "Veri sorumlusu",
         body: [
-          `FRC 6874 Mediterra, ${site.team.city}'daki ${site.team.school}'nin robotik takımıdır. Bu sitenin veri sorumlusu okuldur.`,
+          `FRC 6874 Mediterra, Antalya Döşemealtı'ndaki ${site.team.school}'nin robotik takımıdır. Bu sitenin veri sorumlusu okuldur.`,
           `Soru ve başvurular için: ${REACH}.`,
         ],
       },
@@ -377,7 +377,7 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
         title: "Hangi veriler",
         body: [
           "Yalnızca iletişim formuna yazdıklarınız: adınız, e-posta adresiniz, seçtiğiniz seçenek ve mesajınız, bir de gönderilme zamanı.",
-          "Formla birlikte IP adresinizi ya da tarayıcı bilginizi kaydetmiyoruz.",
+          "Mesajınızla birlikte IP adresinizi ya da tarayıcı bilginizi saklamıyoruz.",
         ],
       },
       {
@@ -400,8 +400,8 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
       {
         title: "Çerezler ve istatistik",
         body: [
-          "Reklam ya da takip çerezi yok. Tek bir çerez, frc6874-booted, giriş animasyonunu bu tarayıcı oturumunda gördüğünüzü hatırlar ki her sayfada tekrar oynamasın. Tarayıcıyı kapattığınızda silinir.",
-          "Erişilebilirlik menüsünde bir ayar değiştirirseniz, seçimleriniz bir sonraki ziyarette de geçerli olsun diye tarayıcınızın yerel depolamasında saklanır. Bize hiçbir zaman gönderilmez.",
+          "Reklam ya da takip çerezi yok. Tek bir çerez kullanılır: frc6874-booted. Giriş animasyonu her sayfada yeniden oynamasın diye, onu bu oturumda gördüğünüzü hatırlar. Oturum depolamasında da aynı amaçla bir işaret tutulur. İkisi de tarayıcıyı kapattığınızda silinir.",
+          "Erişilebilirlik menüsünde bir ayar değiştirirseniz, seçimleriniz bir sonraki ziyarette de geçerli olsun diye tarayıcınızın yerel depolamasında (frc6874-a11y) saklanır. Bize hiçbir zaman gönderilmez.",
           "Vercel Web Analytics sayfa görüntülemelerini çerez kullanmadan ve kim olduğunuzu belirlemeden sayar.",
         ],
       },

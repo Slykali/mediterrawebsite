@@ -23,7 +23,7 @@ export const FAQ: Record<Locale, FaqItem[]> = {
     {
       question: "How can a company sponsor the team?",
       answer:
-        "Sponsors can give money, materials, machining time or mentoring. It pays for regional registration, parts, batteries and getting the robot and team to events in İstanbul and Ankara. Sponsors get their logo on the robot, in the pit and on team shirts, and a place on the website. Get in touch through the Contact page and we'll work out what fits.",
+        "Sponsors can give money, materials, machining time or mentoring. The support pays for regional registration, parts, batteries and getting the robot and team to events in İstanbul and Ankara. Sponsors get their logo on the robot, in the pit and on team shirts, and a place on the website. Get in touch through the Contact page and we'll work out what fits.",
     },
     {
       question: "Where is the team based?",
@@ -45,7 +45,7 @@ export const FAQ: Record<Locale, FaqItem[]> = {
     {
       question: "FRC 6874 Mediterra'ya kimler katılabilir?",
       answer:
-        "FRC 6874 Mediterra bir okul takımı: yalnızca Döşemealtı, Antalya'daki Özel Antalya Bahçeşehir Anadolu Lisesi öğrencileri katılabilir. Takım şu anda yeni üye almıyor. Sponsor olmak ya da mentorluk yapmak isteyen şirketler ve mühendisler İletişim sayfasındaki formdan yine de bize ulaşabilir.",
+        "FRC 6874 Mediterra bir okul takımı: yalnızca Antalya Döşemealtı'ndaki Özel Antalya Bahçeşehir Anadolu Lisesi öğrencileri katılabilir. Takım şu anda yeni üye almıyor. Sponsor olmak ya da mentorluk yapmak isteyen şirketler ve mühendisler İletişim sayfasındaki formdan yine de bize ulaşabilir.",
     },
     {
       question: "Bir şirket takıma nasıl sponsor olabilir?",
@@ -55,7 +55,7 @@ export const FAQ: Record<Locale, FaqItem[]> = {
     {
       question: "Takım nerede?",
       answer:
-        "Döşemealtı, Antalya, Türkiye'de. Takımı her sezon Özel Antalya Bahçeşehir Anadolu Lisesi destekledi.",
+        "Antalya'nın Döşemealtı ilçesinde. Takımı her sezon Özel Antalya Bahçeşehir Anadolu Lisesi destekledi.",
     },
     {
       question: "FIRST Robotics Competition nedir?",

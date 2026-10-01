@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
+// Preview deployments get the Vercel Toolbar, served from vercel.live.
+const toolbar = process.env.VERCEL_ENV === "preview" ? " https://vercel.live" : "";
 
 /**
  * Everything the site loads comes from its own origin: fonts are self-hosted by
@@ -11,12 +13,13 @@ const isDev = process.env.NODE_ENV !== "production";
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ""}`,
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  `script-src 'self' 'unsafe-inline'${toolbar}${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ""}`,
+  `style-src 'self' 'unsafe-inline'${toolbar}`,
+  `img-src 'self' data: blob:${toolbar}`,
   "media-src 'self'",
-  "font-src 'self'",
-  `connect-src 'self'${isDev ? " ws: https://va.vercel-scripts.com" : ""}`,
+  `font-src 'self'${toolbar}`,
+  `connect-src 'self'${toolbar}${isDev ? " ws: https://va.vercel-scripts.com" : ""}`,
+  `frame-src 'self'${toolbar}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

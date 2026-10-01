@@ -32,6 +32,7 @@ const MESSAGES: Record<
     fix: string;
     failed: string;
     notConnected: string;
+    retry: string;
   }
 > = {
   en: {
@@ -44,12 +45,13 @@ const MESSAGES: Record<
     failed: site.contact.email
       ? `Couldn't send that. Email us at ${site.contact.email}.`
       : "Couldn't send that. Message us on Instagram, @team_6874.",
+    retry: "The page hadn't finished loading. Wait a moment and press send again. If it keeps happening, message us on Instagram, @team_6874.",
     notConnected:
       "Form isn't connected yet. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to .env.local and restart the dev server.",
   },
   tr: {
     sent: "Aldık. Takımdan biri birkaç gün içinde size dönecek.",
-    name: "Bir isim gerekli.",
+    name: "Adınızı yazın.",
     email: "Bu e-posta adresi doğru görünmüyor.",
     interest: "Birini seçin.",
     message: "Bir şeyler yazın, tek satır bile olur.",
@@ -57,6 +59,7 @@ const MESSAGES: Record<
     failed: site.contact.email
       ? `Gönderilemedi. Bize ${site.contact.email} adresinden yazın.`
       : "Gönderilemedi. Instagram'dan yazın: @team_6874.",
+    retry: "Sayfa tam yüklenmemişti. Biraz bekleyip tekrar gönderin. Sorun sürerse Instagram'dan yazın: @team_6874.",
     notConnected:
       "Form henüz bağlı değil. .env.local dosyasına SUPABASE_URL ve SUPABASE_SERVICE_ROLE_KEY ekleyip geliştirme sunucusunu yeniden başlatın.",
   },
@@ -75,17 +78,31 @@ export async function submitContact(
   const locale = formData.get("locale");
   const t = MESSAGES[isLocale(locale) ? locale : "en"];
 
-  // Bots fill the hidden field, post without the timestamp the page sets, or
-  // submit instantly. Report success and store nothing.
-  if (field(formData, "company_website", 200)) return { status: "success", message: t.sent };
+  // Bots fill the hidden field or submit instantly. Report success and store nothing.
+  if (field(formData, "hp_6874", 200)) return { status: "success", message: t.sent };
   const startedAt = Number(formData.get("started_at"));
-  if (!(startedAt > 0) || Date.now() - startedAt < MIN_FILL_MS) {
+  if (startedAt > 0 && Date.now() - startedAt < MIN_FILL_MS) {
     return { status: "success", message: t.sent };
+  }
+
+  // No timestamp means the page's script hadn't run yet (or is off). Don't
+  // pretend it worked: keep what they typed and ask them to send it again.
+  if (!(startedAt > 0)) {
+    return {
+      status: "error",
+      message: t.retry,
+      values: {
+        name: field(formData, "name", 120),
+        email: field(formData, "email", 254),
+        interest: field(formData, "interest", 20),
+        message: field(formData, "message", 4000),
+      },
+    };
   }
 
   const values: ContactValues = {
     name: field(formData, "name", 120),
-    email: field(formData, "email", 254),
+    email: field(formData, "email", 254).toLowerCase(),
     interest: field(formData, "interest", 20),
     message: field(formData, "message", 4000),
   };

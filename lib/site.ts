@@ -14,6 +14,13 @@ const SITE_URL = (
   (PRODUCTION_HOST ? `https://${PRODUCTION_HOST}` : "http://localhost:3000")
 ).replace(/\/+$/, "");
 
+if (process.env.VERCEL_ENV === "production" && SITE_URL.includes("localhost")) {
+  throw new Error(
+    "Site URL resolved to localhost in a production build. Set NEXT_PUBLIC_SITE_URL, or turn on " +
+      "\"Automatically expose System Environment Variables\" in the Vercel project settings.",
+  );
+}
+
 // The address replies come from. It should be a mailbox the school or an adult
 // mentor controls. Until NEXT_PUBLIC_CONTACT_EMAIL is set, the site shows no
 // email at all and points people to Instagram instead.

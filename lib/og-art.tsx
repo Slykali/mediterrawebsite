@@ -16,7 +16,7 @@ const TEXT = {
     footer: `Döşemealtı, Antalya · since ${team.rookieYear} · 2026: 7th of 33, Alliance 5 captain`,
   },
   tr: {
-    alt: `FRC ${team.number} Mediterra, Döşemealtı, Antalya'dan bir FIRST Robotics Competition takımı`,
+    alt: `FRC ${team.number} Mediterra, Antalya Döşemealtı'ndan bir FIRST Robotics Competition takımı`,
     program: "FIRST® Robotics Competition takımı",
     next: "Sıradaki maç",
     season: `${team.season} sezonu`,
@@ -38,11 +38,14 @@ const MUTE = "#7d879b";
  */
 async function barlow(axis: string, text: string): Promise<ArrayBuffer | null> {
   try {
-    const css = await fetch(
+    const cssRes = await fetch(
       `https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@${axis}&text=${encodeURIComponent(text)}`,
-    ).then((res) => res.text());
-    const url = css.match(/src: url\((.+?)\) format/)?.[1];
-    return url ? await fetch(url).then((res) => res.arrayBuffer()) : null;
+    );
+    if (!cssRes.ok) return null;
+    const url = (await cssRes.text()).match(/src: url\((.+?)\) format/)?.[1];
+    if (!url) return null;
+    const fontRes = await fetch(url);
+    return fontRes.ok ? await fontRes.arrayBuffer() : null;
   } catch {
     return null;
   }
