@@ -143,7 +143,12 @@ export function Hero() {
       </motion.header>
 
       <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-12 text-center sm:px-6">
-        <motion.p variants={riseIn} data-reveal className="font-mono text-[0.6875rem] tracking-[0.3em] text-mute uppercase">
+        {/* Turkish: 3px higher, so it clears the dot on the İ in the headline below. */}
+        <motion.p
+          variants={riseIn}
+          data-reveal
+          className={`relative font-mono text-[0.6875rem] tracking-[0.3em] text-mute uppercase ${locale === "tr" ? "-top-[3px]" : ""}`}
+        >
           {t.qualification}
         </motion.p>
         <motion.h1 variants={riseIn} data-reveal className={`${HUD} mt-4 text-[clamp(4rem,14vw,12.5rem)] leading-[0.82]`}>
