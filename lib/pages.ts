@@ -201,7 +201,6 @@ export const CHROME = {
       line1: "Not on",
       line2: "the field",
       body: "That page doesn't exist. Try one of these:",
-      imageAlt: "Pixel-art drawing of three team members in black 6874 shirts, shrugging.",
     },
   },
   tr: {
@@ -226,7 +225,6 @@ export const CHROME = {
       line1: "Sahada",
       line2: "değil",
       body: "Böyle bir sayfa yok. Şunlardan birine göz atın:",
-      imageAlt: "Siyah 6874 tişörtlü, omuz silken üç takım üyesinin piksel çizimi.",
     },
   },
 } as const;
