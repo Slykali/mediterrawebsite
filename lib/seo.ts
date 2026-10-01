@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
-import { SPONSORS } from "./content";
+import { CURRENT_SPONSORS } from "./content";
 import { FAQ } from "./faq";
 import { LOCALES, OG_LOCALE, localePath, type Locale } from "./i18n";
+import { OG_SIZE, ogAlt } from "./og-art";
 import { PAGES, PAGE_PATHS, type PageKey } from "./pages";
 import { HAS_REAL_EMAIL, site } from "./site";
 
@@ -18,8 +19,8 @@ export function languageAlternates(path: string): Record<string, string> {
 
 /**
  * Everything a page needs in <head>: title, description, canonical, hreflang,
- * Open Graph and Twitter. The canonical is always the clean path, so
- * ?design=… variants all point back to one URL.
+ * Open Graph and Twitter. The canonical is always the clean path, without
+ * any query string.
  */
 export function pageMetadata(locale: Locale, page: PageKey): Metadata {
   const copy = PAGES[locale][page];
@@ -27,6 +28,14 @@ export function pageMetadata(locale: Locale, page: PageKey): Metadata {
   const url = localePath(locale, path);
   const title = page === "home" ? { absolute: copy.title } : copy.title;
   const fullTitle = page === "home" ? copy.title : TITLE_TEMPLATE.replace("%s", copy.title);
+  // Setting openGraph here replaces the file-based card from app/opengraph-image,
+  // so every page names it explicitly.
+  const image = {
+    url: locale === "tr" ? "/tr/opengraph-image" : "/opengraph-image",
+    width: OG_SIZE.width,
+    height: OG_SIZE.height,
+    alt: ogAlt(locale),
+  };
 
   return {
     title,
@@ -40,6 +49,7 @@ export function pageMetadata(locale: Locale, page: PageKey): Metadata {
       url,
       title: fullTitle,
       description: copy.description,
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
@@ -47,6 +57,7 @@ export function pageMetadata(locale: Locale, page: PageKey): Metadata {
       creator: site.contact.xHandle,
       title: fullTitle,
       description: copy.description,
+      images: [image],
     },
   };
 }
@@ -62,14 +73,13 @@ export function sportsTeamJsonLd(locale: Locale) {
     "@id": `${site.url}/#team`,
     name: site.team.displayName,
     // Haliç left out on purpose: FIRST's records have 2023 as Imperium.
-    alternateName: ["Team 6874", "FRC Team 6874", "Mediterra Robotics", ...site.team.formerNames],
+    alternateName: ["Team 6874", "FRC Team 6874", ...site.team.formerNames],
     sport: "Robotics",
     url: abs(localePath(locale, "/")),
     logo: `${site.url}/icon-512.png`,
     image: `${site.url}/opengraph-image`,
     foundingDate: String(site.team.rookieYear),
     description: PAGES[locale].home.description,
-    inLanguage: locale,
     location: {
       "@type": "Place",
       name: `${site.team.city}, ${site.team.country}`,
@@ -87,7 +97,7 @@ export function sportsTeamJsonLd(locale: Locale) {
     },
     sponsor: [
       { "@type": "EducationalOrganization", name: site.team.school },
-      ...SPONSORS.map((sponsor) => ({ "@type": "Organization", name: sponsor.name })),
+      ...CURRENT_SPONSORS.map((sponsor) => ({ "@type": "Organization", name: sponsor.name })),
     ],
     ...(HAS_REAL_EMAIL ? { email: site.contact.email } : {}),
     sameAs: [site.contact.tba, site.contact.frcEvents, site.contact.instagram, site.contact.x],

@@ -1,17 +1,20 @@
 "use client";
 
-import { useActionState, type ReactNode } from "react";
+import Link from "next/link";
+import { useActionState, useEffect, useRef, type ReactNode } from "react";
 
 import { submitContact } from "@/app/actions";
-import { useContent } from "@/components/i18n/locale-provider";
+import { Cased, useContent, useLocale } from "@/components/i18n/locale-provider";
 import { ClosedNotice } from "@/components/shared/closed-notice";
 import { FormGuards } from "@/components/shared/form-guards";
 import { Reveal } from "@/components/shared/reveal";
 import { initialContactState, isChecked } from "@/lib/contact";
+import { localePath } from "@/lib/i18n";
+import { PAGE_PATHS } from "@/lib/pages";
 import { useCopy } from "./copy";
 import { HUD, MONO, SectionTitle } from "./ui";
 
-const INPUT = "mt-2 w-full bg-transparent text-xl font-semibold outline-none placeholder:text-mute/50";
+const INPUT = "mt-2 w-full bg-transparent text-xl font-semibold outline-none placeholder:text-mute/80";
 
 function Field({
   label,
@@ -25,10 +28,10 @@ function Field({
   children: ReactNode;
 }) {
   return (
-    <label className={`block border border-rule bg-panel p-4 transition-colors focus-within:border-mute ${className}`}>
+    <label className={`block border border-rule bg-panel p-4 transition-colors focus-within:border-accent focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent ${className}`}>
       <span className={`flex justify-between gap-4 text-mute ${MONO}`}>
         <span>{label}</span>
-        {error && <span className="tracking-normal text-accent normal-case">{error}</span>}
+        {error && <span className="tracking-normal text-accent-text normal-case">{error}</span>}
       </span>
       {children}
     </label>
@@ -38,10 +41,20 @@ function Field({
 /** Team registration console. Roles alternate red and blue like alliance stations. */
 export function Contact() {
   const [state, formAction, pending] = useActionState(submitContact, initialContactState);
+  const form = useRef<HTMLFormElement>(null);
   const values = state.values ?? {};
   const errors = state.errors ?? {};
   const c = useContent();
+  const locale = useLocale();
   const t = useCopy();
+
+  // After a failed submit, take the cursor to the first field that needs fixing.
+  useEffect(() => {
+    if (state.status !== "error" || !state.errors) return;
+    // The role picker comes first on the page, so it wins when it's one of them.
+    const first = state.errors.interest ? 'input[name="interest"]' : '[aria-invalid="true"]';
+    form.current?.querySelector<HTMLElement>(first)?.focus();
+  }, [state]);
 
   return (
     <section id="contact" className="border-t border-rule px-4 py-20 sm:px-6">
@@ -52,14 +65,14 @@ export function Contact() {
       </SectionTitle>
 
       <Reveal delay={0.05}>
-        <form action={formAction} noValidate className="relative mt-10 grid gap-3 lg:grid-cols-12">
-          <FormGuards design="matchday" />
+        <form ref={form} action={formAction} noValidate className="relative mt-10 grid gap-3 lg:grid-cols-12">
+          <FormGuards />
           <ClosedNotice className="bg-panel lg:col-span-12" />
 
           <fieldset className="lg:col-span-12">
             <legend className={`flex w-full justify-between gap-4 text-mute ${MONO}`}>
               <span>{t.selectRole}</span>
-              {errors.interest && <span className="tracking-normal text-accent normal-case">{errors.interest}</span>}
+              {errors.interest && <span className="tracking-normal text-accent-text normal-case">{errors.interest}</span>}
             </legend>
             <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3">
               {c.interests.map((option, i) => {
@@ -80,10 +93,12 @@ export function Contact() {
                           : "peer-checked:border-accent peer-checked:bg-accent/15"
                       }`}
                     >
-                      <span className={`${MONO} ${blue ? "text-accent-2" : "text-accent"}`}>
+                      <span className={`${MONO} ${blue ? "text-accent-2-text" : "text-accent-text"}`}>
                         {blue ? t.blue : t.red} {Math.floor(i / 2) + 1}
                       </span>
-                      <span className={`${HUD} text-2xl leading-none`}>{option.label}</span>
+                      <span className={`${HUD} text-2xl leading-none`}>
+                        <Cased>{option.label}</Cased>
+                      </span>
                     </span>
                   </label>
                 );
@@ -123,8 +138,15 @@ export function Contact() {
             />
           </Field>
 
+          <p className="text-sm leading-relaxed text-mute lg:col-span-12">
+            {t.privacyNote}{" "}
+            <Link href={localePath(locale, PAGE_PATHS.privacy)} className="text-ink underline underline-offset-4">
+              {t.privacyLink}
+            </Link>
+          </p>
+
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2 lg:col-span-12">
-            <p role="status" className={`text-base ${state.status === "error" ? "text-accent" : "text-ink"}`}>
+            <p role="status" className={`text-base ${state.status === "error" ? "text-accent-text" : "text-ink"}`}>
               {state.message}
             </p>
             <button

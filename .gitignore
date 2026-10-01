@@ -17,3 +17,6 @@ Thumbs.db
 
 # Local editor/agent config (machine-specific paths)
 .claude/
+
+# macOS resource forks
+._*

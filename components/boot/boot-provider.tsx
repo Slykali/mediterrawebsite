@@ -1,5 +1,6 @@
 "use client";
 
+import { MotionConfig } from "framer-motion";
 import {
   createContext,
   useCallback,
@@ -114,5 +115,11 @@ export function BootProvider({
     [phase, skip, crawler, finish],
   );
 
-  return <BootContext.Provider value={value}>{children}</BootContext.Provider>;
+  // reducedMotion="user": with prefers-reduced-motion, Framer skips transform
+  // and layout animations site-wide (opacity fades still run).
+  return (
+    <BootContext.Provider value={value}>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </BootContext.Provider>
+  );
 }

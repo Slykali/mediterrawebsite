@@ -1,14 +1,11 @@
 "use server";
 
-import { headers } from "next/headers";
-
 import {
   INTEREST_VALUES,
   type ContactField,
   type ContactState,
   type ContactValues,
 } from "@/lib/contact";
-import { isDesignId } from "@/lib/designs";
 import { isLocale, type Locale } from "@/lib/i18n";
 import { site } from "@/lib/site";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
@@ -17,6 +14,12 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** A human can't read the form and type a message this fast. */
 const MIN_FILL_MS = 2500;
+
+/** Messages one email address can leave per hour before the rest are dropped. */
+const MAX_PER_HOUR = 3;
+
+/** Messages older than this are deleted (see the privacy page). */
+const RETENTION_MS = 365 * 24 * 60 * 60 * 1000;
 
 const MESSAGES: Record<
   Locale,
@@ -38,7 +41,9 @@ const MESSAGES: Record<
     interest: "Pick one.",
     message: "Say something, even one line.",
     fix: "A few things need fixing.",
-    failed: `Couldn't send that. Email us at ${site.contact.email}.`,
+    failed: site.contact.email
+      ? `Couldn't send that. Email us at ${site.contact.email}.`
+      : "Couldn't send that. Message us on Instagram, @team_6874.",
     notConnected:
       "Form isn't connected yet. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to .env.local and restart the dev server.",
   },
@@ -49,7 +54,9 @@ const MESSAGES: Record<
     interest: "Birini seçin.",
     message: "Bir şeyler yazın, tek satır bile olur.",
     fix: "Düzeltilmesi gereken birkaç şey var.",
-    failed: `Gönderilemedi. Bize ${site.contact.email} adresinden yazın.`,
+    failed: site.contact.email
+      ? `Gönderilemedi. Bize ${site.contact.email} adresinden yazın.`
+      : "Gönderilemedi. Instagram'dan yazın: @team_6874.",
     notConnected:
       "Form henüz bağlı değil. .env.local dosyasına SUPABASE_URL ve SUPABASE_SERVICE_ROLE_KEY ekleyip geliştirme sunucusunu yeniden başlatın.",
   },
@@ -68,10 +75,11 @@ export async function submitContact(
   const locale = formData.get("locale");
   const t = MESSAGES[isLocale(locale) ? locale : "en"];
 
-  // Bots fill the hidden field or submit instantly. Report success and store nothing.
+  // Bots fill the hidden field, post without the timestamp the page sets, or
+  // submit instantly. Report success and store nothing.
   if (field(formData, "company_website", 200)) return { status: "success", message: t.sent };
   const startedAt = Number(formData.get("started_at"));
-  if (startedAt > 0 && Date.now() - startedAt < MIN_FILL_MS) {
+  if (!(startedAt > 0) || Date.now() - startedAt < MIN_FILL_MS) {
     return { status: "success", message: t.sent };
   }
 
@@ -102,20 +110,31 @@ export async function submitContact(
     };
   }
 
-  const design = String(formData.get("design") ?? "");
+  // Someone (or something) sending again and again: keep answering, stop storing.
+  const { count } = await supabase
+    .from("contact_messages")
+    .select("id", { count: "exact", head: true })
+    .eq("email", values.email)
+    .gte("created_at", new Date(Date.now() - 60 * 60 * 1000).toISOString());
+  if ((count ?? 0) >= MAX_PER_HOUR) return { status: "success", message: t.sent };
+
+  // Only what's needed to reply. The privacy notice promises nothing else is kept.
   const { error } = await supabase.from("contact_messages").insert({
     name: values.name,
     email: values.email,
     interest: values.interest,
     message: values.message,
-    design: isDesignId(design) ? design : null,
-    user_agent: (await headers()).get("user-agent")?.slice(0, 400) ?? null,
   });
 
   if (error) {
     console.error("[contact] insert failed:", error.message);
     return { status: "error", values, message: t.failed };
   }
+
+  // The privacy notice says messages are deleted after 12 months.
+  const cutoff = new Date(Date.now() - RETENTION_MS).toISOString();
+  const { error: pruneError } = await supabase.from("contact_messages").delete().lt("created_at", cutoff);
+  if (pruneError) console.error("[contact] pruning old messages failed:", pruneError.message);
 
   return { status: "success", message: t.sent };
 }

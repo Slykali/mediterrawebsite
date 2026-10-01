@@ -1,5 +1,5 @@
 /**
- * Everything the sections say, in both languages. All five designs read from
+ * Everything the sections say, in both languages. The design reads from
  * here and nowhere else, so an edit lands everywhere at once. Client
  * components get the right language with useContent(); server code indexes
  * CONTENT[locale].

@@ -11,11 +11,13 @@ const PRIORITY: Record<PageKey, number> = {
   join: 0.8,
   sponsors: 0.7,
   robot2026: 0.6,
+  privacy: 0.2,
 };
 
 /** Every page in both languages, each listing its other-language twin. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+  // Bump when content changes. new Date() would claim every page changed on every deploy.
+  const lastModified = new Date("2026-10-01");
   const abs = (path: string) => `${site.url}${path === "/" ? "" : path}`;
 
   return (Object.keys(PAGE_PATHS) as PageKey[]).flatMap((page) => {
@@ -26,7 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     return LOCALES.map((locale) => ({
       url: abs(localePath(locale, path)),
       lastModified,
-      changeFrequency: page === "home" ? ("weekly" as const) : ("monthly" as const),
+      changeFrequency: page === "home" ? ("weekly" as const) : page === "privacy" ? ("yearly" as const) : ("monthly" as const),
       priority: PRIORITY[page],
       alternates: { languages },
     }));

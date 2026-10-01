@@ -1,9 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { useState } from "react";
 
-import { useContent } from "@/components/i18n/locale-provider";
+import { Cased, useContent, useLocale } from "@/components/i18n/locale-provider";
 import { useSectionHref } from "@/components/i18n/nav";
 import { FinishChart } from "@/components/shared/finish-chart";
 import { Marquee } from "@/components/shared/marquee";
@@ -19,6 +20,8 @@ import {
   type Robot,
   type TimelineKind,
 } from "@/lib/content";
+import { localePath } from "@/lib/i18n";
+import { CHROME, PAGE_PATHS } from "@/lib/pages";
 import { LINKS, site } from "@/lib/site";
 import { useCopy } from "./copy";
 import { HUD, MONO, SectionTitle, SkewButton } from "./ui";
@@ -29,7 +32,7 @@ import { HUD, MONO, SectionTitle, SkewButton } from "./ui";
 const RESULT: Record<TimelineKind, { tag: string; stripe: string }> = {
   legacy: { tag: "bg-accent-2 text-on-accent", stripe: "bg-accent-2" },
   latest: { tag: "bg-accent text-on-accent", stripe: "bg-accent" },
-  next: { tag: "border border-accent text-accent", stripe: "bg-accent" },
+  next: { tag: "border border-accent text-accent-text", stripe: "bg-accent" },
 };
 
 export function Timeline() {
@@ -38,14 +41,14 @@ export function Timeline() {
   return (
     <section id="timeline" className="border-t border-rule px-4 py-20 sm:px-6">
       <SectionTitle kicker={t.matchLog}>
-        {t.regionals(c.spell(REGIONAL_COUNT))}
+        <Cased>{t.regionals(c.spell(REGIONAL_COUNT))}</Cased>
         <br />
         <span className="text-mute">{c.sinceRookie}</span>
       </SectionTitle>
 
       <Reveal className="mt-10 border border-rule bg-panel/40 p-4 sm:p-6">
         <p className={`text-mute ${MONO}`}>{t.bestFinish}</p>
-        <FinishChart className="mt-4 text-ink" highlightClassName="text-accent" />
+        <FinishChart className="mt-4 text-ink" highlightClassName="text-accent-text" />
       </Reveal>
 
       <div className="mt-4 border border-rule bg-panel/40">
@@ -70,7 +73,7 @@ export function Timeline() {
                 </span>
               </span>
               <div>
-                <h3 className={`${HUD} text-2xl`}>{entry.title}</h3>
+                <h3 className={`${HUD} text-2xl`}><Cased>{entry.title}</Cased></h3>
                 <p className="mt-1 max-w-2xl text-base leading-snug text-mute">{entry.body}</p>
               </div>
             </Reveal>
@@ -93,7 +96,7 @@ function LockedDetail({ robot }: { robot: Robot }) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-10 text-center">
       <span className={`${HUD} text-[clamp(6rem,14vw,10rem)] leading-none text-rule`}>?</span>
-      <p className={`${HUD} text-3xl`}>{t.unlocks(robot.game)}</p>
+      <p className={`${HUD} text-3xl`}><Cased>{t.unlocks(robot.game)}</Cased></p>
       <p className={`text-mute ${MONO}`}>
         {time ? `${time.days}d ${pad2(time.hours)}h ${pad2(time.minutes)}m ${pad2(time.seconds)}s` : "--"}
       </p>
@@ -128,12 +131,16 @@ function RobotDetail({ robot }: { robot: Robot }) {
             className="mx-auto my-6 w-full max-w-lg text-ink"
           />
           <p className={`text-mute ${MONO}`}>{t.illustration}</p>
-          <h3 className={`${HUD} mt-2 text-5xl leading-none`}>{robotTitle(robot)}</h3>
-          <dl className="mt-5 grid grid-cols-3 border-y border-rule">
+          <h3 className={`${HUD} mt-2 text-5xl leading-none`}>
+            <Cased>{robotTitle(robot)}</Cased>
+          </h3>
+          <dl className="mt-5 grid border-y border-rule min-[480px]:grid-cols-3">
             {rows.map(([label, value]) => (
-              <div key={label} className="border-r border-rule px-3 py-3 last:border-r-0">
+              <div key={label} className="min-w-0 border-rule px-3 py-3 not-last:border-b min-[480px]:not-last:border-r min-[480px]:not-last:border-b-0">
                 <dt className={`text-mute ${MONO}`}>{label}</dt>
-                <dd className={`${HUD} mt-1 text-lg`}>{value}</dd>
+                <dd className={`${HUD} mt-1 text-lg`}>
+                  <Cased>{value}</Cased>
+                </dd>
               </div>
             ))}
           </dl>
@@ -176,7 +183,7 @@ export function Garage() {
                 ) : (
                   <RobotGlyph kind={item.kind} strokeWidth={1.3} className="h-16 w-full text-ink" />
                 )}
-                <span className={`${HUD} text-base leading-none`}>{item.locked ? t.locked : robotTitle(item)}</span>
+                <span className={`${HUD} text-base leading-none`}><Cased>{item.locked ? t.locked : robotTitle(item)}</Cased></span>
                 {active && (
                   <motion.span
                     layoutId="robot-select"
@@ -235,7 +242,9 @@ export function Backers() {
           <Marquee baseVelocity={-0.04} repeat={3} itemClassName="">
             {SPONSORS.map((sponsor) => (
               <span key={sponsor.name} className="flex items-center gap-4 px-5">
-                <span className={`${HUD} text-2xl sm:text-3xl`}>{sponsor.name}</span>
+                <span className={`${HUD} text-2xl sm:text-3xl`}>
+                  <Cased>{sponsor.name}</Cased>
+                </span>
                 <span className={`text-mute ${MONO}`}>{formatSeasons(sponsor.seasons)}</span>
                 <span className="size-1.5 bg-accent" />
               </span>
@@ -247,8 +256,10 @@ export function Backers() {
       <div className="mt-10 grid gap-3 px-4 sm:px-6 md:grid-cols-3">
         {c.pitch.map((item, i) => (
           <Reveal key={item.title} delay={i * 0.06} className="border border-rule bg-panel p-5">
-            <span className={`text-accent ${MONO}`}>0{i + 1}</span>
-            <h3 className={`${HUD} mt-2 text-2xl`}>{item.title}</h3>
+            <span className={`text-accent-text ${MONO}`}>0{i + 1}</span>
+            <h3 className={`${HUD} mt-2 text-2xl`}>
+              <Cased>{item.title}</Cased>
+            </h3>
             <p className="mt-2 text-base leading-snug text-mute">{item.body}</p>
           </Reveal>
         ))}
@@ -269,20 +280,27 @@ export function Backers() {
 export function Footer() {
   const { team, contact } = site;
   const c = useContent();
+  const locale = useLocale();
+  const chrome = CHROME[locale];
 
   return (
     <footer className="border-t border-rule">
       <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-6 sm:px-6">
         <span className={`${HUD} text-3xl`}>
-          {team.number} <span className="text-mute">{team.name}</span>
+          {team.number}{" "}
+          <span className="text-mute">
+            <Cased>{team.name}</Cased>
+          </span>
         </span>
         <nav className={`flex flex-wrap gap-5 text-mute ${MONO}`}>
-          <a href={`mailto:${contact.email}`} className="transition-colors hover:text-ink">
-            {c.email}
-          </a>
+          {contact.email && (
+            <a href={`mailto:${contact.email}`} className="transition-colors hover:text-ink">
+              {c.email}
+            </a>
+          )}
           {LINKS.map((link) => (
             <a key={link.label} href={link.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
-              {link.label}
+              <Cased>{link.label}</Cased>
             </a>
           ))}
         </nav>
@@ -291,14 +309,21 @@ export function Footer() {
         <span className="flex-1 bg-accent" />
         <span className="flex-1 bg-accent-2" />
       </div>
-      <div className={`flex justify-between gap-4 px-4 py-3 text-mute sm:px-6 ${MONO}`}>
-        <span>
+      <div className={`flex flex-wrap justify-between gap-x-6 gap-y-2 px-4 py-3 text-mute sm:px-6 ${MONO}`}>
+        {/* Server and browser can straddle New Year; the browser's year wins. */}
+        <span suppressHydrationWarning>
           &copy; {new Date().getFullYear()} FRC {team.number}
         </span>
-        <a href="#top" className="transition-colors hover:text-ink">
-          {c.backToTop} &uarr;
-        </a>
+        <span className="flex gap-6">
+          <Link href={localePath(locale, PAGE_PATHS.privacy)} className="transition-colors hover:text-ink">
+            {chrome.privacy}
+          </Link>
+          <a href="#top" className="transition-colors hover:text-ink">
+            {c.backToTop} &uarr;
+          </a>
+        </span>
       </div>
+      <p className="max-w-4xl px-4 pb-6 text-xs leading-relaxed text-mute sm:px-6">{chrome.firstNotice}</p>
     </footer>
   );
 }

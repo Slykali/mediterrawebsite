@@ -4,23 +4,24 @@ import { DESIGNS } from "@/components/designs/registry";
 import { JsonLd } from "@/components/shared/json-ld";
 import { RobotGlyph } from "@/components/shared/robot-glyph";
 import { CONTENT, MT07, SPONSORS, formatSeasons } from "@/lib/content";
+import { DEFAULT_DESIGN } from "@/lib/designs";
 import { localePath, type Locale } from "@/lib/i18n";
-import { PAGES, PAGE_PATHS, ROBOT_PAGE, SEASON_TABLE } from "@/lib/pages";
+import { PAGES, PAGE_PATHS, PRIVACY, ROBOT_PAGE, SEASON_TABLE } from "@/lib/pages";
 import { faqJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
-import { DesignFrame, resolvePageDesign, type SearchParams } from "./design-frame";
+import { DesignFrame } from "./design-frame";
 import { PageShell } from "./page-shell";
 
-type PageProps = { locale: Locale; searchParams: SearchParams };
+type PageProps = { locale: Locale };
 
 const LABEL = "font-mono text-[10px] tracking-[0.18em] uppercase";
 const LINK =
-  "group inline-flex items-center gap-2 border-b border-current pb-1 font-mono text-[11px] tracking-[0.16em] uppercase transition-colors hover:text-accent";
+  "group inline-flex items-center gap-2 border-b border-current pb-1 font-mono text-[11px] tracking-[0.16em] uppercase transition-colors hover:text-accent-text";
 
 /* --- Home ----------------------------------------------------------------- */
 
-export async function HomePage({ locale, searchParams }: PageProps) {
-  const id = await resolvePageDesign(searchParams);
+export function HomePage({ locale }: PageProps) {
+  const id = DEFAULT_DESIGN;
   const { Home } = DESIGNS[id];
 
   return (
@@ -76,8 +77,8 @@ function SeasonTable({ locale, pad }: { locale: Locale; pad: string }) {
   );
 }
 
-export async function HistoryPage({ locale, searchParams }: PageProps) {
-  const id = await resolvePageDesign(searchParams);
+export function HistoryPage({ locale }: PageProps) {
+  const id = DEFAULT_DESIGN;
   const { Timeline, Garage, pad } = DESIGNS[id];
 
   return (
@@ -136,8 +137,8 @@ function SponsorTable({ locale, pad }: { locale: Locale; pad: string }) {
   );
 }
 
-export async function SponsorsPage({ locale, searchParams }: PageProps) {
-  const id = await resolvePageDesign(searchParams);
+export function SponsorsPage({ locale }: PageProps) {
+  const id = DEFAULT_DESIGN;
   const { Backers, pad } = DESIGNS[id];
 
   return (
@@ -150,8 +151,8 @@ export async function SponsorsPage({ locale, searchParams }: PageProps) {
 
 /* --- Join ----------------------------------------------------------------- */
 
-export async function JoinPage({ locale, searchParams }: PageProps) {
-  const id = await resolvePageDesign(searchParams);
+export function JoinPage({ locale }: PageProps) {
+  const id = DEFAULT_DESIGN;
   const { Contact } = DESIGNS[id];
 
   return (
@@ -163,8 +164,8 @@ export async function JoinPage({ locale, searchParams }: PageProps) {
 
 /* --- MT07 ----------------------------------------------------------------- */
 
-export async function RobotPage({ locale, searchParams }: PageProps) {
-  const id = await resolvePageDesign(searchParams);
+export function RobotPage({ locale }: PageProps) {
+  const id = DEFAULT_DESIGN;
   const { pad } = DESIGNS[id];
   const c = CONTENT[locale];
   const t = ROBOT_PAGE[locale];
@@ -224,13 +225,41 @@ export async function RobotPage({ locale, searchParams }: PageProps) {
           {next && (
             <p className="max-w-2xl border-t border-rule pt-6 text-sm leading-relaxed">
               {t.next}{" "}
-              <Link href={localePath(locale, PAGE_PATHS.join)} className="text-accent underline underline-offset-4">
+              <Link href={localePath(locale, PAGE_PATHS.join)} className="text-accent-text underline underline-offset-4">
                 {PAGES[locale].join.h1} &rarr;
               </Link>
             </p>
           )}
         </div>
       </section>
+    </PageShell>
+  );
+}
+
+/* --- Privacy -------------------------------------------------------------- */
+
+export function PrivacyPage({ locale }: PageProps) {
+  const id = DEFAULT_DESIGN;
+  const { pad } = DESIGNS[id];
+  const t = PRIVACY[locale];
+
+  return (
+    <PageShell locale={locale} page="privacy" design={id}>
+      <div className={`py-14 sm:py-20 ${pad}`}>
+        <div className="max-w-3xl divide-y divide-rule border-y border-rule">
+          {t.sections.map((section) => (
+            <section key={section.title} className="grid gap-3 py-8 sm:grid-cols-[12rem_1fr] sm:gap-8">
+              <h2 className={`text-ink ${LABEL} pt-1`}>{section.title}</h2>
+              <div className="space-y-3 text-sm leading-relaxed text-mute sm:text-base">
+                {section.body.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+        <p className={`mt-6 text-mute ${LABEL}`}>{t.updated}</p>
+      </div>
     </PageShell>
   );
 }

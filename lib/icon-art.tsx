@@ -1,9 +1,9 @@
 import { ImageResponse } from "next/og";
 
 /**
- * The favicon mark (app/icon.svg) drawn at any size: a hazard-orange square
- * over two bone rules on carbon. TODO: swap for the team's real logo if there
- * is one — replace app/icon.svg and this drawing together.
+ * The favicon mark (app/icon.svg) drawn at any size: a red and a blue block,
+ * the two alliances, on Matchday's near-black. TODO: swap for the team's real
+ * logo if there is one; replace app/icon.svg and this drawing together.
  */
 export function iconImage(size: number) {
   const u = size / 32;
@@ -13,10 +13,9 @@ export function iconImage(size: number) {
 
   return new ImageResponse(
     (
-      <div style={{ display: "flex", position: "relative", width: "100%", height: "100%", background: "#0c0c0b" }}>
-        {block(6, 6, 8, 8, "#ff3d00")}
-        {block(6, 18, 20, 3, "#edeae3")}
-        {block(6, 23, 13, 3, "#edeae3")}
+      <div style={{ display: "flex", position: "relative", width: "100%", height: "100%", background: "#06080d" }}>
+        {block(5, 7, 10, 18, "#e3262c")}
+        {block(17, 7, 10, 18, "#1f6fe0")}
       </div>
     ),
     { width: size, height: size },

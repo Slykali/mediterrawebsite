@@ -10,8 +10,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: PAGES.en.home.description,
     start_url: "/",
     display: "browser",
-    background_color: "#0c0c0b",
-    theme_color: "#0c0c0b",
+    background_color: "#06080d",
+    theme_color: "#06080d",
     icons: [
       { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },

@@ -10,9 +10,7 @@ create table if not exists public.contact_messages (
   name text not null check (char_length(name) between 1 and 120),
   email text not null check (char_length(email) between 3 and 254),
   interest text not null check (interest in ('crew', 'sponsor', 'mentor', 'other')),
-  message text not null check (char_length(message) between 1 and 4000),
-  design text,
-  user_agent text
+  message text not null check (char_length(message) between 1 and 4000)
 );
 
 alter table public.contact_messages enable row level security;

@@ -5,6 +5,7 @@ import { Fragment } from "react";
 
 import { useBoot } from "@/components/boot/boot-provider";
 import { LangSwitch } from "@/components/i18n/lang-switch";
+import { Cased } from "@/components/i18n/locale-provider";
 import { useSectionHref } from "@/components/i18n/nav";
 import { MediaBackdrop } from "@/components/shared/media-backdrop";
 import { pad2, useCountdown, type Countdown } from "@/components/shared/use-countdown";
@@ -27,21 +28,23 @@ function Scorebug({ time }: { time: Countdown | null }) {
 
   return (
     <div className="grid grid-cols-[auto_1fr_auto] items-stretch border border-rule bg-panel/85 backdrop-blur-sm">
-      <div className="flex flex-col justify-center bg-accent px-3 py-2 text-on-accent sm:px-5">
+      <div className="flex flex-col justify-center bg-accent px-2.5 py-2 text-on-accent min-[380px]:px-3 sm:px-5">
         <span className="font-mono text-[9px] tracking-[0.2em] uppercase opacity-80">{t.red}</span>
-        <span className={`${HUD} text-2xl leading-none sm:text-5xl`}>{site.team.number}</span>
+        <span className={`${HUD} text-xl leading-none min-[380px]:text-2xl sm:text-5xl`}>{site.team.number}</span>
       </div>
 
-      <div className="flex flex-col items-center justify-center px-2 py-2 sm:px-6">
+      <div className="flex min-w-0 flex-col items-center justify-center px-1.5 py-2 min-[380px]:px-2 sm:px-6">
         <p className="font-mono text-[9px] tracking-[0.3em] text-mute uppercase">
-          {time?.done ? t.buildOn : t.kickoffIn}
+          <Cased>{time?.done ? t.buildOn : t.kickoffIn}</Cased>
         </p>
-        <div className="mt-1 flex items-start gap-1 sm:gap-3" aria-live="off">
+        {/* The ticking digits are hidden from screen readers; this says the same once. */}
+        <p className="sr-only">{t.kickoffOn}</p>
+        <div aria-hidden className="mt-1 flex items-start gap-1 sm:gap-3">
           {cells.map(([label, value], i) => (
             <Fragment key={label}>
-              {i > 0 && <span className={`${HUD} text-2xl text-mute sm:text-5xl`}>:</span>}
+              {i > 0 && <span className={`${HUD} text-xl text-mute min-[380px]:text-2xl sm:text-5xl`}>:</span>}
               <span className="flex flex-col items-center">
-                <span className={`${HUD} text-2xl leading-none tabular-nums not-italic sm:text-5xl`}>{pad2(value)}</span>
+                <span className={`${HUD} text-xl leading-none min-[380px]:text-2xl tabular-nums not-italic sm:text-5xl`}>{pad2(value)}</span>
                 <span className="mt-1 font-mono text-[8px] tracking-[0.2em] text-mute uppercase">{label}</span>
               </span>
             </Fragment>
@@ -49,9 +52,9 @@ function Scorebug({ time }: { time: Countdown | null }) {
         </div>
       </div>
 
-      <div className="flex flex-col items-end justify-center bg-accent-2 px-3 py-2 text-on-accent sm:px-5">
+      <div className="flex flex-col items-end justify-center bg-accent-2 px-2.5 py-2 text-on-accent min-[380px]:px-3 sm:px-5">
         <span className="font-mono text-[9px] tracking-[0.2em] uppercase opacity-80">{t.blue}</span>
-        <span className={`${HUD} text-2xl leading-none sm:text-5xl`}>{site.team.season}</span>
+        <span className={`${HUD} text-xl leading-none min-[380px]:text-2xl sm:text-5xl`}>{site.team.season}</span>
       </div>
     </div>
   );
@@ -72,10 +75,16 @@ function LowerThird({ play }: { play: boolean }) {
     >
       <span className={`flex items-center bg-accent px-4 text-2xl text-on-accent ${HUD}`}>{team.number}</span>
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-r border-rule bg-panel/90 px-4 py-2 font-mono text-[10px] tracking-[0.16em] text-mute uppercase sm:text-[11px]">
-        <span className="text-ink">{team.name}</span>
-        <span>{team.city}</span>
-        <span>{t.lastResult}</span>
-        <span className="text-accent">{t.membership}</span>
+        <span className="text-ink">
+          <Cased>{team.name}</Cased>
+        </span>
+        <span>
+          <Cased>{team.city}</Cased>
+        </span>
+        <span>
+          <Cased>{t.lastResult}</Cased>
+        </span>
+        <span className="text-accent-text">{t.membership}</span>
       </div>
     </motion.div>
   );
@@ -105,7 +114,7 @@ export function Hero() {
       <motion.header
         variants={fadeIn}
         data-reveal
-        className={`relative flex items-center justify-between gap-4 border-b border-rule px-4 py-3 sm:px-6 ${MONO}`}
+        className={`relative flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-rule px-4 py-3 sm:px-6 ${MONO}`}
       >
         <span className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 bg-accent px-2 py-0.5 text-on-accent">
@@ -113,12 +122,13 @@ export function Hero() {
             {t.live}
           </span>
           <span className="text-ink">
-            FRC {team.number} &middot; {team.name}
+            FRC {team.number} &middot; <Cased>{team.name}</Cased>
           </span>
         </span>
-        <nav className="hidden gap-6 text-mute md:flex">
+        {/* Phones: its own row under the logo. md and up: between logo and language. */}
+        <nav aria-label={t.sectionsNav} className="order-last flex w-full flex-wrap gap-x-5 gap-y-1 text-mute md:order-none md:w-auto md:gap-x-6">
           {NAV_IDS.map((id) => (
-            <a key={id} href={href(id)} className="transition-colors hover:text-ink">
+            <a key={id} href={href(id)} className="py-1 transition-colors hover:text-ink">
               {t.nav[id]}
             </a>
           ))}
@@ -135,15 +145,15 @@ export function Hero() {
         </motion.p>
         <motion.h1 variants={riseIn} data-reveal className={`${HUD} mt-4 text-[clamp(4rem,14vw,12.5rem)] leading-[0.82]`}>
           <span className="sr-only">FRC {team.number} Mediterra: </span>
-          {t.weAreBack[0]}
-          <span className="text-accent">{t.weAreBack[1]}</span>
+          {t.headline[0]}
+          <span className="text-accent">{t.headline[1]}</span>
         </motion.h1>
         <motion.div variants={riseIn} data-reveal className="mt-10 w-full max-w-3xl">
           <Scorebug time={time} />
         </motion.div>
         <motion.div variants={riseIn} data-reveal className="mt-10 flex flex-wrap justify-center gap-4">
           <SkewButton href={href("contact")} tone="red">
-            {t.joinAlliance}
+            {t.getInTouch}
           </SkewButton>
           <SkewButton href={href("backers")} tone="blue">
             {t.sponsorUs}

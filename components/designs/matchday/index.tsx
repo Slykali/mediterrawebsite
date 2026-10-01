@@ -14,7 +14,7 @@ export function MatchdayDesign() {
       <BootOverlay exit="collapse">
         <MatchdayBoot />
       </BootOverlay>
-      <main>
+      <main id="main">
         <Hero />
         <Timeline />
         <Garage />

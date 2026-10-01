@@ -1,30 +1,29 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 import { useLocale } from "@/components/i18n/locale-provider";
-import type { DesignId } from "@/lib/designs";
 
 /**
- * Hidden fields every contact form carries: which design sent it, the page's
+ * Hidden fields the contact form carries: the page's
  * language (for the reply text), when the form was first shown (bots submit
  * instantly), and a honeypot only bots fill.
- * The timestamp is set after mount — rendering Date.now() on the server would
- * never match the client.
+ * The timestamp is set after mount (rendering Date.now() on the server would
+ * never match the client), and as the field's default, not just its value:
+ * React resets the form after every submit, and a reset puts each field back
+ * to its default. A plain value would come back empty and the retry would be
+ * dropped as a bot.
  */
-export function FormGuards({ design }: { design: DesignId }) {
-  const startedAt = useRef<HTMLInputElement>(null);
+export function FormGuards() {
+  const [startedAt, setStartedAt] = useState("");
   const locale = useLocale();
 
-  useEffect(() => {
-    if (startedAt.current) startedAt.current.value = String(Date.now());
-  }, []);
+  useEffect(() => setStartedAt(String(Date.now())), []);
 
   return (
     <>
-      <input type="hidden" name="design" defaultValue={design} />
       <input type="hidden" name="locale" defaultValue={locale} />
-      <input ref={startedAt} type="hidden" name="started_at" defaultValue="" />
+      <input type="hidden" name="started_at" defaultValue={startedAt} />
       <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
         <label>
           Leave this empty

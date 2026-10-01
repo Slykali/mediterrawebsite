@@ -1,0 +1,117 @@
+/* Token blocks, headline tweaks and textures the archived designs used.
+   They were cut from app/globals.css when Matchday became the only design.
+   To bring a design back, paste its block (and any texture it uses) back in. */
+
+/* 01 — Kinetic */
+[data-design="kinetic"] {
+  --canvas: #0c0c0b;
+  --panel: #141413;
+  --ink: #edeae3;
+  --mute: #77746b;
+  --rule: #2a2a26;
+  --accent: #ff3d00;
+  --accent-2: #edeae3;
+  --on-accent: #0c0c0b;
+  --display: var(--font-anton);
+  --body: var(--font-plex-mono);
+  color-scheme: dark;
+}
+
+/* 02 — Editorial */
+[data-design="editorial"] {
+  --canvas: #f1ede4;
+  --panel: #e6e0d3;
+  --ink: #151412;
+  --mute: #6b665b;
+  --rule: #cbc4b5;
+  --accent: #c8321b;
+  --accent-2: #1d3557;
+  --on-accent: #f1ede4;
+  --display: var(--font-instrument);
+  --body: var(--font-newsreader);
+  color-scheme: light;
+  font-variant-numeric: normal;
+}
+
+/* 03 — Blueprint */
+[data-design="blueprint"] {
+  --canvas: #0c2846;
+  --panel: #0f3056;
+  --ink: #e6f0ff;
+  --mute: #8ba8cc;
+  --rule: #2b5686;
+  --accent: #ff5a4a;
+  --accent-2: #ffd35c;
+  --on-accent: #0c2846;
+  --display: var(--font-plex-condensed);
+  --body: var(--font-plex-condensed);
+  color-scheme: dark;
+}
+
+/* 04 — Hazard */
+[data-design="hazard"] {
+  --canvas: #f5d000;
+  --panel: #ecc800;
+  --ink: #0b0b0b;
+  --mute: #4d4300;
+  --rule: #0b0b0b;
+  --accent: #0b0b0b;
+  --accent-2: #ffffff;
+  --on-accent: #f5d000;
+  --display: var(--font-archivo);
+  --body: var(--font-archivo);
+  color-scheme: light;
+}
+
+[data-design="editorial"] :is(.display-title, .display-face) {
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+[data-design="blueprint"] :is(.display-title, .display-face) {
+  font-weight: 600;
+}
+
+[data-design="hazard"] :is(.display-title, .display-face) {
+  font-weight: 900;
+  font-stretch: 125%;
+  letter-spacing: -0.03em;
+}
+
+/* Drawing-sheet grid (Blueprint): major lines every 96px, minor every 16px. */
+@utility bp-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--rule) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--rule) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(to right, color-mix(in oklab, var(--rule) 25%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--rule) 25%, transparent) 1px, transparent 1px);
+  background-size:
+    96px 96px,
+    96px 96px,
+    16px 16px,
+    16px 16px;
+}
+
+/* Hazard tape. Override --stripe-a / --stripe-b to invert it. */
+@utility stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--stripe-a, var(--ink)) 0 14px,
+    var(--stripe-b, var(--canvas)) 14px 28px
+  );
+}
+
+@keyframes stripes-move {
+  to {
+    background-position: 39.598px 0;
+  }
+}
+
+@utility stripes-move {
+  animation: stripes-move 1.4s linear infinite;
+}
+
+/* Section hatching, in whatever the current text colour is. */
+@utility hatch {
+  background-image: repeating-linear-gradient(45deg, currentColor 0 1px, transparent 1px 9px);
+}

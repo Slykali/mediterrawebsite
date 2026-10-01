@@ -2,6 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 
+import { cased } from "@/lib/cased";
 import { CONTENT, type Content } from "@/lib/content";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
 
@@ -24,4 +25,9 @@ export function useLocale(): Locale {
 /** The shared section content in the page's language. */
 export function useContent(): Content {
   return CONTENT[useLocale()];
+}
+
+/** Text that's set in capitals: see lib/cased.tsx. */
+export function Cased({ children }: { children: string }) {
+  return cased(children, useLocale());
 }

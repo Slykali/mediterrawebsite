@@ -8,7 +8,7 @@ import { CHROME } from "@/lib/pages";
 
 /**
  * EN / TR. Inherits the type and colour of whatever header it sits in, so it
- * fits all five designs; the inactive language is just dimmed. Plain <a>, not
+ * fits any header; the inactive language is just dimmed. Plain <a>, not
  * <Link>: switching language needs a full load so <html lang> changes too.
  */
 export function LangSwitch({ className = "" }: { className?: string }) {
@@ -31,7 +31,7 @@ export function LangSwitch({ className = "" }: { className?: string }) {
               href={localePath(l, path)}
               hrefLang={l}
               lang={l}
-              aria-label={CHROME[locale].switchLabel}
+              aria-label={`${l.toUpperCase()}: ${CHROME[locale].switchLabel}`}
               className="opacity-50 transition-opacity hover:opacity-100"
             >
               {l.toUpperCase()}

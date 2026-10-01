@@ -5,10 +5,19 @@
  *   https://www.thebluealliance.com/team/6874
  */
 
-// TODO: set NEXT_PUBLIC_SITE_URL in Vercel to the production domain
-// (e.g. https://yourdomain.com). Canonicals, hreflang, the sitemap and the
-// structured data are all built from it.
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://6874.vercel.app").replace(/\/+$/, "");
+// Canonicals, hreflang, the sitemap and the structured data are all built from
+// this. On Vercel it's the project's production domain automatically; set
+// NEXT_PUBLIC_SITE_URL to override it (e.g. once a custom domain is added).
+const PRODUCTION_HOST = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
+const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (PRODUCTION_HOST ? `https://${PRODUCTION_HOST}` : "http://localhost:3000")
+).replace(/\/+$/, "");
+
+// The address replies come from. It should be a mailbox the school or an adult
+// mentor controls. Until NEXT_PUBLIC_CONTACT_EMAIL is set, the site shows no
+// email at all and points people to Instagram instead.
+const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || null;
 
 export const site = {
   team: {
@@ -35,7 +44,7 @@ export const site = {
   },
 
   contact: {
-    email: "team6874@example.com", // TODO — the team's real address
+    email: CONTACT_EMAIL,
     instagram: "https://www.instagram.com/team_6874/",
     x: "https://x.com/team6874",
     xHandle: "@team6874",
@@ -46,8 +55,8 @@ export const site = {
   url: SITE_URL,
 } as const;
 
-/** False while the email above is still the placeholder; keeps it out of structured data. */
-export const HAS_REAL_EMAIL = !site.contact.email.endsWith("@example.com");
+/** False until NEXT_PUBLIC_CONTACT_EMAIL is set. */
+export const HAS_REAL_EMAIL = site.contact.email !== null;
 
 /** Outbound links every footer shows. */
 export const LINKS = [

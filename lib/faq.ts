@@ -60,7 +60,7 @@ export const FAQ: Record<Locale, FaqItem[]> = {
     {
       question: "FIRST Robotics Competition nedir?",
       answer:
-        "FIRST Robotics Competition (FRC), FIRST'ün lise takımları için düzenlediği uluslararası bir robotik yarışması. Her ocak ayında kickoff'ta yeni bir oyun açıklanır; takımlar bu oyunu oynayacak robotu tasarlar, üretir, programlar ve regional yarışmalarda sahaya çıkar. 2027 oyunu BIOCORE, 9 Ocak 2027'de açıklanıyor.",
+        "FIRST Robotics Competition (FRC), FIRST kuruluşunun lise takımları için düzenlediği uluslararası bir robotik yarışması. Her ocak ayında kickoff'ta yeni bir oyun açıklanır; takımlar bu oyunu oynayacak robotu tasarlar, üretir, programlar ve regional yarışmalarda sahaya çıkar. 2027 oyunu BIOCORE, 9 Ocak 2027'de açıklanıyor.",
     },
     {
       question: "Takımın en iyi sonuçları neler?",

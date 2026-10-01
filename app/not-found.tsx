@@ -12,7 +12,7 @@ export default async function NotFound() {
   const t = CHROME[locale].notFound;
 
   return (
-    <main className="flex min-h-screen flex-col items-start justify-end gap-6 bg-canvas p-6 text-ink sm:p-10">
+    <main id="main" className="flex min-h-screen flex-col items-start justify-end gap-6 bg-canvas p-6 text-ink sm:p-10">
       <p className="font-mono text-[10px] tracking-[0.2em] text-mute uppercase">{t.kicker}</p>
       <h1 className="display-title text-[clamp(4rem,16vw,14rem)] leading-[0.85]">
         {t.line1}

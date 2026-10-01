@@ -12,7 +12,7 @@ type ThroughPage = keyof (typeof CHROME)["en"]["through"];
 /**
  * "Full history and results →" at the foot of a homepage section, pointing at
  * the page that section also lives on. Renders nothing on that page itself.
- * Colours come from currentColor and the design's accent, so it fits all five.
+ * Colours come from currentColor and the design's accent.
  */
 export function ThroughLink({ page, className = "" }: { page: ThroughPage; className?: string }) {
   const locale = useLocale();
@@ -21,7 +21,7 @@ export function ThroughLink({ page, className = "" }: { page: ThroughPage; class
   return (
     <Link
       href={localePath(locale, PAGE_PATHS[page])}
-      className={`group inline-flex items-center gap-2 border-b border-current pb-1 font-mono text-[11px] tracking-[0.16em] uppercase transition-colors hover:text-accent ${className}`}
+      className={`group inline-flex items-center gap-2 border-b border-current pb-1 font-mono text-[11px] tracking-[0.16em] uppercase transition-colors hover:text-accent-text ${className}`}
     >
       {CHROME[locale].through[page]}
       <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">

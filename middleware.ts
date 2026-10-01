@@ -13,6 +13,6 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Pages only: skip Next internals and anything with a file extension.
-  matcher: ["/((?!_next/|.*\\.[a-zA-Z0-9]+$).*)"],
+  // Pages only: skip Next and Vercel internals and anything with a file extension.
+  matcher: ["/((?!_next/|_vercel/|.*\\.[a-zA-Z0-9]+$).*)"],
 };

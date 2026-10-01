@@ -5,6 +5,7 @@ import { DESIGNS } from "@/components/designs/registry";
 import { LangSwitch } from "@/components/i18n/lang-switch";
 import { JsonLd } from "@/components/shared/json-ld";
 import type { DesignId } from "@/lib/designs";
+import { cased } from "@/lib/cased";
 import { localePath, type Locale } from "@/lib/i18n";
 import { CHROME, NAV_PAGES, PAGES, PAGE_PATHS, type PageKey } from "@/lib/pages";
 import { breadcrumbJsonLd } from "@/lib/seo";
@@ -48,7 +49,7 @@ export function PageShell({
         >
           <Link href={home} className="flex items-center gap-2 text-ink">
             <span className="size-1.5 bg-accent" />
-            FRC {site.team.number} &middot; {site.team.name}
+            FRC {site.team.number} &middot; {cased(site.team.name, locale)}
           </Link>
           <nav aria-label={CHROME[locale].pagesNav}>
             <ul className="flex flex-wrap gap-x-5 gap-y-2">
@@ -68,7 +69,7 @@ export function PageShell({
           <LangSwitch className="text-ink" />
         </header>
 
-        <main>
+        <main id="main">
           <div className={`border-b border-rule py-14 sm:py-20 ${parts.pad}`}>
             <nav aria-label={CHROME[locale].breadcrumb} className={`text-mute ${LABEL}`}>
               <ol className="flex flex-wrap gap-2">
@@ -83,7 +84,7 @@ export function PageShell({
                 </li>
               </ol>
             </nav>
-            <p className={`mt-10 text-accent ${LABEL}`}>{copy.kicker}</p>
+            <p className={`mt-10 text-accent-text ${LABEL}`}>{copy.kicker}</p>
             {/* Leading leaves room for İ, Ö, Ü dots above and Ç, Ş tails below. */}
             <h1 className="display-title mt-5 text-[clamp(3rem,10vw,8rem)] leading-[0.95]">{copy.h1}</h1>
             <p className="mt-8 max-w-2xl text-sm leading-relaxed text-mute sm:text-base">{copy.intro}</p>

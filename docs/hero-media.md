@@ -1,6 +1,8 @@
 # Hero media
 
-Three files, exact names:
+The Matchday hero can play a muted background loop. Put three files in
+`public/media/`, exact names, then set `HAS_HERO_MEDIA = true` in
+`lib/site.ts`:
 
 | File               | What                                      |
 | ------------------ | ----------------------------------------- |
@@ -11,11 +13,13 @@ Three files, exact names:
 Rules that matter:
 
 - **8–12 seconds, seamless loop.** Longer and nobody sees the end anyway.
-- **No audio track at all** — not silent audio, none. Halves the file and
+- **No audio track at all.** Not silent audio, none. Halves the file and
   guarantees autoplay.
 - **Under 3 MB per file.** It's decoration; it must not outweigh the page.
 - **Shoot/render dark and low-contrast.** White text sits on top of it. CAD
   turntables, the mill cutting, sparks, a drivetrain spinning up.
+- **No students' faces without written parent consent.** Team members are
+  minors. Machine and CAD footage needs no one's permission.
 
 ```bash
 # webm

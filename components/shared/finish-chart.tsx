@@ -129,8 +129,8 @@ export function FinishChart({
       </div>
       <figcaption className={`mt-3 opacity-70 ${labelClassName}`}>
         {en
-          ? "Best qualification finish each season, from FIRST’s event records."
-          : "Her sezonun en iyi sıralama derecesi, FIRST’ün yarışma kayıtlarından."}
+          ? "Best qualification finish each season, from the official FIRST event records."
+          : "Her sezonun en iyi sıralama derecesi, resmi FIRST yarışma kayıtlarından."}
       </figcaption>
     </figure>
   );

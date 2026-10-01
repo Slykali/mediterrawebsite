@@ -4,6 +4,6 @@ export const alt = ogAlt("tr");
 export const size = OG_SIZE;
 export const contentType = "image/png";
 
-export default function OpengraphImage() {
+export default async function OpengraphImage() {
   return ogImage("tr");
 }

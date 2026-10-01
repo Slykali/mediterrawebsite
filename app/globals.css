@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
+/* The archived designs aren't shipped; don't generate their classes. */
+@source not "../archive";
+
 /* ---------------------------------------------------------------------------
-   Five designs, one set of semantic tokens. Components only ever say
-   bg-canvas, text-ink, border-rule, text-accent — the active design decides
-   what those mean. Adding a design means adding one block below.
+   One set of semantic tokens. Components only ever say bg-canvas, text-ink,
+   border-rule, text-accent; the design block below decides what those mean.
+   The other four designs' blocks are in archive/designs/tokens.css.
 
    (The page colour is "canvas", not "base": text-base is already Tailwind's
    1rem font size and the two would collide.)
@@ -16,6 +19,8 @@
   --color-rule: var(--rule);
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
+  --color-accent-text: var(--accent-text);
+  --color-accent-2-text: var(--accent-2-text);
   --color-on-accent: var(--on-accent);
 
   --font-display: var(--display);
@@ -23,69 +28,8 @@
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
-/* 01 — Kinetic. Also the fallback before any design attribute resolves. */
+/* Matchday. Also on :root so nothing renders unstyled before the attribute. */
 :root,
-[data-design="kinetic"] {
-  --canvas: #0c0c0b;
-  --panel: #141413;
-  --ink: #edeae3;
-  --mute: #77746b;
-  --rule: #2a2a26;
-  --accent: #ff3d00;
-  --accent-2: #edeae3;
-  --on-accent: #0c0c0b;
-  --display: var(--font-anton);
-  --body: var(--font-plex-mono);
-  color-scheme: dark;
-}
-
-/* 02 — Editorial */
-[data-design="editorial"] {
-  --canvas: #f1ede4;
-  --panel: #e6e0d3;
-  --ink: #151412;
-  --mute: #6b665b;
-  --rule: #cbc4b5;
-  --accent: #c8321b;
-  --accent-2: #1d3557;
-  --on-accent: #f1ede4;
-  --display: var(--font-instrument);
-  --body: var(--font-newsreader);
-  color-scheme: light;
-  font-variant-numeric: normal;
-}
-
-/* 03 — Blueprint */
-[data-design="blueprint"] {
-  --canvas: #0c2846;
-  --panel: #0f3056;
-  --ink: #e6f0ff;
-  --mute: #8ba8cc;
-  --rule: #2b5686;
-  --accent: #ff5a4a;
-  --accent-2: #ffd35c;
-  --on-accent: #0c2846;
-  --display: var(--font-plex-condensed);
-  --body: var(--font-plex-condensed);
-  color-scheme: dark;
-}
-
-/* 04 — Hazard */
-[data-design="hazard"] {
-  --canvas: #f5d000;
-  --panel: #ecc800;
-  --ink: #0b0b0b;
-  --mute: #4d4300;
-  --rule: #0b0b0b;
-  --accent: #0b0b0b;
-  --accent-2: #ffffff;
-  --on-accent: #f5d000;
-  --display: var(--font-archivo);
-  --body: var(--font-archivo);
-  color-scheme: light;
-}
-
-/* 05 — Matchday */
 [data-design="matchday"] {
   --canvas: #06080d;
   --panel: #0d121c;
@@ -94,6 +38,9 @@
   --rule: #1c2434;
   --accent: #e3262c;
   --accent-2: #1f6fe0;
+  /* The two alliance colours as small text: lifted to 4.5:1 on canvas and panel. */
+  --accent-text: #f04a4f;
+  --accent-2-text: #4a8af0;
   --on-accent: #ffffff;
   --display: var(--font-barlow);
   --body: var(--font-barlow);
@@ -110,7 +57,7 @@
     background-color: var(--canvas);
     color: var(--ink);
     font-family: var(--body);
-    /* Spec tables and counters must not jitter. Editorial opts out above. */
+    /* Scores, ranks and the countdown must not jitter. */
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
   }
@@ -131,37 +78,20 @@
 }
 
 /* --- Shared display type ---------------------------------------------------
-   Page titles and the FAQ sit outside the five designs' own components, so
-   they take each design's headline treatment from here. */
+   Page titles and the FAQ sit outside the design's own components, so they
+   take its headline treatment from here. */
 
 @utility display-face {
   font-family: var(--display);
-}
-
-/* display-face in capitals (Editorial overrides this below). */
-@utility display-title {
-  font-family: var(--display);
-  text-transform: uppercase;
-}
-
-[data-design="editorial"] :is(.display-title, .display-face) {
-  text-transform: none;
-  letter-spacing: -0.01em;
-}
-
-[data-design="blueprint"] :is(.display-title, .display-face) {
-  font-weight: 600;
-}
-
-[data-design="hazard"] :is(.display-title, .display-face) {
-  font-weight: 900;
-  font-stretch: 125%;
-  letter-spacing: -0.03em;
-}
-
-[data-design="matchday"] :is(.display-title, .display-face) {
   font-weight: 800;
   font-style: italic;
+}
+
+@utility display-title {
+  font-family: var(--display);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
 }
 
 /* --- Textures ------------------------------------------------------------- */
@@ -171,48 +101,27 @@
   opacity: 0.05;
 }
 
-/* Drawing-sheet grid: major lines every 96px, minor every 16px. */
-@utility bp-grid {
-  background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--rule) 60%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--rule) 60%, transparent) 1px, transparent 1px),
-    linear-gradient(to right, color-mix(in oklab, var(--rule) 25%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--rule) 25%, transparent) 1px, transparent 1px);
-  background-size:
-    96px 96px,
-    96px 96px,
-    16px 16px,
-    16px 16px;
-}
-
-/* Hazard tape. Override --stripe-a / --stripe-b to invert it. */
-@utility stripes {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--stripe-a, var(--ink)) 0 14px,
-    var(--stripe-b, var(--canvas)) 14px 28px
-  );
-}
-
-/* One stripe period along x is 28px / cos(45°) — move exactly that far and the loop has no seam. */
-@keyframes stripes-move {
+/* The intro is in the server HTML so it covers the page from the first paint.
+   If the script that removes it never runs, it gets out of the way anyway. */
+@keyframes boot-failsafe {
   to {
-    background-position: 39.598px 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 }
 
-@utility stripes-move {
-  animation: stripes-move 1.4s linear infinite;
-}
-
-/* Section hatching, in whatever the current text colour is. */
-@utility hatch {
-  background-image: repeating-linear-gradient(45deg, currentColor 0 1px, transparent 1px 9px);
+[data-boot-overlay] {
+  animation: boot-failsafe 0s 4s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /* The intro never plays with reduced motion; don't flash it before hydration. */
+  [data-boot-overlay] {
+    display: none;
   }
 
   *,
