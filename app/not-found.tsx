@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import Image from "next/image";
 import Link from "next/link";
 
 import { DEFAULT_LOCALE, LOCALE_HEADER, isLocale, localePath } from "@/lib/i18n";
@@ -12,9 +13,9 @@ export default async function NotFound() {
   const t = CHROME[locale].notFound;
 
   return (
-    <main id="main" className="flex min-h-screen flex-col items-start justify-end gap-6 bg-canvas p-6 text-ink sm:p-10">
+    <main id="main" className="flex min-h-screen flex-col items-start gap-6 bg-canvas p-6 text-ink sm:p-10">
       <p className="font-mono text-[0.625rem] tracking-[0.2em] text-mute uppercase">{t.kicker}</p>
-      <h1 className="display-title text-[clamp(4rem,16vw,14rem)] leading-[0.85]">
+      <h1 className="display-title text-[clamp(3.5rem,12vw,10rem)] leading-[0.85]">
         {t.line1}
         <br />
         {t.line2}
@@ -33,6 +34,16 @@ export default async function NotFound() {
           </Link>
         ))}
       </nav>
+      {/* Drawn on pure black; lighten blends that into the page colour so no box shows. */}
+      <Image
+        src="/404-crew.webp"
+        alt={t.imageAlt}
+        width={900}
+        height={626}
+        priority
+        sizes="(min-width: 768px) 42rem, 100vw"
+        className="mt-4 h-auto w-full max-w-2xl mix-blend-lighten"
+      />
     </main>
   );
 }
