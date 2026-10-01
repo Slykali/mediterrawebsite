@@ -4,7 +4,7 @@ import { Reveal } from "@/components/shared/reveal";
 
 /** Condensed, heavy, italic display type. */
 export const HUD = "font-display font-extrabold uppercase italic tracking-[-0.01em]";
-export const MONO = "font-mono text-[10px] tracking-[0.2em] uppercase";
+export const MONO = "font-mono text-[0.625rem] tracking-[0.2em] uppercase";
 
 /** Field-connected green, as on the driver station. */
 export const GO = "#2bd46a";
@@ -17,7 +17,8 @@ export function SectionTitle({ kicker, children }: { kicker: string; children: R
         <span className="h-3 w-1 bg-accent-2" />
         {kicker}
       </p>
-      <h2 className={`${HUD} mt-3 text-[clamp(3rem,8vw,7rem)] leading-[0.85]`}>{children}</h2>
+      {/* Large text settings can make one long word wider than a phone; let it break. */}
+      <h2 className={`${HUD} mt-3 text-[clamp(3rem,8vw,7rem)] leading-[0.85] break-words hyphens-auto`}>{children}</h2>
     </Reveal>
   );
 }

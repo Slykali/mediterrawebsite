@@ -318,6 +318,9 @@ export function Footer() {
           <Link href={localePath(locale, PAGE_PATHS.privacy)} className="transition-colors hover:text-ink">
             {chrome.privacy}
           </Link>
+          <Link href={localePath(locale, PAGE_PATHS.accessibility)} className="transition-colors hover:text-ink">
+            {chrome.accessibility}
+          </Link>
           <a href="#top" className="transition-colors hover:text-ink">
             {c.backToTop} &uarr;
           </a>

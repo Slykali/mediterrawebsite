@@ -18,12 +18,12 @@ export const FAQ: Record<Locale, FaqItem[]> = {
     {
       question: "Who can join FRC 6874 Mediterra?",
       answer:
-        "FRC 6874 Mediterra is a school team: only students of Özel Antalya Bahçeşehir Anadolu Lisesi in Döşemealtı, Antalya can join. The team isn't taking new members at the moment. Companies and engineers who want to sponsor or mentor can still get in touch through the form on the Join page.",
+        "FRC 6874 Mediterra is a school team: only students of Özel Antalya Bahçeşehir Anadolu Lisesi in Döşemealtı, Antalya can join. The team isn't taking new members at the moment. Companies and engineers who want to sponsor or mentor can still get in touch through the form on the Contact page.",
     },
     {
       question: "How can a company sponsor the team?",
       answer:
-        "Sponsors can give money, materials, machining time or mentoring. It pays for regional registration, parts, batteries and getting the robot and team to events in İstanbul and Ankara. Sponsors get their logo on the robot, in the pit and on team shirts, and a place on the website. Get in touch through the Join page and we'll work out what fits.",
+        "Sponsors can give money, materials, machining time or mentoring. It pays for regional registration, parts, batteries and getting the robot and team to events in İstanbul and Ankara. Sponsors get their logo on the robot, in the pit and on team shirts, and a place on the website. Get in touch through the Contact page and we'll work out what fits.",
     },
     {
       question: "Where is the team based?",
@@ -45,12 +45,12 @@ export const FAQ: Record<Locale, FaqItem[]> = {
     {
       question: "FRC 6874 Mediterra'ya kimler katılabilir?",
       answer:
-        "FRC 6874 Mediterra bir okul takımı: yalnızca Döşemealtı, Antalya'daki Özel Antalya Bahçeşehir Anadolu Lisesi öğrencileri katılabilir. Takım şu anda yeni üye almıyor. Sponsor olmak ya da mentorluk yapmak isteyen şirketler ve mühendisler Katıl sayfasındaki formdan yine de bize ulaşabilir.",
+        "FRC 6874 Mediterra bir okul takımı: yalnızca Döşemealtı, Antalya'daki Özel Antalya Bahçeşehir Anadolu Lisesi öğrencileri katılabilir. Takım şu anda yeni üye almıyor. Sponsor olmak ya da mentorluk yapmak isteyen şirketler ve mühendisler İletişim sayfasındaki formdan yine de bize ulaşabilir.",
     },
     {
       question: "Bir şirket takıma nasıl sponsor olabilir?",
       answer:
-        "Sponsorlar para, malzeme, tezgâh zamanı ya da mentorluk desteği verebilir. Bu destek regional kayıt ücretlerini, parçaları, aküleri ve robotla takımın İstanbul ve Ankara'daki yarışmalara gitmesini karşılar. Sponsorların logosu robotta, pitte ve takım tişörtlerinde, adı da web sitesinde yer alır. Katıl sayfasından bize ulaşın, size uyanı birlikte bulalım.",
+        "Sponsorlar para, malzeme, tezgâh zamanı ya da mentorluk desteği verebilir. Bu destek regional kayıt ücretlerini, parçaları, aküleri ve robotla takımın İstanbul ve Ankara'daki yarışmalara gitmesini karşılar. Sponsorların logosu robotta, pitte ve takım tişörtlerinde, adı da web sitesinde yer alır. İletişim sayfasından bize ulaşın, size uyanı birlikte bulalım.",
     },
     {
       question: "Takım nerede?",

@@ -1,5 +1,5 @@
 import { useLocale } from "@/components/i18n/locale-provider";
-import type { SectionId, TimelineKind } from "@/lib/content";
+import type { TimelineKind } from "@/lib/content";
 import { site } from "@/lib/site";
 
 const { team } = site;
@@ -10,10 +10,6 @@ const en = {
   match: "Match",
   loading: "loading",
   ready: "ready",
-  nav: { timeline: "Match log", garage: "Robot select", backers: "Partners", contact: "Contact" } as Record<
-    Exclude<SectionId, "top">,
-    string
-  >,
   red: "Red",
   blue: "Blue",
   cells: ["Days", "Hrs", "Min", "Sec"],
@@ -23,7 +19,6 @@ const en = {
   lastResult: `${team.lastCompeted}: 7th of 33, Alliance 5 captain`,
   membership: "Membership closed",
   live: "On deck",
-  sectionsNav: "Sections",
   seasonLabel: `${team.season} season`,
   qualification: `Qualification 01 · ${team.season} season`,
   headline: ["Next match ", String(team.season)],
@@ -66,7 +61,6 @@ const tr: typeof en = {
   match: "Maç",
   loading: "yükleniyor",
   ready: "hazır",
-  nav: { timeline: "Maç kaydı", garage: "Robot seçimi", backers: "Destekçiler", contact: "İletişim" },
   red: "Kırmızı",
   blue: "Mavi",
   cells: ["Gün", "Sa", "Dk", "Sn"],
@@ -76,7 +70,6 @@ const tr: typeof en = {
   lastResult: `${team.lastCompeted}: 33'te 7., 5. İttifak kaptanı`,
   membership: "Üye alımı kapalı",
   live: "Sırada",
-  sectionsNav: "Bölümler",
   seasonLabel: `${team.season} sezonu`,
   qualification: `Sıralama 01 · ${team.season} sezonu`,
   headline: ["Sıradaki maç ", String(team.season)],

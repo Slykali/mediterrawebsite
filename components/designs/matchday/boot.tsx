@@ -31,7 +31,7 @@ export function MatchdayBoot() {
           return (
             <li
               key={check}
-              className={`flex items-center gap-2 border px-3 py-1.5 font-mono text-[11px] tracking-[0.14em] uppercase transition-colors ${
+              className={`flex items-center gap-2 border px-3 py-1.5 font-mono text-[0.6875rem] tracking-[0.14em] uppercase transition-colors ${
                 ok ? "text-ink" : "border-rule text-mute"
               }`}
               style={ok ? { borderColor: GO } : undefined}

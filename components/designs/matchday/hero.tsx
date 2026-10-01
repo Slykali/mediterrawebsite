@@ -1,20 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Fragment } from "react";
 
 import { useBoot } from "@/components/boot/boot-provider";
 import { LangSwitch } from "@/components/i18n/lang-switch";
-import { Cased } from "@/components/i18n/locale-provider";
+import { Cased, useLocale } from "@/components/i18n/locale-provider";
 import { useSectionHref } from "@/components/i18n/nav";
 import { MediaBackdrop } from "@/components/shared/media-backdrop";
 import { pad2, useCountdown, type Countdown } from "@/components/shared/use-countdown";
 import { SPRING, fadeIn, riseIn, stagger } from "@/lib/motion";
+import { localePath } from "@/lib/i18n";
+import { CHROME, NAV_PAGES, PAGES, PAGE_PATHS } from "@/lib/pages";
 import { site } from "@/lib/site";
 import { useCopy } from "./copy";
 import { HUD, MONO, SkewButton } from "./ui";
-
-const NAV_IDS = ["timeline", "garage", "backers", "contact"] as const;
 
 /** Red team number, countdown in the middle, blue season. */
 function Scorebug({ time }: { time: Countdown | null }) {
@@ -29,12 +30,12 @@ function Scorebug({ time }: { time: Countdown | null }) {
   return (
     <div className="grid grid-cols-[auto_1fr_auto] items-stretch border border-rule bg-panel/85 backdrop-blur-sm">
       <div className="flex flex-col justify-center bg-accent px-2.5 py-2 text-on-accent min-[380px]:px-3 sm:px-5">
-        <span className="font-mono text-[9px] tracking-[0.2em] uppercase opacity-80">{t.red}</span>
+        <span className="font-mono text-[0.5625rem] tracking-[0.2em] uppercase opacity-80">{t.red}</span>
         <span className={`${HUD} text-xl leading-none min-[380px]:text-2xl sm:text-5xl`}>{site.team.number}</span>
       </div>
 
       <div className="flex min-w-0 flex-col items-center justify-center px-1.5 py-2 min-[380px]:px-2 sm:px-6">
-        <p className="font-mono text-[9px] tracking-[0.3em] text-mute uppercase">
+        <p className="font-mono text-[0.5625rem] tracking-[0.3em] text-mute uppercase">
           <Cased>{time?.done ? t.buildOn : t.kickoffIn}</Cased>
         </p>
         {/* The ticking digits are hidden from screen readers; this says the same once. */}
@@ -45,7 +46,7 @@ function Scorebug({ time }: { time: Countdown | null }) {
               {i > 0 && <span className={`${HUD} text-xl text-mute min-[380px]:text-2xl sm:text-5xl`}>:</span>}
               <span className="flex flex-col items-center">
                 <span className={`${HUD} text-xl leading-none min-[380px]:text-2xl tabular-nums not-italic sm:text-5xl`}>{pad2(value)}</span>
-                <span className="mt-1 font-mono text-[8px] tracking-[0.2em] text-mute uppercase">{label}</span>
+                <span className="mt-1 font-mono text-[0.5rem] tracking-[0.2em] text-mute uppercase">{label}</span>
               </span>
             </Fragment>
           ))}
@@ -53,7 +54,7 @@ function Scorebug({ time }: { time: Countdown | null }) {
       </div>
 
       <div className="flex flex-col items-end justify-center bg-accent-2 px-2.5 py-2 text-on-accent min-[380px]:px-3 sm:px-5">
-        <span className="font-mono text-[9px] tracking-[0.2em] uppercase opacity-80">{t.blue}</span>
+        <span className="font-mono text-[0.5625rem] tracking-[0.2em] uppercase opacity-80">{t.blue}</span>
         <span className={`${HUD} text-xl leading-none min-[380px]:text-2xl sm:text-5xl`}>{site.team.season}</span>
       </div>
     </div>
@@ -74,7 +75,7 @@ function LowerThird({ play }: { play: boolean }) {
       className="relative mb-6 flex max-w-[min(100%,56rem)] items-stretch self-start"
     >
       <span className={`flex items-center bg-accent px-4 text-2xl text-on-accent ${HUD}`}>{team.number}</span>
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-r border-rule bg-panel/90 px-4 py-2 font-mono text-[10px] tracking-[0.16em] text-mute uppercase sm:text-[11px]">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-1 border-y border-r border-rule bg-panel/90 px-4 py-2 font-mono text-[0.625rem] tracking-[0.16em] text-mute uppercase sm:text-[0.6875rem]">
         <span className="text-ink">
           <Cased>{team.name}</Cased>
         </span>
@@ -96,6 +97,7 @@ export function Hero() {
   const { team } = site;
   const t = useCopy();
   const href = useSectionHref();
+  const locale = useLocale();
 
   return (
     <motion.section
@@ -126,11 +128,12 @@ export function Hero() {
           </span>
         </span>
         {/* Phones: its own row under the logo. md and up: between logo and language. */}
-        <nav aria-label={t.sectionsNav} className="order-last flex w-full flex-wrap gap-x-5 gap-y-1 text-mute md:order-none md:w-auto md:gap-x-6">
-          {NAV_IDS.map((id) => (
-            <a key={id} href={href(id)} className="py-1 transition-colors hover:text-ink">
-              {t.nav[id]}
-            </a>
+        <nav aria-label={CHROME[locale].pagesNav} className="order-last flex w-full flex-wrap gap-x-5 gap-y-1 text-mute md:order-none md:w-auto md:gap-x-6">
+          {/* The same pages as every subpage's header; the homepage below is the summary. */}
+          {NAV_PAGES.map((key) => (
+            <Link key={key} href={localePath(locale, PAGE_PATHS[key])} className="py-1 transition-colors hover:text-ink">
+              {PAGES[locale][key].label}
+            </Link>
           ))}
         </nav>
         <span className="flex items-center gap-4">
@@ -140,7 +143,7 @@ export function Hero() {
       </motion.header>
 
       <div className="relative flex flex-1 flex-col items-center justify-center px-4 py-12 text-center sm:px-6">
-        <motion.p variants={riseIn} data-reveal className="font-mono text-[11px] tracking-[0.3em] text-mute uppercase">
+        <motion.p variants={riseIn} data-reveal className="font-mono text-[0.6875rem] tracking-[0.3em] text-mute uppercase">
           {t.qualification}
         </motion.p>
         <motion.h1 variants={riseIn} data-reveal className={`${HUD} mt-4 text-[clamp(4rem,14vw,12.5rem)] leading-[0.82]`}>

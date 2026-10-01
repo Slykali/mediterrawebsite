@@ -7,7 +7,7 @@ import { MT07 } from "./content";
 import type { Locale } from "./i18n";
 import { site } from "./site";
 
-export type PageKey = "home" | "history" | "sponsors" | "join" | "robot2026" | "privacy";
+export type PageKey = "home" | "history" | "sponsors" | "join" | "robot2026" | "privacy" | "accessibility";
 
 /** Locale-neutral paths. localePath() adds /tr. */
 export const PAGE_PATHS: Record<PageKey, string> = {
@@ -17,6 +17,7 @@ export const PAGE_PATHS: Record<PageKey, string> = {
   join: "/join",
   robot2026: "/robot/2026",
   privacy: "/privacy",
+  accessibility: "/accessibility",
 };
 
 export type PageCopy = {
@@ -61,14 +62,14 @@ const EN: Record<PageKey, PageCopy> = {
     label: "Sponsors",
   },
   join: {
-    title: "Joining the Team and Contact",
+    title: "Contact and Joining the Team",
     description:
       "FRC Team 6874 Mediterra is a school team: only students of Özel Antalya Bahçeşehir Anadolu Lisesi can join, and membership is currently closed. Sponsors and mentors can get in touch here.",
-    h1: "Join the team",
+    h1: "Contact",
     kicker: "School team · membership closed",
     intro:
       "FRC 6874 Mediterra is a school team made up of students of Özel Antalya Bahçeşehir Anadolu Lisesi, and we aren't taking new members right now. Companies that want to sponsor and engineers who could mentor can still write to us below, and someone on the team will answer.",
-    label: "Join",
+    label: "Contact",
   },
   robot2026: {
     title: "MT07, the 2026 Robot",
@@ -88,6 +89,16 @@ const EN: Record<PageKey, PageCopy> = {
     intro:
       "This site collects personal data in one place: the contact form. Here is what happens to it.",
     label: "Privacy",
+  },
+  accessibility: {
+    title: "Accessibility Statement",
+    description:
+      "How the FRC Team 6874 Mediterra website works with a keyboard, screen readers and larger text, what still falls short, and how to tell us about a problem.",
+    h1: "Accessibility",
+    kicker: "WCAG 2.2 · AA",
+    intro:
+      "Everyone should be able to read this site and get in touch with the team, whatever they use to browse it. Here is what we've done, what isn't right yet, and how to tell us.",
+    label: "Accessibility",
   },
 };
 
@@ -121,14 +132,14 @@ const TR: Record<PageKey, PageCopy> = {
     label: "Sponsorlar",
   },
   join: {
-    title: "Takıma Katılım ve İletişim",
+    title: "İletişim ve Takıma Katılım",
     description:
       "FRC 6874 Mediterra bir okul takımı: yalnızca Özel Antalya Bahçeşehir Anadolu Lisesi öğrencileri katılabilir ve üye alımı şu anda kapalı. Sponsorlar ve mentorlar buradan bize ulaşabilir.",
-    h1: "Takıma katıl",
+    h1: "İletişim",
     kicker: "Okul takımı · üye alımı kapalı",
     intro:
       "FRC 6874 Mediterra, Özel Antalya Bahçeşehir Anadolu Lisesi öğrencilerinden oluşan bir okul takımı ve şu anda yeni üye almıyoruz. Sponsor olmak isteyen şirketler ve mentorluk yapabilecek mühendisler aşağıdan bize yazabilir; takımdan biri size dönecek.",
-    label: "Katıl",
+    label: "İletişim",
   },
   robot2026: {
     title: "MT07, 2026 Robotumuz",
@@ -147,6 +158,16 @@ const TR: Record<PageKey, PageCopy> = {
     kicker: "KVKK aydınlatma metni",
     intro: "Bu site kişisel veriyi tek bir yerde topluyor: iletişim formu. Bu verilere ne olduğu aşağıda.",
     label: "Gizlilik",
+  },
+  accessibility: {
+    title: "Erişilebilirlik Beyanı",
+    description:
+      "FRC 6874 Mediterra web sitesinin klavye, ekran okuyucu ve büyük yazıyla nasıl çalıştığı, nerelerde hâlâ eksik olduğu ve bir sorunu bize nasıl bildirebileceğiniz.",
+    h1: "Erişilebilirlik",
+    kicker: "WCAG 2.2 · AA",
+    intro:
+      "Bu siteyi herkes, hangi araçla gezerse gezsin okuyabilmeli ve takıma ulaşabilmeli. Neler yaptığımız, neyin henüz tam olmadığı ve bize nasıl bildirebileceğiniz aşağıda.",
+    label: "Erişilebilirlik",
   },
 };
 
@@ -169,9 +190,10 @@ export const CHROME = {
       history: "Full history and results",
       robot2026: "MT07, the 2026 robot",
       sponsors: "Sponsorship details",
-      join: "Join the team",
+      join: "Contact",
     },
     privacy: "Privacy",
+    accessibility: "Accessibility",
     firstNotice:
       "FIRST®, FIRST® Robotics Competition and FRC® are registered trademarks of FIRST® (www.firstinspires.org), which is not overseeing, involved with, or responsible for this website.",
     notFound: {
@@ -192,9 +214,10 @@ export const CHROME = {
       history: "Tüm tarihçe ve sonuçlar",
       robot2026: "2026 robotumuz MT07",
       sponsors: "Sponsorluk ayrıntıları",
-      join: "Takıma katıl",
+      join: "İletişim",
     },
     privacy: "Gizlilik",
+    accessibility: "Erişilebilirlik",
     firstNotice:
       "FIRST®, FIRST® Robotics Competition ve FRC®, FIRST® (www.firstinspires.org) kuruluşunun tescilli markalarıdır. FIRST bu web sitesini denetlemez, siteyle ilgisi yoktur ve sitenin sorumluluğunu taşımaz.",
     notFound: {
@@ -323,6 +346,7 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
         title: "Cookies and statistics",
         body: [
           "No advertising or tracking cookies. One cookie, frc6874-booted, remembers for the current browser session that you've seen the opening animation, so it doesn't play on every page. It's deleted when you close the browser.",
+          "If you change anything in the accessibility menu, your choices are kept in your browser's local storage so they stay on the next visit. They're never sent to us.",
           "Vercel Web Analytics counts page views without cookies and without identifying you.",
         ],
       },
@@ -377,6 +401,7 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
         title: "Çerezler ve istatistik",
         body: [
           "Reklam ya da takip çerezi yok. Tek bir çerez, frc6874-booted, giriş animasyonunu bu tarayıcı oturumunda gördüğünüzü hatırlar ki her sayfada tekrar oynamasın. Tarayıcıyı kapattığınızda silinir.",
+          "Erişilebilirlik menüsünde bir ayar değiştirirseniz, seçimleriniz bir sonraki ziyarette de geçerli olsun diye tarayıcınızın yerel depolamasında saklanır. Bize hiçbir zaman gönderilmez.",
           "Vercel Web Analytics sayfa görüntülemelerini çerez kullanmadan ve kim olduğunuzu belirlemeden sayar.",
         ],
       },
@@ -389,6 +414,91 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
         body: [
           "KVKK m.11 uyarınca hakkınızda veri işlenip işlenmediğini öğrenebilir, bir kopyasını isteyebilir, düzeltilmesini ya da silinmesini talep edebilir ve işlenmesine itiraz edebilirsiniz.",
           `${REACH} üzerinden yazın, 30 gün içinde yanıt veririz. Kişisel Verileri Koruma Kurulu'na şikâyet hakkınız da saklıdır.`,
+        ],
+      },
+    ],
+  },
+};
+
+/* --- Accessibility statement ----------------------------------------------- */
+
+export const ACCESSIBILITY: Record<Locale, { updated: string; sections: PrivacySection[] }> = {
+  en: {
+    updated: "Last reviewed 1 October 2026",
+    sections: [
+      {
+        title: "What we aim for",
+        body: [
+          "Level AA of the Web Content Accessibility Guidelines (WCAG) 2.2. The team checked the site itself: with a keyboard, the browser's accessibility tree, contrast measurements and phone-sized screens. It hasn't been tested with every screen reader or had an independent audit.",
+        ],
+      },
+      {
+        title: "What works",
+        body: [
+          "Everything can be reached with the keyboard, focus is always visible, and a “Skip to content” link comes first on every page.",
+          "Text colours meet AA contrast on the dark background. Every page sets its language, so screen readers read Turkish and English with the right pronunciation.",
+          "Form fields have labels, errors are read out, and after a failed send the cursor moves to the first field that needs fixing.",
+          "If your device is set to reduce motion, the opening animation, the sponsor ticker and the scroll effects don't run.",
+        ],
+      },
+      {
+        title: "Settings on this site",
+        body: [
+          "The button in the bottom-left corner opens a menu with larger text, higher contrast, a switch that stops every animation, underlined links and a plainer font. Your choices are saved in your browser.",
+          "Browser zoom works too.",
+        ],
+      },
+      {
+        title: "What isn't right yet",
+        body: [
+          "The robot drawings are illustrations of a typical robot for each game, not our robots. Each one has a text description, but there are no photos yet.",
+          "The sponsor ticker keeps moving unless you point at it, focus it, or turn on “Stop animations”.",
+        ],
+      },
+      {
+        title: "Tell us",
+        body: [
+          `If something doesn't work for you, write to ${REACH} and say which page and what you were trying to do. We'll answer within two weeks.`,
+        ],
+      },
+    ],
+  },
+  tr: {
+    updated: "Son kontrol: 1 Ekim 2026",
+    sections: [
+      {
+        title: "Hedefimiz",
+        body: [
+          "Web İçeriği Erişilebilirlik Yönergeleri (WCAG) 2.2'nin AA düzeyi. Siteyi takım kendisi kontrol etti: klavyeyle, tarayıcının erişilebilirlik ağacıyla, kontrast ölçümleriyle ve telefon boyutunda ekranlarda. Her ekran okuyucuyla denenmedi ve bağımsız bir denetimden geçmedi.",
+        ],
+      },
+      {
+        title: "Neler çalışıyor",
+        body: [
+          "Her şeye klavyeyle ulaşılabiliyor, odak her zaman görünüyor ve her sayfada ilk bağlantı “İçeriğe geç”.",
+          "Yazı renkleri koyu zeminde AA kontrastını karşılıyor. Her sayfa dilini belirtiyor, bu yüzden ekran okuyucular Türkçe ve İngilizceyi doğru telaffuzla okuyor.",
+          "Form alanlarının etiketleri var, hatalar sesli okunuyor ve gönderim başarısız olursa imleç düzeltilmesi gereken ilk alana gidiyor.",
+          "Cihazınızda hareketi azaltma ayarı açıksa giriş animasyonu, sponsor bandı ve kaydırma efektleri çalışmaz.",
+        ],
+      },
+      {
+        title: "Bu sitedeki ayarlar",
+        body: [
+          "Sol alt köşedeki düğme bir menü açar: daha büyük yazı, yüksek kontrast, tüm animasyonları durduran bir düğme, altı çizili bağlantılar ve sade bir yazı tipi. Seçimleriniz tarayıcınızda saklanır.",
+          "Tarayıcı yakınlaştırması da çalışır.",
+        ],
+      },
+      {
+        title: "Henüz tam olmayanlar",
+        body: [
+          "Robot çizimleri her oyun için tipik bir robotun illüstrasyonu, bizim robotlarımız değil. Her birinin metin açıklaması var ama henüz fotoğraf yok.",
+          "Sponsor bandı, üzerine gelmediğiniz, odaklanmadığınız ya da “Animasyonları durdur” açık olmadığı sürece hareket eder.",
+        ],
+      },
+      {
+        title: "Bize bildirin",
+        body: [
+          `Bir şey sizin için çalışmıyorsa ${REACH} üzerinden yazın; hangi sayfada ve ne yapmaya çalışırken olduğunu söyleyin. İki hafta içinde yanıt veririz.`,
         ],
       },
     ],

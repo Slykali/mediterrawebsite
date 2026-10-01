@@ -28,7 +28,7 @@ type FinishChartProps = {
 export function FinishChart({
   className = "",
   highlightClassName = "",
-  labelClassName = "font-mono text-[10px] sm:text-[11px]",
+  labelClassName = "font-mono text-[0.625rem] sm:text-[0.6875rem]",
 }: FinishChartProps) {
   const c = useContent();
   const { crawler } = useBoot();

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+import { useMotionOff } from "@/components/a11y/a11y-provider";
 import { HAS_HERO_MEDIA } from "@/lib/site";
 
 /**
@@ -10,18 +11,22 @@ import { HAS_HERO_MEDIA } from "@/lib/site";
  */
 export function MediaBackdrop({ opacity = "opacity-25" }: { opacity?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const still = useMotionOff();
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (still) {
+      video.pause();
+      return;
+    }
 
     // Started here rather than with the autoPlay attribute: reduced motion
     // keeps the poster and the loop is never fetched.
     void video.play().catch(() => {
       /* Autoplay blocked: the poster stays up. */
     });
-  }, []);
+  }, [still]);
 
   if (!HAS_HERO_MEDIA) {
     return <div aria-hidden className="grain pointer-events-none absolute inset-0" />;

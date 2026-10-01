@@ -56,7 +56,9 @@ docs/hero-media.md       how to add the hero video
 ## Pages and languages
 
 Same paths in both languages: `/`, `/history`, `/sponsors`, `/join`,
-`/robot/2026`, `/privacy`, each with a `/tr` twin.
+`/robot/2026`, `/privacy`, `/accessibility`, each with a `/tr` twin. The homepage is
+the summary that scrolls; the header nav on every page, home included, goes to
+the full pages.
 
 - Section text is in `lib/content.ts`, page copy in `lib/pages.ts`, the FAQ in
   `lib/faq.ts`, and Matchday's own wording in
@@ -86,6 +88,18 @@ can't read or write the table; only the server action can.
   which is what the privacy notice promises.
 - Until the keys are set, submitting says "not connected yet" in development
   and points to Instagram in production.
+
+## Accessibility
+
+- The button bottom-left opens the accessibility menu (`components/a11y/`):
+  text size, higher contrast, stop animations, underline links, plainer font.
+  Settings are saved in localStorage and put on `<html>` as `data-a11y-*`
+  attributes before first paint (the script in `lib/a11y.ts`); the CSS for
+  them is in `app/globals.css`.
+- Text size works by changing the root font size, so **size text in rem**,
+  never px.
+- Anything that moves on its own must stop when `useMotionOff()` is true.
+- `/accessibility` is the statement. Update its date when you re-check.
 
 ## Legal
 

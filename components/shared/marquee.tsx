@@ -4,7 +4,6 @@ import {
   motion,
   useAnimationFrame,
   useMotionValue,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -13,6 +12,7 @@ import {
 } from "framer-motion";
 import { useRef, type ReactNode } from "react";
 
+import { useMotionOff } from "@/components/a11y/a11y-provider";
 import { wrap } from "@/lib/utils";
 
 type MarqueeProps = {
@@ -31,7 +31,8 @@ type MarqueeProps = {
 
 /**
  * Scroll-reactive marquee: speeds up with scroll velocity and reverses when
- * you scroll back up. Static under prefers-reduced-motion.
+ * you scroll back up. Stops under prefers-reduced-motion or the accessibility
+ * menu's "Stop animations", and pauses while the pointer or focus is on it.
  */
 export function Marquee({
   children,
@@ -41,7 +42,8 @@ export function Marquee({
   className = "",
   itemClassName = "pr-[0.3em]",
 }: MarqueeProps) {
-  const reduced = useReducedMotion();
+  const reduced = useMotionOff();
+  const paused = useRef(false);
   const baseX = useMotionValue(0);
 
   const { scrollY } = useScroll();
@@ -58,7 +60,7 @@ export function Marquee({
   const direction = useRef(1);
 
   useAnimationFrame((_, delta) => {
-    if (reduced) return;
+    if (reduced || paused.current) return;
 
     let moveBy = direction.current * baseVelocity * (delta / 1000);
 
@@ -75,7 +77,13 @@ export function Marquee({
   return (
     // Clip sideways only. overflow-hidden also clipped vertically, which cut
     // the dots and cedillas off Ö, Ü, İ, Ş at the display sizes' tight leading.
-    <div className="w-full overflow-x-clip">
+    <div
+      className="w-full overflow-x-clip"
+      onPointerEnter={() => (paused.current = true)}
+      onPointerLeave={() => (paused.current = false)}
+      onFocus={() => (paused.current = true)}
+      onBlur={() => (paused.current = false)}
+    >
       <motion.div style={{ x }} className={`flex w-max flex-nowrap ${className}`}>
         {Array.from({ length: repeat }, (_, i) => (
           // Only the first copy is content; the rest are the loop.

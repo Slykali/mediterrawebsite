@@ -1,6 +1,5 @@
 "use client";
 
-import { MotionConfig } from "framer-motion";
 import {
   createContext,
   useCallback,
@@ -11,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 
+import { A11Y_ATTR } from "@/lib/a11y";
 import { BOOT_COOKIE } from "@/lib/boot";
 
 /**
@@ -99,7 +99,10 @@ export function BootProvider({
 
   useEffect(() => {
     const seen = readSessionFlag();
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // The OS setting, or "Stop animations" in the accessibility menu (already on <html>).
+    const reduced =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      document.documentElement.hasAttribute(A11Y_ATTR.still);
     // Once per tab, never for people who asked for less motion. Functional
     // update so an input that already skipped from "idle" isn't overwritten.
     setPhase((prev) => (prev === "idle" ? (seen || reduced ? "skipped" : "running") : prev));
@@ -115,11 +118,5 @@ export function BootProvider({
     [phase, skip, crawler, finish],
   );
 
-  // reducedMotion="user": with prefers-reduced-motion, Framer skips transform
-  // and layout animations site-wide (opacity fades still run).
-  return (
-    <BootContext.Provider value={value}>
-      <MotionConfig reducedMotion="user">{children}</MotionConfig>
-    </BootContext.Provider>
-  );
+  return <BootContext.Provider value={value}>{children}</BootContext.Provider>;
 }

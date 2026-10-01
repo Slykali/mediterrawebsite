@@ -26,6 +26,8 @@ const csp = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // The dev badge sits bottom-left, right on top of the accessibility button.
+  devIndicators: false,
   async headers() {
     return [
       {

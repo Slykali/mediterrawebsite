@@ -12,6 +12,7 @@ const PRIORITY: Record<PageKey, number> = {
   sponsors: 0.7,
   robot2026: 0.6,
   privacy: 0.2,
+  accessibility: 0.2,
 };
 
 /** Every page in both languages, each listing its other-language twin. */
@@ -28,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     return LOCALES.map((locale) => ({
       url: abs(localePath(locale, path)),
       lastModified,
-      changeFrequency: page === "home" ? ("weekly" as const) : page === "privacy" ? ("yearly" as const) : ("monthly" as const),
+      changeFrequency: page === "home" ? ("weekly" as const) : page === "privacy" || page === "accessibility" ? ("yearly" as const) : ("monthly" as const),
       priority: PRIORITY[page],
       alternates: { languages },
     }));

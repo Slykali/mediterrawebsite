@@ -21,7 +21,7 @@ export function ThroughLink({ page, className = "" }: { page: ThroughPage; class
   return (
     <Link
       href={localePath(locale, PAGE_PATHS[page])}
-      className={`group inline-flex items-center gap-2 border-b border-current pb-1 font-mono text-[11px] tracking-[0.16em] uppercase transition-colors hover:text-accent-text ${className}`}
+      className={`group inline-flex items-center gap-2 border-b border-current pb-1 font-mono text-[0.6875rem] tracking-[0.16em] uppercase transition-colors hover:text-accent-text ${className}`}
     >
       {CHROME[locale].through[page]}
       <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">

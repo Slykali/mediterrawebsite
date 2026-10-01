@@ -6,7 +6,7 @@ import { RobotGlyph } from "@/components/shared/robot-glyph";
 import { CONTENT, MT07, SPONSORS, formatSeasons } from "@/lib/content";
 import { DEFAULT_DESIGN } from "@/lib/designs";
 import { localePath, type Locale } from "@/lib/i18n";
-import { PAGES, PAGE_PATHS, PRIVACY, ROBOT_PAGE, SEASON_TABLE } from "@/lib/pages";
+import { ACCESSIBILITY, PAGES, PAGE_PATHS, PRIVACY, ROBOT_PAGE, SEASON_TABLE } from "@/lib/pages";
 import { faqJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { DesignFrame } from "./design-frame";
@@ -14,9 +14,9 @@ import { PageShell } from "./page-shell";
 
 type PageProps = { locale: Locale };
 
-const LABEL = "font-mono text-[10px] tracking-[0.18em] uppercase";
+const LABEL = "font-mono text-[0.625rem] tracking-[0.18em] uppercase";
 const LINK =
-  "group inline-flex items-center gap-2 border-b border-current pb-1 font-mono text-[11px] tracking-[0.16em] uppercase transition-colors hover:text-accent-text";
+  "group inline-flex items-center gap-2 border-b border-current pb-1 font-mono text-[0.6875rem] tracking-[0.16em] uppercase transition-colors hover:text-accent-text";
 
 /* --- Home ----------------------------------------------------------------- */
 
@@ -236,15 +236,19 @@ export function RobotPage({ locale }: PageProps) {
   );
 }
 
-/* --- Privacy -------------------------------------------------------------- */
+/* --- Privacy and accessibility -------------------------------------------- */
 
-export function PrivacyPage({ locale }: PageProps) {
+/** A page of titled sections: the privacy notice and the accessibility statement. */
+function NoticePage({
+  locale,
+  page,
+  t,
+}: PageProps & { page: "privacy" | "accessibility"; t: (typeof PRIVACY)[Locale] }) {
   const id = DEFAULT_DESIGN;
   const { pad } = DESIGNS[id];
-  const t = PRIVACY[locale];
 
   return (
-    <PageShell locale={locale} page="privacy" design={id}>
+    <PageShell locale={locale} page={page} design={id}>
       <div className={`py-14 sm:py-20 ${pad}`}>
         <div className="max-w-3xl divide-y divide-rule border-y border-rule">
           {t.sections.map((section) => (
@@ -262,4 +266,12 @@ export function PrivacyPage({ locale }: PageProps) {
       </div>
     </PageShell>
   );
+}
+
+export function PrivacyPage({ locale }: PageProps) {
+  return <NoticePage locale={locale} page="privacy" t={PRIVACY[locale]} />;
+}
+
+export function AccessibilityPage({ locale }: PageProps) {
+  return <NoticePage locale={locale} page="accessibility" t={ACCESSIBILITY[locale]} />;
 }

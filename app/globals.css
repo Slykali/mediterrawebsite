@@ -77,6 +77,58 @@
   }
 }
 
+/* --- Accessibility menu ----------------------------------------------------
+   Set on <html> by lib/a11y.ts. Every size is in rem, so text size is just the
+   root font size. The token overrides need html[…] in front to beat the
+   design block's specificity. */
+
+html[data-a11y-text="1"] {
+  font-size: 112.5%;
+}
+
+html[data-a11y-text="2"] {
+  font-size: 125%;
+}
+
+html[data-a11y-contrast],
+html[data-a11y-contrast] [data-design] {
+  --mute: #c9d0dc;
+  --rule: #55627c;
+  --panel: #0a0e16;
+  --accent-text: #ff8085;
+  --accent-2-text: #8ab8ff;
+}
+
+html[data-a11y-links] a {
+  text-decoration-line: underline;
+  text-underline-offset: 0.2em;
+}
+
+html[data-a11y-readable],
+html[data-a11y-readable] [data-design] {
+  --body: ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+html[data-a11y-readable] .font-mono {
+  letter-spacing: 0.04em !important;
+}
+
+html[data-a11y-still] {
+  scroll-behavior: auto;
+}
+
+html[data-a11y-still] *,
+html[data-a11y-still] *::before,
+html[data-a11y-still] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+html[data-a11y-still] [data-boot-overlay] {
+  display: none;
+}
+
 /* --- Shared display type ---------------------------------------------------
    Page titles and the FAQ sit outside the design's own components, so they
    take its headline treatment from here. */

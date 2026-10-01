@@ -12,7 +12,7 @@ import { breadcrumbJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { DesignFrame } from "./design-frame";
 
-const LABEL = "font-mono text-[10px] tracking-[0.18em] uppercase";
+const LABEL = "font-mono text-[0.625rem] tracking-[0.18em] uppercase";
 
 /**
  * Frame for every page except home: a header with the page nav and EN / TR,
@@ -86,7 +86,7 @@ export function PageShell({
             </nav>
             <p className={`mt-10 text-accent-text ${LABEL}`}>{copy.kicker}</p>
             {/* Leading leaves room for İ, Ö, Ü dots above and Ç, Ş tails below. */}
-            <h1 className="display-title mt-5 text-[clamp(3rem,10vw,8rem)] leading-[0.95]">{copy.h1}</h1>
+            <h1 className="display-title mt-5 text-[clamp(3rem,10vw,8rem)] leading-[0.95] break-words hyphens-auto">{copy.h1}</h1>
             <p className="mt-8 max-w-2xl text-sm leading-relaxed text-mute sm:text-base">{copy.intro}</p>
           </div>
 

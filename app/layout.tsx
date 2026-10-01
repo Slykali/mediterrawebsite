@@ -3,9 +3,12 @@ import type { Metadata, Viewport } from "next";
 import { cookies, headers } from "next/headers";
 import { Barlow_Condensed, IBM_Plex_Mono } from "next/font/google";
 
+import { A11yMenu } from "@/components/a11y/a11y-menu";
+import { A11yProvider } from "@/components/a11y/a11y-provider";
 import { BootProvider } from "@/components/boot/boot-provider";
 import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { JsonLd } from "@/components/shared/json-ld";
+import { A11Y_HEAD_SCRIPT } from "@/lib/a11y";
 import { BOOT_COOKIE } from "@/lib/boot";
 import { DEFAULT_DESIGN } from "@/lib/designs";
 import { DEFAULT_LOCALE, LOCALE_HEADER, OG_LOCALE, isLocale } from "@/lib/i18n";
@@ -88,6 +91,10 @@ export default async function RootLayout({
     // Browser extensions (theme/dark-mode ones especially) add attributes to
     // <html> before React loads. This only silences mismatches on this element.
     <html lang={locale} data-design={DEFAULT_DESIGN} className={fontVariables} suppressHydrationWarning>
+      <head>
+        {/* Saved accessibility settings, applied before the first paint. */}
+        <script dangerouslySetInnerHTML={{ __html: A11Y_HEAD_SCRIPT }} />
+      </head>
       <body className="antialiased">
         <a
           href="#main"
@@ -103,9 +110,12 @@ export default async function RootLayout({
         </noscript>
 
         <LocaleProvider locale={locale}>
-          <BootProvider skip={skipBoot} crawler={crawler}>
-            {children}
-          </BootProvider>
+          <A11yProvider>
+            <BootProvider skip={skipBoot} crawler={crawler}>
+              {children}
+            </BootProvider>
+            <A11yMenu />
+          </A11yProvider>
         </LocaleProvider>
         <Analytics />
       </body>

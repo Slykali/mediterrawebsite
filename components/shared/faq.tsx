@@ -17,7 +17,7 @@ export function Faq({ className = "border-t border-rule px-4 py-16 sm:px-6 sm:py
     <section id="faq" aria-labelledby="faq-title" className={className}>
       <div className="grid gap-10 lg:grid-cols-12">
         <Reveal className="lg:col-span-4">
-          <p className="font-mono text-[10px] tracking-[0.2em] text-mute uppercase">{heading.kicker}</p>
+          <p className="font-mono text-[0.625rem] tracking-[0.2em] text-mute uppercase">{heading.kicker}</p>
           <h2 id="faq-title" className="display-title mt-3 text-[clamp(2.5rem,6vw,5rem)] leading-[0.9]">
             {heading.title}
           </h2>
