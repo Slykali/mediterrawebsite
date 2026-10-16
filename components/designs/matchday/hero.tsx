@@ -9,6 +9,7 @@ import { LangSwitch } from "@/components/i18n/lang-switch";
 import { Cased, useLocale } from "@/components/i18n/locale-provider";
 import { useSectionHref } from "@/components/i18n/nav";
 import { MediaBackdrop } from "@/components/shared/media-backdrop";
+import { TeamLogo } from "@/components/shared/team-logo";
 import { pad2, useCountdown, type Countdown } from "@/components/shared/use-countdown";
 import { SPRING, fadeIn, riseIn, stagger } from "@/lib/motion";
 import { localePath } from "@/lib/i18n";
@@ -119,6 +120,7 @@ export function Hero() {
         className={`relative flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-rule px-4 py-3 sm:px-6 ${MONO}`}
       >
         <span className="flex items-center gap-3">
+          <TeamLogo />
           <span className="flex items-center gap-1.5 bg-accent px-2 py-0.5 text-on-accent">
             <span className="size-1.5 animate-pulse rounded-full bg-on-accent" />
             {t.live}

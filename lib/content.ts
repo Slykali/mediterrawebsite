@@ -220,6 +220,13 @@ const ROBOT_SOURCE: RobotSource[] = [
 export const ROBOT_COUNT = ROBOT_SOURCE.length;
 export const UNLOCKED_ROBOTS = ROBOT_SOURCE.filter((robot) => !robot.locked).length;
 
+/**
+ * Seasons shown in the robot selector. Only 2026: the team has no details or
+ * photos of the earlier robots. Their results stay in the history table and
+ * chart. Add a season here once there's something to show for its robot.
+ */
+export const GARAGE_SEASONS: number[] = [2026];
+
 /** The big label on a robot card: its name if it had one, otherwise the game. */
 export function robotTitle(robot: Robot): string {
   return robot.robotName ?? robot.game;

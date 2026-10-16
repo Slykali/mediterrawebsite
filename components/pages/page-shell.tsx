@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { DESIGNS } from "@/components/designs/registry";
 import { LangSwitch } from "@/components/i18n/lang-switch";
 import { JsonLd } from "@/components/shared/json-ld";
+import { TeamLogo } from "@/components/shared/team-logo";
 import type { DesignId } from "@/lib/designs";
 import { cased } from "@/lib/cased";
 import { localePath, type Locale } from "@/lib/i18n";
@@ -47,8 +48,8 @@ export function PageShell({
           id="top"
           className={`flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b border-rule py-3 text-mute ${parts.pad} ${LABEL}`}
         >
-          <Link href={home} className="flex items-center gap-2 text-ink">
-            <span className="size-1.5 bg-accent" />
+          <Link href={home} className="flex items-center gap-2.5 text-ink">
+            <TeamLogo />
             FRC {site.team.number} &middot; {cased(site.team.name, locale)}
           </Link>
           <nav aria-label={CHROME[locale].pagesNav}>

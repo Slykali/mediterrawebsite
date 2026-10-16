@@ -13,6 +13,7 @@ import { RobotGlyph } from "@/components/shared/robot-glyph";
 import { ThroughLink } from "@/components/shared/through-link";
 import { pad2, useCountdown } from "@/components/shared/use-countdown";
 import {
+  GARAGE_SEASONS,
   REGIONAL_COUNT,
   SPONSORS,
   formatSeasons,
@@ -155,8 +156,9 @@ function RobotDetail({ robot }: { robot: Robot }) {
 export function Garage() {
   const c = useContent();
   const t = useCopy();
-  const [selected, setSelected] = useState(() => Math.max(0, c.robots.findLastIndex((robot) => !robot.locked)));
-  const robot = c.robots[selected];
+  const robots = c.robots.filter((item) => GARAGE_SEASONS.includes(item.season));
+  const [selected, setSelected] = useState(() => Math.max(0, robots.findLastIndex((robot) => !robot.locked)));
+  const robot = robots[selected];
 
   return (
     <section id="garage" className="border-t border-rule px-4 py-20 sm:px-6">
@@ -164,7 +166,7 @@ export function Garage() {
 
       <div className="mt-10 grid gap-4 lg:grid-cols-12">
         <div className="grid grid-cols-3 content-start gap-2 sm:grid-cols-4 lg:col-span-5 lg:grid-cols-3">
-          {c.robots.map((item, i) => {
+          {robots.map((item, i) => {
             const active = i === selected;
             return (
               <button

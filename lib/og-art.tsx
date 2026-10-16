@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 import type { Locale } from "./i18n";
+import { LOGO_DATA_URI, LOGO_RATIO } from "./logo";
 import { site } from "./site";
 
 export const OG_SIZE = { width: 1200, height: 630 };
@@ -80,8 +81,14 @@ export async function ogImage(locale: Locale) {
         }}
       >
         <div style={{ display: "flex", flex: 1, flexDirection: "column", justifyContent: "space-between", padding: "56px 64px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 24, letterSpacing: 3, color: MUTE }}>
-            <div style={{ display: "flex" }}>{t.program}</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 24, letterSpacing: 3, color: MUTE }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element -- Satori needs a plain img */}
+              <div style={{ display: "flex", background: "#ffffff", borderRadius: 8, padding: 6 }}>
+                <img src={LOGO_DATA_URI} width={Math.round(68 * LOGO_RATIO)} height={68} alt="" />
+              </div>
+              {t.program}
+            </div>
             <div style={{ display: "flex" }}>{t.season}</div>
           </div>
 

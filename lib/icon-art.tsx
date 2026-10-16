@@ -1,21 +1,22 @@
 import { ImageResponse } from "next/og";
 
+import { LOGO_DATA_URI, LOGO_RATIO } from "./logo";
+
 /**
- * The favicon mark (app/icon.svg) drawn at any size: a red and a blue block,
- * the two alliances, on Matchday's near-black. TODO: swap for the team's real
- * logo if there is one; replace app/icon.svg and this drawing together.
+ * The team logo on a white tile, at any size, for the PNG icons (Apple touch
+ * icon, the web manifest, the structured-data logo). The logo takes 80% of the
+ * width so it stays inside the safe area when a platform rounds the corners.
  */
 export function iconImage(size: number) {
-  const u = size / 32;
-  const block = (x: number, y: number, w: number, h: number, background: string) => (
-    <div style={{ position: "absolute", left: x * u, top: y * u, width: w * u, height: h * u, background }} />
-  );
+  const w = Math.round(size * 0.8);
 
   return new ImageResponse(
     (
-      <div style={{ display: "flex", position: "relative", width: "100%", height: "100%", background: "#06080d" }}>
-        {block(5, 7, 10, 18, "#e3262c")}
-        {block(17, 7, 10, 18, "#1f6fe0")}
+      <div
+        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%", background: "#ffffff" }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- Satori needs a plain img */}
+        <img src={LOGO_DATA_URI} width={w} height={Math.round(w / LOGO_RATIO)} alt="" />
       </div>
     ),
     { width: size, height: size },
