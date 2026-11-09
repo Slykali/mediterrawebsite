@@ -243,8 +243,7 @@
     <h1 data-t="thanks"></h1>
     <p class="hint" id="tesekkurMetni"></p>
     <div class="stack">
-      <a class="btn" id="sonucLink" style="display:flex;align-items:center;justify-content:center;text-decoration:none" data-t="seeResults"></a>
-      <button class="btn ghost" type="button" id="tekrar" data-t="again"></button>
+      <button class="btn" type="button" id="tekrar" data-t="again"></button>
     </div>
   </section>
 
@@ -264,7 +263,6 @@
   var GOOGLE = SUNUCU_URL.indexOf('http') === 0;
   var ONIZLEME = !GOOGLE && !API;
   var POSTER = GOOGLE ? SUNUCU_POSTER : (new URLSearchParams(location.search).get('p') || '');
-  var SONUC_URL = GOOGLE ? SUNUCU_URL + '?sayfa=sonuc' : (API ? '/anket/sonuc' : 'sonuc.html');
   var GIZLILIK_URL = 'https://www.mediterra6874.com/';
   var ACILIS = Date.now();
 
@@ -290,8 +288,8 @@
       send: 'Gönder', sending: 'Gönderiliyor…',
       sendErr: 'Gönderilemedi. İnternetini kontrol edip tekrar dene.',
       thanks: 'Teşekkürler!',
-      thanksText: function (ad, oran, ilk) { return ilk ? 'Seçtiğin duygu: ' + ad + '. İlk cevabı sen verdin!' : 'Seçtiğin duygu: ' + ad + '. Şu ana kadar cevap verenlerin %' + oran + ' kadarı da böyle hissediyor.'; },
-      seeResults: 'Herkes ne hissediyor? →', again: 'Başka biri cevaplasın',
+      thanksText: function (ad) { return 'Seçtiğin duygu: ' + ad + '. Cevabın kaydedildi, katıldığın için teşekkürler.'; },
+      again: 'Başka biri cevaplasın',
       privacy: 'Cevaplar anonimdir. Sadece yaş ve seçilen duygu kaydedilir.',
       privacyLink: 'Gizlilik', privacyPath: 'tr/privacy'
     },
@@ -307,8 +305,8 @@
       send: 'Send', sending: 'Sending…',
       sendErr: 'Could not send. Check your connection and try again.',
       thanks: 'Thank you!',
-      thanksText: function (ad, oran, ilk) { return ilk ? 'You picked ' + ad + '. You are the very first to answer!' : 'You picked ' + ad + '. ' + oran + '% of people so far feel the same.'; },
-      seeResults: 'See how everyone feels →', again: 'Let someone else answer',
+      thanksText: function (ad) { return 'You picked ' + ad + '. Your answer is saved. Thank you for taking part.'; },
+      again: 'Let someone else answer',
       privacy: 'Answers are anonymous. Only age and the chosen feeling are stored.',
       privacyLink: 'Privacy', privacyPath: 'privacy'
     }
@@ -336,7 +334,6 @@
     $('yas').placeholder = m.agePh;
     $('gizlilik').href = (API ? '/' : GIZLILIK_URL) + m.privacyPath;
     duygulariCiz();
-    $('sonucLink').href = SONUC_URL + (SONUC_URL.indexOf('?') >= 0 ? '&' : '?') + 'dil=' + dil;
   }
 
   function duygulariCiz() {
@@ -434,10 +431,9 @@
     sunucu('kaydet', { yas: yas, duygu: secili, poster: POSTER, dil: dil })
       .then(function (s) {
         var d = DUYGULAR.filter(function (x) { return x.kod === secili; })[0];
-        var oran = s && s.kisi ? Math.round(100 * s.toplam[secili] / s.kisi) : 100;
         $('rozet').style.background = 'var(--' + secili + ')';
         $('rozet').style.color = secili === 'guilt' ? 'var(--ink)' : 'var(--paper)';
-        $('tesekkurMetni').textContent = METIN[dil].thanksText(d[dil][0], oran, !s || s.kisi <= 1);
+        $('tesekkurMetni').textContent = METIN[dil].thanksText(d[dil][0]);
         adim(3);
       })
       .catch(function () {
