@@ -31,6 +31,13 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // The dev badge sits bottom-left, right on top of the accessibility button.
   devIndicators: false,
+  // The COP31 climate survey is static HTML in public/anket/ (QR codes point here).
+  async rewrites() {
+    return [
+      { source: "/anket", destination: "/anket/index.html" },
+      { source: "/anket/sonuc", destination: "/anket/sonuc.html" },
+    ];
+  },
   async headers() {
     return [
       {
