@@ -309,7 +309,7 @@ const REACH = site.contact.email ?? "Instagram (@team_6874)";
 
 export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection[] }> = {
   en: {
-    updated: "Last updated 1 October 2026",
+    updated: "Last updated 9 November 2026",
     sections: [
       {
         title: "Who is responsible",
@@ -343,6 +343,13 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
         body: ["Messages are deleted automatically 12 months after they arrive, or sooner if you ask."],
       },
       {
+        title: "Climate survey (/anket)",
+        body: [
+          "The COP31 climate survey asks two things: your age and how you feel about climate change. We store those two answers, the time, which poster's QR code you scanned and the page language. No name, email or IP address, so the answers can't be traced back to you.",
+          "Answers are kept in a Google Sheet, with copies in the same Supabase database and in automatic daily backups, and are used only to show the results and to report them as totals. The page remembers your language choice in your browser's local storage (dil).",
+        ],
+      },
+      {
         title: "Cookies and statistics",
         body: [
           "No advertising or tracking cookies. One cookie, frc6874-booted, remembers for the current browser session that you've seen the opening animation, so it doesn't play on every page. A matching flag is kept in session storage. Both are deleted when you close the browser.",
@@ -364,7 +371,7 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
     ],
   },
   tr: {
-    updated: "Son güncelleme: 1 Ekim 2026",
+    updated: "Son güncelleme: 9 Kasım 2026",
     sections: [
       {
         title: "Veri sorumlusu",
@@ -396,6 +403,13 @@ export const PRIVACY: Record<Locale, { updated: string; sections: PrivacySection
       {
         title: "Ne kadar süre",
         body: ["Mesajlar geldikten 12 ay sonra otomatik olarak silinir. İsterseniz daha önce de sileriz."],
+      },
+      {
+        title: "İklim anketi (/anket)",
+        body: [
+          "COP31 iklim anketi iki şey sorar: yaşınızı ve iklim değişikliği hakkında ne hissettiğinizi. Bu iki cevabı, zamanı, hangi posterin QR kodunu okuttuğunuzu ve sayfa dilini saklarız. Ad, e-posta ya da IP adresi yoktur; cevaplar size geri bağlanamaz.",
+          "Cevaplar bir Google E-Tablosunda tutulur; kopyaları aynı Supabase veritabanında ve otomatik günlük yedeklerde bulunur. Yalnızca sonuçları göstermek ve toplam olarak raporlamak için kullanılır. Sayfa, dil seçiminizi tarayıcınızın yerel depolamasında (dil) hatırlar.",
+        ],
       },
       {
         title: "Çerezler ve istatistik",

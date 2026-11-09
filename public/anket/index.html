@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>İklim &amp; Duygular</title>
+<link rel="stylesheet" href="/anket/fonts/fonts.css">
+<style>
+  :root {
+    --ink: #151210;
+    --paper: #f4ecdf;
+    --paper-dim: #e6dccb;
+    --muted: #6d6458;
+    --pessimism: #4a3020;
+    --fear: #1d2d52;
+    --helplessness: #4b5317;
+    --anxiety: #44164f;
+    --anger: #c4100f;
+    --guilt: #f25a0a;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  /* iPhone'da telefonun yazı boyutu ayarını (Dynamic Type) izler; rem birimleri buna göre büyür. */
+  html { font-size: 100%; -webkit-text-size-adjust: 100%; }
+  @supports (font: -apple-system-body) { html { font: -apple-system-body; } }
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--ink);
+    color: var(--ink);
+    font-family: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+  }
+  .stripes {
+    height: 22px;
+    flex: none;
+    background: repeating-linear-gradient(-45deg, var(--paper) 0 14px, var(--ink) 14px 28px);
+  }
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 20px 16px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--paper);
+    margin-bottom: 18px;
+  }
+  .top { gap: 12px; }
+  .kicker {
+    font-family: "Archivo Black", sans-serif;
+    font-size: .8rem;
+    line-height: 1.3;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .kicker small { display: block; font: 600 .8rem "Archivo", sans-serif; letter-spacing: .02em; text-transform: none; color: #b9b0a2; }
+  .lang {
+    display: flex;
+    flex: none;
+    border: 2px solid var(--paper);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .lang button {
+    background: none;
+    border: 0;
+    color: var(--paper);
+    font: 700 .85rem "Archivo", sans-serif;
+    padding: 0 14px;
+    cursor: pointer;
+    min-height: 44px;
+    min-width: 48px;
+  }
+  .lang button[aria-pressed="true"] { background: var(--paper); color: var(--ink); }
+
+  .card {
+    background: var(--paper);
+    border-radius: var(--radius);
+    padding: 24px 16px;
+    box-shadow: 0 0 0 3px var(--ink), 0 0 0 5px var(--paper);
+  }
+  .step { display: none; }
+  .step.on { display: block; animation: in .25s ease-out; }
+  @keyframes in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .step.on { animation: none; } }
+
+  .count {
+    font: 700 .8rem "Archivo", sans-serif;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: "Archivo Black", sans-serif;
+    font-weight: 400;
+    font-size: clamp(1.75rem, 1rem + 4.5vw, 2.4rem);
+    line-height: 1.08;
+    margin: 0 0 10px;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+  .hint { margin: 0 0 22px; color: var(--muted); font-size: 1rem; line-height: 1.45; }
+
+  .age-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  #yas {
+    width: 100%;
+    font: 400 3.2rem "Archivo Black", sans-serif;
+    text-align: center;
+    padding: 10px 12px;
+    border: 3px solid var(--ink);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--ink);
+    -moz-appearance: textfield;
+  }
+  #yas::-webkit-outer-spin-button, #yas::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  #yas::placeholder { color: #8f877b; }
+  #yas:focus { outline: 3px solid var(--guilt); outline-offset: 2px; }
+  #yas[aria-invalid="true"] { border-color: var(--anger); }
+  .err { color: var(--anger); font-weight: 700; font-size: .9rem; min-height: 1.4em; margin: 6px 0 14px; }
+
+  .btn {
+    width: 100%;
+    min-height: 56px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    font: 400 1.05rem "Archivo Black", sans-serif;
+    letter-spacing: .02em;
+    cursor: pointer;
+    transition: transform .1s, opacity .2s;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn.ghost { background: none; color: var(--ink); border: 2px solid var(--ink); font-size: .95rem; min-height: 48px; }
+  .btn:focus-visible, .back:focus-visible, .lang button:focus-visible { outline: 3px solid var(--guilt); outline-offset: 2px; }
+  .back {
+    background: none; border: 0; padding: 0 12px 0 0; margin: -10px 0 4px;
+    font: 600 .9rem "Archivo", sans-serif; color: var(--muted); cursor: pointer;
+    min-height: 44px;
+  }
+
+  /* Büyük yazı boyutunda kartlar tek sütuna iner. */
+  .emotions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); gap: 10px; margin-bottom: 18px; }
+  .emo {
+    position: relative;
+    min-height: 6.5rem;
+    border: 0;
+    border-radius: 12px;
+    padding: 40px 11px 12px;
+    color: var(--paper);
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 4px;
+    font-family: inherit;
+    transition: transform .12s, box-shadow .12s, opacity .2s;
+  }
+  .emo:active { transform: scale(.97); }
+  .emo .name { font: 400 1.05rem/1.1 "Archivo Black", sans-serif; }
+  .emo .tag { font-size: .85rem; line-height: 1.3; }
+  /* Turuncu üstünde krem yazı 2.9:1 kalıyordu; koyu yazı 5.5:1. */
+  .emo.guilt { color: var(--ink); }
+  .emo .tick {
+    position: absolute; top: 10px; right: 10px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--paper); color: var(--ink);
+    display: none; align-items: center; justify-content: center;
+    font: 900 15px "Archivo", sans-serif;
+  }
+  /* Seçilmeyenler soluklaşmaz (okunur kalsın); seçilen kalın çerçeve + tik ile ayrılır. */
+  .emo[aria-checked="true"] {
+    box-shadow: 0 0 0 3px var(--paper), 0 0 0 7px var(--ink);
+  }
+  .emo[aria-checked="true"] .tick { display: flex; }
+  .emo:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  .done-badge {
+    width: 72px; height: 72px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font: 400 34px "Archivo Black", sans-serif; color: var(--paper);
+    margin-bottom: 16px;
+  }
+  .stack { display: grid; gap: 10px; }
+  .foot { color: #a39b8e; font-size: .8rem; text-align: center; margin-top: 18px; line-height: 1.5; }
+  .foot a { color: var(--paper); font-weight: 700; display: inline-block; padding: 12px 4px; }
+  .foot a:focus-visible { outline: 3px solid var(--guilt); outline-offset: 2px; }
+</style>
+</head>
+<body data-api="/api/anket">
+<div class="stripes" aria-hidden="true"></div>
+<main>
+  <div class="top">
+    <span class="kicker"><span data-t="kicker"></span><small>6874 Mediterra</small></span>
+    <div class="lang" role="group" aria-label="Dil / Language">
+      <button type="button" data-lang="tr">TR</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+  </div>
+
+  <!-- 1. Yaş -->
+  <section class="card step on" id="adim1" aria-live="polite">
+    <p class="count" data-t="step1"></p>
+    <h1 id="yasSoru" data-t="ageQ"></h1>
+    <p class="hint" id="yasIpucu" data-t="ageHint"></p>
+    <form id="yasForm" novalidate>
+      <div class="age-wrap">
+        <input id="yas" type="number" inputmode="numeric" pattern="[0-9]*" min="1" max="120" autocomplete="off" enterkeyhint="next" aria-labelledby="yasSoru" aria-describedby="yasIpucu yasHata">
+      </div>
+      <p class="err" id="yasHata" role="alert"></p>
+      <button class="btn" type="submit" data-t="next"></button>
+    </form>
+  </section>
+
+  <!-- 2. Duygu -->
+  <section class="card step" id="adim2">
+    <button type="button" class="back" id="geri" data-t="back"></button>
+    <p class="count" data-t="step2"></p>
+    <h1 data-t="feelQ"></h1>
+    <p class="hint" data-t="feelHint"></p>
+    <div class="emotions" id="duygular" role="radiogroup"></div>
+    <p class="err" id="gonderHata" role="alert"></p>
+    <button class="btn" type="button" id="gonder" disabled data-t="send"></button>
+  </section>
+
+  <!-- 3. Teşekkürler -->
+  <section class="card step" id="adim3">
+    <div class="done-badge" id="rozet">✓</div>
+    <h1 data-t="thanks"></h1>
+    <p class="hint" id="tesekkurMetni"></p>
+    <div class="stack">
+      <a class="btn" id="sonucLink" style="display:flex;align-items:center;justify-content:center;text-decoration:none" data-t="seeResults"></a>
+      <button class="btn ghost" type="button" id="tekrar" data-t="again"></button>
+    </div>
+  </section>
+
+  <p class="foot"><span data-t="privacy"></span> <a id="gizlilik" data-t="privacyLink"></a></p>
+</main>
+<div class="stripes" aria-hidden="true"></div>
+
+<script>
+  // Üç ortam:
+  //   Google  → Apps Script data-url'i doldurur, google.script.run kullanılır.
+  //   Site    → mediterra6874.com/anket; body'de data-api var, fetch ile /api/anket çağrılır.
+  //   Önizleme → dosya doğrudan açılır; cevaplar tarayıcı hafızasına yazılır.
+  var SUNUCU_POSTER = document.body.getAttribute('data-poster') || '';
+  var SUNUCU_URL = document.body.getAttribute('data-url') || '';
+  var API = document.body.getAttribute('data-api') || '';
+
+  var GOOGLE = SUNUCU_URL.indexOf('http') === 0;
+  var ONIZLEME = !GOOGLE && !API;
+  var POSTER = GOOGLE ? SUNUCU_POSTER : (new URLSearchParams(location.search).get('p') || '');
+  var SONUC_URL = GOOGLE ? SUNUCU_URL + '?sayfa=sonuc' : (API ? '/anket/sonuc' : 'sonuc.html');
+  var GIZLILIK_URL = 'https://www.mediterra6874.com/';
+  var ACILIS = Date.now();
+
+  var DUYGULAR = [
+    { kod: 'pessimism',    tr: ['Karamsarlık', 'Umutsuz bir gelecek mi?'],        en: ['Pessimism', 'A hopeless future?'] },
+    { kod: 'fear',         tr: ['Korku', 'Uçurumun kenarında bir dünya mı?'],     en: ['Fear', 'A world on the edge?'] },
+    { kod: 'helplessness', tr: ['Çaresizlik', 'Çözümü olmayan bir dünya mı?'],    en: ['Helplessness', 'A world with no solution?'] },
+    { kod: 'anxiety',      tr: ['Kaygı', 'Endişe dolu bir dünya mı?'],            en: ['Anxiety', 'A world full of worry?'] },
+    { kod: 'anger',        tr: ['Öfke', 'Yanan bir gezegene karşı!'],             en: ['Anger', 'At a burning planet!'] },
+    { kod: 'guilt',        tr: ['Suçluluk', 'Geleceğimizi yok ettiğimiz için.'],  en: ['Guilt', 'For destroying our future.'] }
+  ];
+
+  var METIN = {
+    tr: {
+      kicker: 'COP31 · İklim & Duygular',
+      step1: 'Soru 1 / 2', step2: 'Soru 2 / 2',
+      ageQ: 'Kaç yaşındasın?',
+      ageHint: 'Sadece yaşını soruyoruz. İsim, e-posta, kayıt yok.',
+      ageErr: 'Lütfen 1 ile 120 arasında bir yaş yaz.', agePh: 'örn. 16',
+      next: 'Devam →', back: '← Yaşı değiştir',
+      feelQ: 'İklim değişikliği hakkında ne hissediyorsun?',
+      feelHint: 'Sana en yakın gelen bir duyguyu seç.',
+      send: 'Gönder', sending: 'Gönderiliyor…',
+      sendErr: 'Gönderilemedi. İnternetini kontrol edip tekrar dene.',
+      thanks: 'Teşekkürler!',
+      thanksText: function (ad, oran, ilk) { return ilk ? 'Seçtiğin duygu: ' + ad + '. İlk cevabı sen verdin!' : 'Seçtiğin duygu: ' + ad + '. Şu ana kadar cevap verenlerin %' + oran + ' kadarı da böyle hissediyor.'; },
+      seeResults: 'Herkes ne hissediyor? →', again: 'Başka biri cevaplasın',
+      privacy: 'Cevaplar anonimdir. Sadece yaş ve seçilen duygu kaydedilir.',
+      privacyLink: 'Gizlilik', privacyPath: 'tr/privacy'
+    },
+    en: {
+      kicker: 'COP31 · Climate & Feelings',
+      step1: 'Question 1 of 2', step2: 'Question 2 of 2',
+      ageQ: 'How old are you?',
+      ageHint: 'We only ask your age. No name, no email, no sign-up.',
+      ageErr: 'Please enter an age between 1 and 120.', agePh: 'e.g. 16',
+      next: 'Next →', back: '← Change age',
+      feelQ: 'How do you feel about climate change?',
+      feelHint: 'Pick the one feeling closest to yours.',
+      send: 'Send', sending: 'Sending…',
+      sendErr: 'Could not send. Check your connection and try again.',
+      thanks: 'Thank you!',
+      thanksText: function (ad, oran, ilk) { return ilk ? 'You picked ' + ad + '. You are the very first to answer!' : 'You picked ' + ad + '. ' + oran + '% of people so far feel the same.'; },
+      seeResults: 'See how everyone feels →', again: 'Let someone else answer',
+      privacy: 'Answers are anonymous. Only age and the chosen feeling are stored.',
+      privacyLink: 'Privacy', privacyPath: 'privacy'
+    }
+  };
+
+  var dil = (function () {
+    try { var k = localStorage.getItem('dil'); if (k === 'tr' || k === 'en') return k; } catch (e) {}
+    return (navigator.language || 'tr').toLowerCase().indexOf('tr') === 0 ? 'tr' : 'en';
+  })();
+  var secili = null;
+  var yas = null;
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function dilUygula() {
+    var m = METIN[dil];
+    document.documentElement.lang = dil;
+    document.querySelectorAll('[data-t]').forEach(function (el) {
+      var v = m[el.getAttribute('data-t')];
+      if (typeof v === 'string') el.textContent = v;
+    });
+    document.querySelectorAll('[data-lang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === dil ? 'true' : 'false');
+    });
+    $('yas').placeholder = m.agePh;
+    $('gizlilik').href = (API ? '/' : GIZLILIK_URL) + m.privacyPath;
+    duygulariCiz();
+    $('sonucLink').href = SONUC_URL + (SONUC_URL.indexOf('?') >= 0 ? '&' : '?') + 'dil=' + dil;
+  }
+
+  function duygulariCiz() {
+    var kutu = $('duygular');
+    kutu.innerHTML = '';
+    DUYGULAR.forEach(function (d) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'emo ' + d.kod;
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', secili === d.kod ? 'true' : 'false');
+      b.style.background = 'var(--' + d.kod + ')';
+      var ad = document.createElement('span'); ad.className = 'name'; ad.textContent = d[dil][0];
+      var tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = d[dil][1];
+      var tick = document.createElement('span'); tick.className = 'tick'; tick.textContent = '✓'; tick.setAttribute('aria-hidden', 'true');
+      b.appendChild(tick); b.appendChild(ad); b.appendChild(tag);
+      b.addEventListener('click', function () {
+        secili = d.kod;
+        $('gonder').disabled = false;
+        $('gonderHata').textContent = '';
+        duygulariCiz();
+        var yeni = kutu.querySelector('[aria-checked="true"]');
+        if (yeni) yeni.focus();
+      });
+      kutu.appendChild(b);
+    });
+  }
+
+  function adim(n) {
+    ['adim1', 'adim2', 'adim3'].forEach(function (id, i) { $(id).classList.toggle('on', i + 1 === n); });
+    window.scrollTo(0, 0);
+  }
+
+  // --- Sunucu bağlantısı (önizlemede tarayıcı hafızasına yazar) ---
+  function sunucu(fn, arg) {
+    if (API) {
+      return fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({ sure: Date.now() - ACILIS }, arg))
+      }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)); });
+    }
+    return new Promise(function (ok, hata) {
+      if (GOOGLE && window.google && google.script && google.script.run) {
+        google.script.run.withSuccessHandler(ok).withFailureHandler(hata)[fn](arg);
+      } else {
+        setTimeout(function () { try { ok(ONIZLEME_SUNUCU[fn](arg)); } catch (e) { hata(e); } }, 400);
+      }
+    });
+  }
+  var ONIZLEME_SUNUCU = {
+    kaydet: function (v) {
+      var liste = [];
+      try { liste = JSON.parse(localStorage.getItem('onizleme_cevaplar') || '[]'); } catch (e) {}
+      liste.push({ zaman: new Date().toISOString(), yas: v.yas, duygu: v.duygu, poster: v.poster, dil: v.dil });
+      try { localStorage.setItem('onizleme_cevaplar', JSON.stringify(liste)); } catch (e) {}
+      var toplam = {}; DUYGULAR.forEach(function (d) { toplam[d.kod] = 0; });
+      liste.forEach(function (c) { if (c.duygu in toplam) toplam[c.duygu]++; });
+      return { toplam: toplam, kisi: liste.length };
+    }
+  };
+
+  // --- Olaylar ---
+  document.querySelectorAll('[data-lang]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      dil = b.getAttribute('data-lang');
+      try { localStorage.setItem('dil', dil); } catch (e) {}
+      dilUygula();
+    });
+  });
+
+  $('yasForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = Math.floor(Number($('yas').value));
+    if (!(v >= 1 && v <= 120)) {
+      $('yasHata').textContent = METIN[dil].ageErr;
+      $('yas').setAttribute('aria-invalid', 'true');
+      $('yas').focus();
+      return;
+    }
+    $('yasHata').textContent = '';
+    $('yas').removeAttribute('aria-invalid');
+    yas = v;
+    adim(2);
+  });
+  $('yas').addEventListener('input', function () { $('yasHata').textContent = ''; $('yas').removeAttribute('aria-invalid'); });
+  $('geri').addEventListener('click', function () { adim(1); $('yas').focus(); });
+
+  $('gonder').addEventListener('click', function () {
+    if (!secili || !yas) return;
+    var btn = $('gonder');
+    btn.disabled = true;
+    btn.textContent = METIN[dil].sending;
+    $('gonderHata').textContent = '';
+    sunucu('kaydet', { yas: yas, duygu: secili, poster: POSTER, dil: dil })
+      .then(function (s) {
+        var d = DUYGULAR.filter(function (x) { return x.kod === secili; })[0];
+        var oran = s && s.kisi ? Math.round(100 * s.toplam[secili] / s.kisi) : 100;
+        $('rozet').style.background = 'var(--' + secili + ')';
+        $('rozet').style.color = secili === 'guilt' ? 'var(--ink)' : 'var(--paper)';
+        $('tesekkurMetni').textContent = METIN[dil].thanksText(d[dil][0], oran, !s || s.kisi <= 1);
+        adim(3);
+      })
+      .catch(function () {
+        btn.disabled = false;
+        $('gonderHata').textContent = METIN[dil].sendErr;
+      })
+      .then(function () { btn.textContent = METIN[dil].send; });
+  });
+
+  $('tekrar').addEventListener('click', function () {
+    secili = null; yas = null;
+    $('yas').value = '';
+    $('gonder').disabled = true;
+    duygulariCiz();
+    adim(1);
+    $('yas').focus();
+  });
+
+  dilUygula();
+</script>
+</body>
+</html>
